@@ -1,31 +1,42 @@
-# sv
+# Guild Table
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+> Guild Table is in active developemnt. Feature set and availibility is subject to change.
 
-## Creating a project
+A solution for online Dungeons and Dragons that incldues:
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Character Management**
+  - generation
+  - sheets
+  - stats
+  - inventory
+- **Monster Management**
+  - import your own monsters
+  - deploy them to the VTT
+- **Virtual Table Top (VTT)**
+  - Support for different maps
+  - object visiblity control (for the DM)
+  - map annotationse
+  - represents your character as a token
+- **Battle Sequence Assistance**
+  - Calculates damage values based on rolls and stats
+  - Keeps track of turns
+- **Basic Campaign Management**
+  - Wiki system
+    - private notes / wikis for DMs
+    - public notes / lore for added fun
+  - invite players into a campaign
 
-```bash
-# create a new project in the current directory
-npx sv create
+The ultimate goal of Guild Table is to remove the need to 'share screen' if you were playing online.
 
-# create a new project in my-app
-npx sv create my-app
-```
+## Running Guild-Table
 
-## Developing
+- Install the dependencies with `npm install`
+- Start up the docker images with Docker Compose
+  - `Docker Compose up -d`
+- Start up the Svelte server and open a new tab
+  - `npm run dev --open`
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
+## Production Instructions
 
 To create a production version of your app:
 
