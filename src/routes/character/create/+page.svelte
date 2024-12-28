@@ -1,9 +1,5 @@
 <script>
-    import Button from "@/components/ui/button/button.svelte";
-	import Input from "@/components/ui/input/input.svelte";
-	import Label from "@/components/ui/label/label.svelte";
     import { superForm } from "sveltekit-superforms";
-    import SuperDebug from "sveltekit-superforms";
     import {questions} from "./questions.json";
     import FormForEach from "@/helpers/form_helpers/FormForEach.svelte";
     let {data} = $props();
@@ -24,4 +20,3 @@
     <FormForEach {form} {questions} {errors}/>
     <input type='submit'/>
 </form>
-<SuperDebug data={$form}/>
