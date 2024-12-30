@@ -7,15 +7,15 @@
 	import Forward from "lucide-svelte/icons/forward";
 	import Trash2 from "lucide-svelte/icons/trash-2";
 
-	let { projects } = $props();
+	let { campaigns } = $props();
 
 	const sidebar = useSidebar();
 </script>
 
 <Sidebar.Group class="group-data-[collapsible=icon]:hidden">
-	<Sidebar.GroupLabel>Projects</Sidebar.GroupLabel>
+	<Sidebar.GroupLabel>Campaigns</Sidebar.GroupLabel>
 	<Sidebar.Menu>
-		{#each projects as item (item.name)}
+		{#each campaigns as item (item.name)}
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton>
 					{#snippet child({ props })}

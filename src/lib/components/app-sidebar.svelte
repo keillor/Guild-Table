@@ -8,14 +8,14 @@
 	import GalleryVerticalEnd from "lucide-svelte/icons/gallery-vertical-end";
 	import Map from "lucide-svelte/icons/map";
 	import Settings2 from "lucide-svelte/icons/settings-2";
-	import SquareTerminal from "lucide-svelte/icons/square-terminal";
+	import {Users} from "lucide-svelte";
 
 	// This is sample data.
 	const data = {
 		user: {
 			name: "shadcn",
 			email: "m@example.com",
-			avatar: "/avatars/shadcn.jpg",
+			avatar: "https://imgcdn.stablediffusionweb.com/2024/4/13/9b63df72-55ff-46fd-a5b4-7941b198db95.jpg",
 		},
 		teams: [
 			{
@@ -36,22 +36,18 @@
 		],
 		navMain: [
 			{
-				title: "Playground",
-				url: "#",
-				icon: SquareTerminal,
+				title: "Characters",
+				url: "/character",
+				icon: Users,
 				isActive: true,
 				items: [
 					{
-						title: "History",
-						url: "#",
+						title: "Character Manage",
+						url: "/character",
 					},
 					{
-						title: "Starred",
-						url: "#",
-					},
-					{
-						title: "Settings",
-						url: "#",
+						title: "Create New Character",
+						url: "/character/create",
 					},
 				],
 			},
@@ -121,7 +117,7 @@
 				],
 			},
 		],
-		projects: [
+		campaigns: [
 			{
 				name: "Design Engineering",
 				url: "#",
@@ -156,7 +152,7 @@
 	</Sidebar.Header>
 	<Sidebar.Content>
 		<NavMain items={data.navMain} />
-		<NavProjects projects={data.projects} />
+		<NavProjects campaigns={data.campaigns} />
 	</Sidebar.Content>
 	<Sidebar.Footer>
 		<NavUser user={data.user} />
