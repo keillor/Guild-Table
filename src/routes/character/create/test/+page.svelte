@@ -16,15 +16,15 @@
     );
 </script>
     
-   <Select.Root type="single" name="favoriteFruit" bind:value>
-    <Select.Trigger class="w-[180px]">
-     {triggerContent}
-    </Select.Trigger>
-    <Select.Content>
-     <Select.Group>
-      {#each fruits as fruit}
-            <Select.Item value={fruit.value} label={fruit.label}>{fruit.label}</Select.Item>
-      {/each}
-     </Select.Group>
-    </Select.Content>
-   </Select.Root>
+<Select.Root type="single" name="favoriteFruit" bind:value>
+<Select.Trigger class="w-[180px]">
+    {triggerContent}
+</Select.Trigger>
+<Select.Content>
+    <Select.Group>
+    {#each fruits as fruit}
+        <Select.Item value={fruit.value} label={fruit.label}>{fruit.label}</Select.Item>
+    {/each}
+    </Select.Group>
+</Select.Content>
+</Select.Root>
