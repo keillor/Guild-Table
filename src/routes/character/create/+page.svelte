@@ -4,10 +4,7 @@
     let {data} = $props();
     const results = data.results;
     let value = $state("");
-
-    const triggerContent = $derived(
-        fruits.find((f) => f.value === value)?.label ?? "Select a fruit"
-    );
+    
 
     const {form, errors, message} = superForm(data.form);
 </script>
