@@ -1,14 +1,9 @@
 {
 	"questions": [
 		{
-			"label": "Enter your Email:",
-			"type": "email",
-			"var": "email"
-		},
-		{
-			"label": "Enter your First Name",
+			"label": "Select a Class",
 			"type": "string",
-			"var": "first"
+			"var": "class"
 		}
 	]
 }

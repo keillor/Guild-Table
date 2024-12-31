@@ -105,7 +105,7 @@
 
 				<AlertDialog.Root>
 					<AlertDialog.Trigger>
-						<Button variant="outline">
+						<Button variant="outline"> <!-- THIS BUTTON MIGHT CAUSE HYDRATION ISSUES -->
 							<Trash class="mr-2 size-4" />
 							Delete
 						</Button>
