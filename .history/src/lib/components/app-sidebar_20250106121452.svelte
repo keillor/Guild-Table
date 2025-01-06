@@ -36,26 +36,10 @@
 		],
 		navMain: [
 			{
-				title: "Campaigns",
-				url: "/",
-				icon: Frame,
-				isActive: false,
-				items: [
-					{
-						title: "Dungeon Master",
-						url: "/play/dm",
-					},
-					{
-						title: "Campaign Player",
-						url: "/play/player",
-					},
-				],
-			},
-			{
 				title: "Characters",
 				url: "/character",
 				icon: Users,
-				isActive: false,
+				isActive: true,
 				items: [
 					{
 						title: "Character Manage",

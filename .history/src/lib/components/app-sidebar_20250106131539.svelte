@@ -36,7 +36,7 @@
 		],
 		navMain: [
 			{
-				title: "Campaigns",
+				title: "Play Game",
 				url: "/",
 				icon: Frame,
 				isActive: false,
@@ -46,7 +46,7 @@
 						url: "/play/dm",
 					},
 					{
-						title: "Campaign Player",
+						title: "Player",
 						url: "/play/player",
 					},
 				],
