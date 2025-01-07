@@ -1,9 +1,0 @@
-{
-	"questions": [
-		{
-			"label": "Select a Class",
-			"type": "string",
-			"var": "class"
-		}
-	]
-}
