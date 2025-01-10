@@ -54,8 +54,8 @@
             </Select.Content>
         </Select.Root>
         {#if $errors.race}<span class="text-red-500 font-bold underline">{$errors.race}</span>{/if}
-        <Button>Next</Button>
-        <button>submit</button>
+        <Button disabled>Back</Button>
+        <Button type='submit'>Next</Button>
     {:else}
         <input type='hidden' name='race' bind:value={$form.race}/>
         <Label for='class'>Class</Label>
@@ -72,8 +72,8 @@
             </Select.Content>
         </Select.Root>
         {#if $errors.class}<span class="text-red-500 font-bold underline">{$errors.class}</span>{/if}
-        <Button>Save</Button>
-        <button>Submit</button>
+        <Button on:click={() => history.back()}>Back</Button>
+        <Button type='submit'>Save</Button>
     {/if}
 
 </form>     
