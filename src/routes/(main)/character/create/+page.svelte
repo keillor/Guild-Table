@@ -46,6 +46,7 @@
         <Button type='submit'>Next</Button>
     {:else}
         <input type='hidden' name='race' bind:value={$form.race} />
+        <input type='hidden' name='subrace' bind:value={$form.subrace} />
         <SelectClass classes={classes} errors={errors} form={form} />
         <Button onclick={(event) => goBack(event)}>Back</Button>
         <Button type='submit'>Save</Button>
