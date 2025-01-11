@@ -28,7 +28,7 @@
 </script>
 <Label for='race'>Race</Label>
 <Select.Root type="single" name="race" bind:value={$form.race}>
-    <Select.Trigger class="w-[180px]">
+    <Select.Trigger class="w-[180px]" onclick={() => $form.subrace = null}>
         {racesContent}
     </Select.Trigger>
     <Select.Content>
@@ -45,7 +45,7 @@
 
 {:then data}
     {#if data == null }
-        <p>nothing</p>
+        <div></div>
     {:else}
         <Label for='subrace'>Subrace</Label>
         <Select.Root type="single" name="subrace" bind:value={$form.subrace}>
@@ -61,6 +61,5 @@
                 </Select.Group>
             </Select.Content>
         </Select.Root>
-        <button onclick={(event) => {event.preventDefault(); console.log(subraces);}}>print subrace</button>
     {/if}
 {/await}
