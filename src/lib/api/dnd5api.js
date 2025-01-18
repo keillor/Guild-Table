@@ -7,7 +7,7 @@ export async function dnd5ApiRequest(uri) {
 }
 
 export async function dnd5ApiRaw(uri) {
-	const fetchResult = await fetch(`https://www.dnd5eapi.co${uri}`);
+	const fetchResult = await fetch(`https://www.dnd5eapi.com${uri}`);
 	const results = await fetchResult.json();
 	return results;
 }
