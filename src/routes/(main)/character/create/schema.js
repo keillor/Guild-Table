@@ -6,5 +6,6 @@ export const newRaceSchema = z.object({
 });
 
 export const newClassSchema = newRaceSchema.extend({
-	class: z.string().min(2).max(50)
+	class: z.string().min(2).max(50),
+	subclass: z.string().min(2).max(50).optional()
 });
