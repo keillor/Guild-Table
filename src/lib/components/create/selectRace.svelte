@@ -8,7 +8,7 @@
     const racesContent = $derived(
         races?.results?.find((f) => f.index === $form.race)?.name ?? "Select a Race..."
     );
-    const selectedRaceURL = $derived(
+/*     const selectedRaceURL = $derived(
         races?.results?.find((f) => f.index === $form.race)?.url ?? null);
 
     const subraces = $derived.by(async () => {
@@ -24,7 +24,7 @@
             return null;
         }
     })
-
+ */
 </script>
 <Label for='race'>Race</Label>
 <Select.Root type="single" name="race" bind:value={$form.race}>
@@ -41,7 +41,7 @@
 </Select.Root>
 {#if $errors.race}<span class="text-red-500 font-bold underline">{$errors.race}</span>{/if}
 
-{#await subraces}
+<!-- {#await subraces}
 
 {:then data}
     {#if data == null }
@@ -62,4 +62,4 @@
             </Select.Content>
         </Select.Root>
     {/if}
-{/await}
+{/await} -->
