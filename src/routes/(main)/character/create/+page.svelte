@@ -1,17 +1,13 @@
 <script>
-// @ts-nocheck
-
-    import SuperDebug, { superForm, superValidate } from "sveltekit-superforms";
+    import { superForm, superValidate } from "sveltekit-superforms";
     import * as Select from "$lib/components/ui/select/index.js";
 	import Button from "@/components/ui/button/button.svelte";
 	import Label from "@/components/ui/label/label.svelte";
-	import { zod } from "sveltekit-superforms/adapters";
-	import { newClassSchema, newRaceSchema } from "./schema.js";
 	import SelectRace from "@/components/create/selectRace.svelte";
 	import SelectClass from "@/components/create/selectClass.svelte";
     let {data} = $props();
-    const races = data.races;
-    const classes = data.classes;
+    const races = data.results.races;
+    const classes = data.results.classes;
     
     
     const {form, formId, errors, message, capture, restore} = superForm(data.form, {
@@ -41,13 +37,17 @@
 	<input type="hidden" name="step" bind:value={step} />
 	<input type="hidden" name="__superform_id" bind:value={$formId} />
      {#if step == 1}
-        <SelectRace errors={errors} races={races} form={form} />
-        <Button onclick={(event) => goBack(event)}>Back</Button>
+        <SelectRace races={races} errors={errors}  form={form} />
+        <SelectClass classes={classes} errors={errors} form={form} />
+
+        <Button onclick={(event) => goBack(event)}>Cancel</Button>
         <Button type='submit'>Next</Button>
     {:else}
         <input type='hidden' name='race' bind:value={$form.race} />
-        <input type='hidden' name='subrace' bind:value={$form.subrace} />
-        <SelectClass classes={classes} errors={errors} form={form} />
+        <input type='hidden' name='class' bind:value={$form.class} />
+
+        <h1>Please review the provided information.</h1>
+
         <Button onclick={(event) => goBack(event)}>Back</Button>
         <Button type='submit'>Save</Button>
     {/if}

@@ -1,45 +1,66 @@
 import { superValidate, message, defaultValues, type Infer } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { fail, redirect } from '@sveltejs/kit';
-import { dnd5ApiRequest } from '@/api/dnd5api.js';
-import { newRaceSchema, newClassSchema } from './schema';
+import { error, fail, redirect } from '@sveltejs/kit';
+import { dnd5ApiRaw, dnd5ApiRequest } from '@/api/dnd5api.js';
+import { newClassSchema, raceDataSchema } from './schema';
 import type { Actions } from './$types.js';
 import { goto } from '$app/navigation';
 
-const steps = [zod(newRaceSchema), zod(newClassSchema)];
-const lastStep = steps[1];
+
+//steps length is used to detemine if the form has been completed.
+const steps = [zod(newClassSchema), zod(raceDataSchema)];
+const lastStep = steps[steps.length - 1];
 export const load = async ({ request }) => {
 	let step = 1
-	let races = {}
-	let classes = {}
+	const results = {}
+	console.log(request.locals)
+
+	//determine if we already know the step number
 	try {
 		step = request.locals['step'];
-		if (request.locals['step'] == 1) {
-			races = await dnd5ApiRequest('races');
-		}
-		else if (request.locals['step'] == 2) {
-			classes = await dnd5ApiRequest('classes');
-		}
+		console.log(step);
 	} catch {
-		step = 1
-		races = await dnd5ApiRequest('races');
+		step = 1;
 	}
+	
+	//only fetch the data that we need for that new page.
+	if (step == 1) {
+		results['races'] = await dnd5ApiRequest('races');
+		results['classes'] = await dnd5ApiRequest('classes');
+	}
+	else if (step == 2) {
+		//results['raceData'] = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
+		console.log(request.locals.race)
+		const thing = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
+		console.log(await thing)
+		// left empty intentionally
+	}
+
+	//create a superForm with the final schema to init all the potential vars
 	// @ts-ignore
 	const form = await superValidate<Infer<typeof  newClassSchema>>(lastStep);
-	return { form, races, classes };
+	return { form, results };
 };
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
-	next: async ({ request }) => {
+	next: async ({ request }) => { 
+
+		//retrieve formData and step number
 		const formData = await request.formData();
 		const step = +(formData.get('step') ?? '1');
 		request.locals = {step: step};
 
+		//validate our data with the corresponding step number zod schema.
 		const form = await superValidate(formData, steps[step - 1]);
 
-		console.log(form);
+		//console.log(form);
 
+		request.locals = {race: form.data['race']};
+
+
+
+		//check if form is valid
 		if (!form.valid) {
 			//return the form on the same step with the errors
 			return message(form, { step });
