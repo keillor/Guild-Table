@@ -5,6 +5,7 @@
 	import Label from "@/components/ui/label/label.svelte";
 	import SelectRace from "@/components/create/selectRace.svelte";
 	import SelectClass from "@/components/create/selectClass.svelte";
+	import ModifyRace from "@/components/create/modifyRace.svelte";
     let {data} = $props();
     const races = data.results.races;
     const classes = data.results.classes;
@@ -19,7 +20,6 @@
 
     // Set the initial form step to `1` if not supplied in the request.
     let step = $state($message?.step ?? 1);
-    console.log(`INITIAL STEP: ${$message?.step}`);
 
     function goBack(event) {
         event.preventDefault();
@@ -46,7 +46,7 @@
         <input type='hidden' name='race' bind:value={$form.race} />
         <input type='hidden' name='class' bind:value={$form.class} />
 
-        <h1>Please review the provided information.</h1>
+        <ModifyRace form={form} errors={errors}/>
 
         <Button onclick={(event) => goBack(event)}>Back</Button>
         <Button type='submit'>Save</Button>

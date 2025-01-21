@@ -13,12 +13,10 @@ const lastStep = steps[steps.length - 1];
 export const load = async ({ request }) => {
 	let step = 1
 	const results = {}
-	console.log(request.locals)
 
 	//determine if we already know the step number
 	try {
 		step = request.locals['step'];
-		console.log(step);
 	} catch {
 		step = 1;
 	}
@@ -30,7 +28,6 @@ export const load = async ({ request }) => {
 	}
 	else if (step == 2) {
 		//results['raceData'] = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
-		console.log(request.locals.race)
 		const thing = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
 		console.log(await thing)
 		// left empty intentionally
@@ -49,30 +46,27 @@ export const actions = {
 		//retrieve formData and step number
 		const formData = await request.formData();
 		const step = +(formData.get('step') ?? '1');
-		request.locals = {step: step};
 
 		//validate our data with the corresponding step number zod schema.
 		const form = await superValidate(formData, steps[step - 1]);
 
-		//console.log(form);
-
-		request.locals = {race: form.data['race']};
-
-
-
 		//check if form is valid
 		if (!form.valid) {
 			//return the form on the same step with the errors
+			if (step > 1) {
+				return message(form, {step: step, race: form.data['race'], class: form.data['class']})
+			}
 			return message(form, { step });
 		}
 
 		if (step < steps.length) {
-			request.locals = {step: step + 1}
+			request.locals = {step: step + 1, race: form.data['race'], class: form.data['class']};
 			//return next step
 			return message(form, { step: step + 1 });
 		}
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
+		console.log(form);
 		redirect(303, '/character');
 		//the following resets the form to the default state.
 		form.data = defaultValues(lastStep);

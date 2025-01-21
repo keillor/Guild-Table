@@ -23,4 +23,4 @@ export const raceDataSchema = newClassSchema.extend({
 	//occational occuring properties
 	language_options: z.any().optional(),
 	ability_bonus_options: z.any().optional()
-})
+});
