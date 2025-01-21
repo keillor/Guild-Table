@@ -28,9 +28,7 @@ export const load = async ({ request }) => {
 	}
 	else if (step == 2) {
 		//results['raceData'] = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
-		const thing = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
-		console.log(await thing)
-		// left empty intentionally
+		results['raceData'] = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
 	}
 
 	//create a superForm with the final schema to init all the potential vars
@@ -68,10 +66,10 @@ export const actions = {
 		//You can now save the data, return another message, or redirect to another page.
 		console.log(form);
 		redirect(303, '/character');
-		//the following resets the form to the default state.
-		form.data = defaultValues(lastStep);
 
-		
+		//the following resets the form to the default state.
+		///form.data = defaultValues(lastStep);
+
 		return message(form, { text: 'Form posted successfully!', step: 1 });
 	}
 } satisfies Actions;
