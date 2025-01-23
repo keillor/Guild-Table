@@ -5,11 +5,6 @@
     import { CircleX } from 'lucide-svelte/icons';
 	import ComboSelect from "./ComboSelect.svelte";
     const { form, errors, raceData, languages }= $props();
-    console.log(raceData);
-    $form.languages = raceData.languages.map((lang) => {
-        return lang.index;
-    })
-    console.log($form.languages)
 </script>
 
 <Label for='name'>Race Name</Label>
@@ -39,7 +34,7 @@
 <!-- <Label for='starting_proficencies_options'>Starting Proficencies Options</Label>
 <Input name='starting_proficencies_options' bind:value={$form.starting_proficencies_options} type='text'/>
  -->
-<ComboSelect formInputName="languages" formDisplayName="Language" form={form} things={languages} />
+<ComboSelect formInputName="languages" formDisplayName="Language" form={form} things={languages} raceData={raceData}/>
 
 
 <Label for='language_description'>Description</Label>

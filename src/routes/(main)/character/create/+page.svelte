@@ -1,8 +1,6 @@
 <script>
     import { superForm, superValidate } from "sveltekit-superforms";
-    import * as Select from "$lib/components/ui/select/index.js";
 	import Button from "@/components/ui/button/button.svelte";
-	import Label from "@/components/ui/label/label.svelte";
 	import SelectRace from "@/components/create/selectRace.svelte";
 	import SelectClass from "@/components/create/selectClass.svelte";
 	import ModifyRace from "@/components/create/modifyRace.svelte";

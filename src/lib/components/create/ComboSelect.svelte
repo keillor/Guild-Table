@@ -14,16 +14,15 @@
     //combobox end
 
     //shadcn components
-    import { Input } from "$lib/components/ui/input/index.js";
     import Label from "@/components/ui/label/label.svelte";
     import { useId } from "bits-ui";
 
     //data
     const {formInputName, formDisplayName, form, things, raceData} = $props();
-    console.log(things);
-    const allThings = things.results.map((t) => {
-      return t.name;
+    $form[formInputName] = raceData.languages.map((t) => {
+      return t.index;
     });
+    const allThings = things;
     let open = $state(false);
     const triggerId = useId();
 
@@ -57,23 +56,23 @@
         <Command.List>
           <Command.Empty>{`No ${formDisplayName} found.`}</Command.Empty>
           <Command.Group>
-            {#each allThings as item (item)}
+            {#each allThings.results as item (item.index)}
               <Command.Item
-                value={item}
+                value={item.index}
                 onSelect={() => {
-                  const exists = $form.languages.some((i) => i === item);
+                  const exists = $form[formInputName].some((i) => i === item.index);
                     if (!exists) {
-                      $form.languages = [...$form.languages, item];
+                      $form[formInputName] = [...$form[formInputName], item.index];
                     } else {
-                      $form.languages = $form.languages.filter((l) => l !== item);
+                      $form[formInputName] = $form[formInputName].filter((l) => l !== item.index);
                     }
                   closeAndFocusTrigger();
                 }}
               >
               <Check
-                class={cn($form.languages.some((l) => l === item) || "text-transparent")}
+                class={cn($form[formInputName].some((l) => l === item) || "text-transparent")}
               />
-                {item}
+                {item.name}
               </Command.Item>
             {/each}
           </Command.Group>
@@ -82,12 +81,12 @@
     </Popover.Content>
   </Popover.Root>
   <div class='flex flex-row gap-2'>
-    {#each $form[`${formInputName}`] as item (item)}
+    {#each $form[formInputName] as item (item)}
         <Badge class='flex flex-row content-between gap-1 text-white w-min' onclick={(event) => {
             event.preventDefault();
-            $form.languages = $form.languages.filter((l) => l !== item);
+            $form[formInputName] = $form[formInputName].filter((l) => l !== item);
         }}>
-            {item}
+            {allThings.results.find((i) => item === i.index).name}
         </Badge>
     {/each}
 </div>
