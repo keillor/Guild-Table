@@ -29,6 +29,7 @@ export const load = async ({ request }) => {
 	else if (step == 2) {
 		//results['raceData'] = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
 		results['raceData'] = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
+		results['languages'] = await dnd5ApiRaw(`/api/languages`);
 	}
 
 	//create a superForm with the final schema to init all the potential vars
