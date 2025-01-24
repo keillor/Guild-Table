@@ -5,13 +5,14 @@
     import { CircleX } from 'lucide-svelte/icons';
 	import ComboSelect from "./ComboSelect.svelte";
     import * as Select from "$lib/components/ui/select/index.js";
+	import AbilityScoreBonus from "./abilityScoreBonus.svelte";
     const { form, errors, raceData, languages, proficiencies, traits }= $props();
 
     const subracesContent = $derived(
         raceData?.subraces?.find((f) => f.index === $form.subrace)?.name ?? "Select a Subrace..."
     );
 
-    console.log(raceData);
+    console.log(raceData.ability_bonuses);
 
     $form.speed = raceData.speed;
     $form.alignment = raceData.alignment;
@@ -44,6 +45,8 @@
 <!-- <Label for='starting_proficencies_options'>Starting Proficencies Options</Label>
 <Input name='starting_proficencies_options' bind:value={$form.starting_proficencies_options} type='text'/>
  -->
+
+ <AbilityScoreBonus ability_scores={raceData.ability_bonuses} form={form}/>
 
 <ComboSelect formInputName="starting_proficiencies" formDisplayName="Proficiencies" form={form} things={proficiencies} raceData={raceData}/>
 
