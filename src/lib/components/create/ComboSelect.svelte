@@ -70,7 +70,7 @@
                 }}
               >
               <Check
-                class={cn($form[formInputName].some((l) => l === item) || "text-transparent")}
+                class={cn($form[formInputName].some((l) => l === item.index) || "text-transparent")}
               />
                 {item.name}
               </Command.Item>
