@@ -16,7 +16,7 @@ export const raceDataSchema = newClassSchema.extend({
 	starting_proficiencies: z.any(),
 	starting_proficiency_options: z.any(),
 	languages: z.any(),
-	language_description: z.string(),
+	language_desc: z.string(),
 	traits: z.any(),
 	subrace: z.string().optional(),
 
