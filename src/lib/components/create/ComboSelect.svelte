@@ -82,7 +82,7 @@
   </Popover.Root>
   <div class='flex flex-row gap-2'>
     {#each $form[formInputName] as item (item)}
-        <Badge class='flex flex-row content-between gap-1 text-white w-min' onclick={(event) => {
+        <Badge class='flex flex-row content-between gap-1 text-white  h-min' onclick={(event) => {
             event.preventDefault();
             $form[formInputName] = $form[formInputName].filter((l) => l !== item);
         }}>
@@ -90,4 +90,4 @@
         </Badge>
     {/each}
 </div>
-<input hidden bind:value={$form.languages} name='languages'>
+<input hidden bind:value={$form[formInputName]} name={formInputName}>
