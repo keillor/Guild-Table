@@ -19,7 +19,7 @@
 
     //data
     const {formInputName, formDisplayName, form, things, raceData} = $props();
-    $form[formInputName] = raceData.languages.map((t) => {
+    $form[formInputName] = raceData[formInputName].map((t) => {
       return t.index;
     });
     const allThings = things;
