@@ -5,17 +5,19 @@
     import { CircleX } from 'lucide-svelte/icons';
 	import ComboSelect from "./ComboSelect.svelte";
     import * as Select from "$lib/components/ui/select/index.js";
-    const { form, errors, raceData, languages, proficiencies }= $props();
+    const { form, errors, raceData, languages, proficiencies, traits }= $props();
 
     const subracesContent = $derived(
         raceData?.subraces?.find((f) => f.index === $form.subrace)?.name ?? "Select a Subrace..."
     );
 
+    console.log(raceData);
+
     $form.speed = raceData.speed;
     $form.alignment = raceData.alignment;
     $form.size = raceData.size;
     $form.size_description = raceData.size_description;
-    $form.language_description = raceData.language_description;
+    $form.language_desc = raceData.language_desc;
 </script>
 
 <Label for='name'>Race</Label>
@@ -39,23 +41,18 @@
 <Label for='size_description'>Size Description</Label>
 <Input name='size_description' bind:value={$form.size_description} type='text'/>
 
-<Label for='starting_proficiencies'>Starting Proficiencies</Label>
-<Input name='starting_proficiencies' bind:value={$form.starting_proficiencies} type='text'/>
-
 <!-- <Label for='starting_proficencies_options'>Starting Proficencies Options</Label>
 <Input name='starting_proficencies_options' bind:value={$form.starting_proficencies_options} type='text'/>
  -->
 
 <ComboSelect formInputName="starting_proficiencies" formDisplayName="Proficiencies" form={form} things={proficiencies} raceData={raceData}/>
 
+<ComboSelect formInputName="traits" formDisplayName="Trait" form={form} things={traits} raceData={raceData}/>
+
 <ComboSelect formInputName="languages" formDisplayName="Language" form={form} things={languages} raceData={raceData}/>
 
-
-<Label for='language_description'>Description</Label>
-<Input name='language_description' bind:value={$form.language_description} type='text'/>
-
-<Label for='traits'>Traits</Label>
-<Input name='traits' bind:value={$form.traits} type='text'/>
+<Label for='language_desc'>Language  Description</Label>
+<Input name='language_desc' bind:value={$form.language_desc} type='text'/>
 
 
 {#if raceData.subraces}

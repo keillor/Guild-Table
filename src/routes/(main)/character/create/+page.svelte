@@ -9,6 +9,8 @@
     const classes = data.results.classes;
     const raceData = data.results.raceData;
     const allLanguages = data.results.languages;
+    const proficiencies = data.results.proficiencies;
+    const traits = data.results.traits;
     
     
     const {form, formId, errors, message, capture, restore} = superForm(data.form, {
@@ -46,7 +48,7 @@
         <input type='hidden' name='race' bind:value={$form.race} />
         <input type='hidden' name='class' bind:value={$form.class} />
 
-        <ModifyRace raceData={raceData} form={form} errors={errors} languages={allLanguages}/>
+        <ModifyRace raceData={raceData} form={form} errors={errors} languages={allLanguages} proficiencies={proficiencies} traits={traits}/>
 
         <Button onclick={(event) => goBack(event)}>Back</Button>
         <Button type='submit'>Save</Button>
