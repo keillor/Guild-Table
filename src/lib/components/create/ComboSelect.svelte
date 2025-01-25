@@ -1,6 +1,5 @@
 <script>
     //big symbols
-	import { CircleX } from "lucide-svelte";
 	import { Badge } from "../ui/badge";
     
     //Combobox imports
@@ -45,14 +44,14 @@
           role="combobox"
           aria-expanded={open}
         >
-          {`Select ${formDisplayName}`}
+          {`Additional ${formDisplayName}`}
           <ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" />
         </Button>
       {/snippet}
     </Popover.Trigger>
     <Popover.Content class="w-[200px] p-0">
       <Command.Root>
-        <Command.Input placeholder={`search ${formDisplayName}`} />
+        <Command.Input placeholder={`Search ${formDisplayName}`} />
         <Command.List>
           <Command.Empty>{`No ${formDisplayName} found.`}</Command.Empty>
           <Command.Group>
