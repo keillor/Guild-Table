@@ -14,6 +14,7 @@
 
     console.log(raceData);
 
+    //input initilization.
     $form.speed = raceData.speed;
     $form.alignment = raceData.alignment;
     $form.size = raceData.size;
@@ -22,7 +23,7 @@
 </script>
 
 <Label for='name'>Race</Label>
-<Input name='name' bind:value={raceData.name} type='text' disabled />
+<Input name='name' value={raceData.name} type='text' disabled />
 
 <Label for='speed'>Speed</Label>
 <Input name='speed' bind:value={$form.speed} type='number'/>

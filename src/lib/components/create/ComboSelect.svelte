@@ -45,14 +45,14 @@
           role="combobox"
           aria-expanded={open}
         >
-          {`Select a ${formDisplayName}`}
+          {`Select ${formDisplayName}`}
           <ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" />
         </Button>
       {/snippet}
     </Popover.Trigger>
     <Popover.Content class="w-[200px] p-0">
       <Command.Root>
-        <Command.Input placeholder="Search framework..." />
+        <Command.Input placeholder={`search ${formDisplayName}`} />
         <Command.List>
           <Command.Empty>{`No ${formDisplayName} found.`}</Command.Empty>
           <Command.Group>
