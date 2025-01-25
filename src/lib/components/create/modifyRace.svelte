@@ -12,7 +12,7 @@
         raceData?.subraces?.find((f) => f.index === $form.subrace)?.name ?? "Select a Subrace..."
     );
 
-    console.log(raceData.ability_bonuses);
+    console.log(raceData);
 
     $form.speed = raceData.speed;
     $form.alignment = raceData.alignment;
@@ -46,7 +46,7 @@
 <Input name='starting_proficencies_options' bind:value={$form.starting_proficencies_options} type='text'/>
  -->
 
- <AbilityScoreBonus ability_scores={raceData.ability_bonuses} form={form}/>
+<AbilityScoreBonus ability_scores={raceData.ability_bonuses} form={form} />
 
 <ComboSelect formInputName="starting_proficiencies" formDisplayName="Proficiencies" form={form} things={proficiencies} raceData={raceData}/>
 

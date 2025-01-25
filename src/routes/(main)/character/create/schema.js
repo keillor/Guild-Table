@@ -8,7 +8,12 @@ export const newClassSchema = z.object({
 export const raceDataSchema = newClassSchema.extend({
 	name: z.string(),
 	speed: z.number(),
-	ability_bonus: z.any(),
+	int_bonus: z.number(),
+	cha_bonus: z.number(),
+	con_bonus: z.number(),
+	dex_bonus: z.number(),
+	wis_bonus: z.number(),
+	str_bonus: z.number(),
 	alignment: z.string(),
 	age: z.number(),
 	size: z.string(),
