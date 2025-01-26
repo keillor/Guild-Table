@@ -23,15 +23,29 @@ export const load = async ({ request }) => {
 	
 	//only fetch the data that we need for that new page.
 	if (step == 1) {
-		results['races'] = await dnd5ApiRequest('races');
-		results['classes'] = await dnd5ApiRequest('classes');
+		const [races, classes] = await Promise.all([
+			dnd5ApiRequest('races'),
+			dnd5ApiRequest('classes')
+		])
+		results['races'] = races;
+		results['classes'] = classes;
 	}
 	else if (step == 2) {
-		//results['raceData'] = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
-		results['raceData'] = await dnd5ApiRaw(`/api/races/${request.locals['race']}`);
-		results['languages'] = await dnd5ApiRaw(`/api/languages`);
-		results['proficiencies'] = await dnd5ApiRaw(`/api/proficiencies`);
-		results['traits'] = await dnd5ApiRaw(`/api/traits`);
+		//const levelPromise = await dnd5ApiRaw(`/api/classes/${request.locals['class']}/level/1`)
+		const [raceData, languages, proficiencies, traits, classData, levelData] = await Promise.all([
+			dnd5ApiRaw(`/api/races/${request.locals['race']}`),
+			dnd5ApiRaw(`/api/languages`),
+			dnd5ApiRaw(`/api/proficiencies`),
+			dnd5ApiRaw(`/api/traits`),
+			dnd5ApiRaw(`/api/classes/${request.locals['class']}`),
+			dnd5ApiRaw(`/api/classes/${request.locals['class']}/levels/1`)
+		]);
+		results['raceData'] = raceData;
+		results['languages'] = languages;
+		results['proficiencies'] = proficiencies;
+		results['traits'] = traits;
+		results['classData'] = classData;
+		results['levelData'] = levelData;
 	}
 
 	//create a superForm with the final schema to init all the potential vars
