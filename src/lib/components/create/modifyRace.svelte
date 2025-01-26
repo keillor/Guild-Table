@@ -13,7 +13,6 @@
     );
 
     let options = []
-    console.log(raceData);
     for (let key in raceData) {
         if(key.endsWith('options')) {
             options.push({data: raceData[key], displayValue: key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase()), key: key});
@@ -27,17 +26,18 @@
     $form.language_desc = raceData.language_desc;
 </script>
 
-
-<Card.Root>
-    <Card.Header>
-        <h2 class='text-xl font-bold'>Race Options</h2>
-    </Card.Header>
-    <Card.Content>
-        {#each options as option (option.key)}
-            <OptionSelect formInputName={option.key} formDisplayName={option.displayValue} form={form} choices={option.data}/> 
-        {/each}
-    </Card.Content>
-</Card.Root>
+{#if options.length > 0}
+    <Card.Root>
+        <Card.Header>
+            <h2 class='text-xl font-bold'>Race Options</h2>
+        </Card.Header>
+        <Card.Content>
+            {#each options as option (option.key)}
+                <OptionSelect formInputName={option.key} formDisplayName={option.displayValue} form={form} choices={option.data}/> 
+            {/each}
+        </Card.Content>
+    </Card.Root>
+{/if}
 
 
 <Card.Root>
