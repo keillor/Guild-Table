@@ -20,7 +20,6 @@
     const {formInputName, formDisplayName, form, choices} = $props();
     $form[formInputName] = [];
     const allThings = choices;
-    console.log(choices);
     const choiceLimit = Number(choices.choose);
     let limitReached = $derived($form[formInputName].length == choiceLimit);
     let open = $state(false);
