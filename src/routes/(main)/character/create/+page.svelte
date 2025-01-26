@@ -4,6 +4,7 @@
 	import SelectRace from "@/components/create/selectRace.svelte";
 	import SelectClass from "@/components/create/selectClass.svelte";
 	import ModifyRace from "@/components/create/modifyRace.svelte";
+	import ModifyClass from "@/components/create/modifyClass.svelte";
     let {data} = $props();
     const races = data.results.races;
     const classes = data.results.classes;
@@ -11,6 +12,8 @@
     const allLanguages = data.results.languages;
     const proficiencies = data.results.proficiencies;
     const traits = data.results.traits;
+    const classData = data.results.classData;
+    const levelData = data.results.levelData;
     
     
     const {form, formId, errors, message, capture, restore} = superForm(data.form, {
@@ -49,6 +52,7 @@
         <input type='hidden' name='class' bind:value={$form.class} />
 
         <ModifyRace raceData={raceData} form={form} errors={errors} languages={allLanguages} proficiencies={proficiencies} traits={traits}/>
+        <ModifyClass classData={classData} levelData={levelData} form={form}/>
 
         <Button onclick={(event) => goBack(event)}>Back</Button>
         <Button type='submit'>Save</Button>
