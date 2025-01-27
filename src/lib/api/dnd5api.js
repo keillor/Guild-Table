@@ -1,6 +1,6 @@
 //import { DND5APIURL } from "$env/static/private";
 
-const APIURL = 'https://www.dnd5eapi.co'
+const APIURL = 'https://www.dnd5eapi.co';
 
 export async function dnd5ApiRequest(uri) {
 	const fetchResult = await fetch(`${APIURL}/api/${uri}`);

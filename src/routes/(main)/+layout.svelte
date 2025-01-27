@@ -4,8 +4,9 @@
 	import AppSidebar from '@/components/app-sidebar.svelte';
 	let { children } = $props();
 </script>
+
 <Sidebar.Provider>
-	<AppSidebar/>
+	<AppSidebar />
 	<Sidebar.Inset>
 		{@render children()}
 	</Sidebar.Inset>

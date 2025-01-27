@@ -6,13 +6,12 @@ import { newClassSchema, raceDataSchema } from './schema';
 import type { Actions } from './$types.js';
 import { goto } from '$app/navigation';
 
-
 //steps length is used to detemine if the form has been completed.
 const steps = [zod(newClassSchema), zod(raceDataSchema)];
 const lastStep = steps[steps.length - 1];
 export const load = async ({ request }) => {
-	let step = 1
-	const results = {}
+	let step = 1;
+	const results = {};
 
 	//determine if we already know the step number
 	try {
@@ -20,17 +19,16 @@ export const load = async ({ request }) => {
 	} catch {
 		step = 1;
 	}
-	
+
 	//only fetch the data that we need for that new page.
 	if (step == 1) {
 		const [races, classes] = await Promise.all([
 			dnd5ApiRequest('races'),
 			dnd5ApiRequest('classes')
-		])
+		]);
 		results['races'] = races;
 		results['classes'] = classes;
-	}
-	else if (step == 2) {
+	} else if (step == 2) {
 		//const levelPromise = await dnd5ApiRaw(`/api/classes/${request.locals['class']}/level/1`)
 		const [raceData, languages, proficiencies, traits, classData, levelData] = await Promise.all([
 			dnd5ApiRaw(`/api/races/${request.locals['race']}`),
@@ -50,14 +48,13 @@ export const load = async ({ request }) => {
 
 	//create a superForm with the final schema to init all the potential vars
 	// @ts-ignore
-	const form = await superValidate<Infer<typeof  newClassSchema>>(lastStep);
+	const form = await superValidate<Infer<typeof newClassSchema>>(lastStep);
 	return { form, results };
 };
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
-	next: async ({ request }) => { 
-
+	next: async ({ request }) => {
 		//retrieve formData and step number
 		const formData = await request.formData();
 		const step = +(formData.get('step') ?? '1');
@@ -69,13 +66,13 @@ export const actions = {
 		if (!form.valid) {
 			//return the form on the same step with the errors
 			if (step > 1) {
-				return message(form, {step: step, race: form.data['race'], class: form.data['class']})
+				return message(form, { step: step, race: form.data['race'], class: form.data['class'] });
 			}
 			return message(form, { step });
 		}
 
 		if (step < steps.length) {
-			request.locals = {step: step + 1, race: form.data['race'], class: form.data['class']};
+			request.locals = { step: step + 1, race: form.data['race'], class: form.data['class'] };
 			//return next step
 			return message(form, { step: step + 1 });
 		}

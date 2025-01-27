@@ -1,17 +1,17 @@
-version: "3.8"
+version: '3.8'
 
 services:
   mongodb:
     image: mongo:6.0
     container_name: my-mongo-instance
     ports:
-      - "27017:27017" # Expose MongoDB on localhost:27017
+      - '27017:27017' # Expose MongoDB on localhost:27017
     volumes:
       - mongo-data:/data/db # Persist MongoDB data
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin # Optional: MongoDB root user
       MONGO_INITDB_ROOT_PASSWORD: secret # Optional: MongoDB root password
-    command: ["mongod", "--auth"] # enable authentication
+    command: ['mongod', '--auth'] # enable authentication
   mongo-express:
     image: mongo-express
     restart: always

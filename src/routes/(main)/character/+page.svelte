@@ -84,10 +84,12 @@
 					<div class="grid grid-cols-3 gap-5">
 						<!-- <Shield class='size-12 border-2 rounded-md'/> -->
 						{#each list as attribute, i}
-							<div class="h-24 w-24 p-1 border-2 flex flex-col justify-between content-center text-center rounded-lg">
-                                <p class='italic'>{attribute.attribute}</p>
-                                <p class='text-xl font-bold'>{attribute.score}</p>
-                                <p class="border-2 h-min rounded-full px-2">{attribute.modifier}</p>
+							<div
+								class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center"
+							>
+								<p class="italic">{attribute.attribute}</p>
+								<p class="text-xl font-bold">{attribute.score}</p>
+								<p class="h-min rounded-full border-2 px-2">{attribute.modifier}</p>
 							</div>
 						{/each}
 					</div>
@@ -105,7 +107,8 @@
 
 				<AlertDialog.Root>
 					<AlertDialog.Trigger>
-						<Button variant="outline"> <!-- THIS BUTTON MIGHT CAUSE HYDRATION ISSUES -->
+						<Button variant="outline">
+							<!-- THIS BUTTON MIGHT CAUSE HYDRATION ISSUES -->
 							<Trash class="mr-2 size-4" />
 							Delete
 						</Button>
