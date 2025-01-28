@@ -10,7 +10,8 @@
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
-	import * as Select from '$lib/components/ui/select/index.js';
+	import * as RadioGroup from "$lib/components/ui/radio-group/index.js";
+	
 	//combobox end
 
 	//shadcn components
@@ -23,10 +24,17 @@
 	const allThings = choices;
 	console.log(allThings.from.options);
 	const choiceLimit = Number(choices.choose);
+	//const choiceLimit = $derived(subSelect);
 	let limitReached = $derived($form[formInputName].length == choiceLimit);
 	let open = $state(false);
 	const triggerId = useId();
-	let selectValue = $state([]);
+	let subSelect = $state(null);
+	let multiChoiceLimit = $derived.by(() => {
+		if(subSelect != null) {
+			return Number(allThings.from.options[subSelect].choice.choose);
+		}
+		return null;
+	});
 
 	function closeAndFocusTrigger() {
 		open = false;
@@ -37,19 +45,15 @@
 </script>
 
 {#if allThings.from.options[0].option_type == 'choice'}
-	<Label>{allThings.desc}</Label>
-	<Select.Root bind:value={selectValue}>
-		<Select.Trigger class="w-[180px]">
-			{selectValue}
-		</Select.Trigger>
-		<Select.Content>
-			<Select.Group>
-				{#each choices.from.options as option}
-					<Select.Item value={option.choice.desc}>{option.choice.desc}</Select.Item>
-				{/each}
-			</Select.Group>
-		</Select.Content>
-	</Select.Root>
+	<Label for={allThings.desc}>{allThings.desc}</Label>
+	<RadioGroup.Root bind:value={subSelect} name={allThings.desc} onch>
+		{#each allThings.from.options as category, index}
+			<div class='flex flex-row gap-1'>
+				<RadioGroup.Item value={index}>{category.choice.desc}</RadioGroup.Item>
+				<Label for={category.choice.desc} >{category.choice.desc}</Label>
+			</div>
+		{/each}
+	</RadioGroup.Root>
 {:else}
 	<Label>{formDisplayName}</Label>
 	<Popover.Root bind:open>
@@ -112,6 +116,75 @@
 				}}
 			>
 				{allThings.from.options.find((i) => item === i.item.index).item.name}
+			</Badge>
+		{/each}
+	</div>
+	<input hidden bind:value={$form[formInputName]} name={formInputName} />
+{/if}
+
+
+{#if subSelect != null}
+	<Label>{allThings.from.options[subSelect].choice.desc}</Label>
+	<Popover.Root bind:open>
+		<Popover.Trigger disabled={limitReached}>
+			{#snippet child({ props })}
+				<Button
+					variant="outline"
+					class="w-[200px] justify-between"
+					{...props}
+					role="combobox"
+					aria-expanded={open}
+				>
+					{`select ${multiChoiceLimit - $form[formInputName].length} option${multiChoiceLimit - $form[formInputName].length == 1 ? '' : 's'}`}
+					<ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" />
+				</Button>
+			{/snippet}
+		</Popover.Trigger>
+		<Popover.Content class="w-[200px] p-0">
+			<Command.Root>
+				<Command.Input placeholder={'search...'} />
+				<Command.List>
+					<Command.Empty>{`No ${formDisplayName} found.`}</Command.Empty>
+					<Command.Group>
+						{#each allThings.from.options[subSelect].choice.from.options as option}
+							<Command.Item
+								value={option.item.index}
+								onSelect={() => {
+									const exists = $form[formInputName].some((i) => i === option.item.index);
+									if (!exists) {
+										$form[formInputName] = [...$form[formInputName], option.item.index];
+									} else {
+										$form[formInputName] = $form[formInputName].filter(
+											(l) => l !== option.item.index
+										);
+									}
+									closeAndFocusTrigger();
+								}}
+							>
+								<Check
+									class={cn(
+										$form[formInputName].some((l) => l === option.item.index) || 'text-transparent'
+									)}
+								/>
+								{option.item.name}
+							</Command.Item>
+						{/each}
+					</Command.Group>
+				</Command.List>
+			</Command.Root>
+		</Popover.Content>
+	</Popover.Root>
+	<div class="flex flex-row gap-2">
+		{#each $form[formInputName] as item (item)}
+			<Badge
+				class="flex h-min flex-row content-between gap-1  text-white"
+				onclick={(event) => {
+					console.log(allThings.from.options[subSelect].choice.from.options.find((i) => item === i.item.index));
+					event.preventDefault();
+					$form[formInputName] = $form[formInputName].filter((l) => l !== item);
+				}}
+			>
+				{allThings.from.options[subSelect].choice.from.options.find((i) => item === i.item.index).item.name}
 			</Badge>
 		{/each}
 	</div>
