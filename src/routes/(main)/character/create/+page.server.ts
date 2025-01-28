@@ -30,13 +30,14 @@ export const load = async ({ request }) => {
 		results['classes'] = classes;
 	} else if (step == 2) {
 		//const levelPromise = await dnd5ApiRaw(`/api/classes/${request.locals['class']}/level/1`)
-		const [raceData, languages, proficiencies, traits, classData, levelData] = await Promise.all([
+		const [raceData, languages, proficiencies, traits, classData, levelData, equipmentData] = await Promise.all([
 			dnd5ApiRaw(`/api/races/${request.locals['race']}`),
 			dnd5ApiRaw(`/api/languages`),
 			dnd5ApiRaw(`/api/proficiencies`),
 			dnd5ApiRaw(`/api/traits`),
 			dnd5ApiRaw(`/api/classes/${request.locals['class']}`),
-			dnd5ApiRaw(`/api/classes/${request.locals['class']}/levels/1`)
+			dnd5ApiRaw(`/api/classes/${request.locals['class']}/levels/1`),
+			dnd5ApiRaw(`/api/equipment`)
 		]);
 		results['raceData'] = raceData;
 		results['languages'] = languages;
@@ -44,6 +45,7 @@ export const load = async ({ request }) => {
 		results['traits'] = traits;
 		results['classData'] = classData;
 		results['levelData'] = levelData;
+		results['equipmentData'] = levelData;
 	}
 
 	//create a superForm with the final schema to init all the potential vars

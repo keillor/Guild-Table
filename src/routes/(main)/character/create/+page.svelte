@@ -14,6 +14,7 @@
 	const traits = data.results.traits;
 	const classData = data.results.classData;
 	const levelData = data.results.levelData;
+	const equipmentData = data.results.equipmentData;
 
 	const { form, formId, errors, message, capture, restore } = superForm(data.form, {
 		resetForm: false,
