@@ -49,7 +49,7 @@
 	<RadioGroup.Root bind:value={subSelect} name={allThings.desc} onch>
 		{#each allThings.from.options as category, index}
 			<div class='flex flex-row gap-1'>
-				<RadioGroup.Item value={index}>{category.choice.desc}</RadioGroup.Item>
+				<RadioGroup.Item value={index} onclick={() => $form[formInputName] = []}>{category.choice.desc}</RadioGroup.Item>
 				<Label for={category.choice.desc} >{category.choice.desc}</Label>
 			</div>
 		{/each}
