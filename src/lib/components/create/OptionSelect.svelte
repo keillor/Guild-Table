@@ -88,7 +88,6 @@
 		<Badge
 			class="flex h-min flex-row content-between gap-1  text-white"
 			onclick={(event) => {
-				console.log(allThings.from.options.find((i) => item === i.item.index));
 				event.preventDefault();
 				$form[formInputName] = $form[formInputName].filter((l) => l !== item);
 			}}
