@@ -61,6 +61,8 @@ export const actions = {
 		const formData = await request.formData();
 		const step = +(formData.get('step') ?? '1');
 
+		console.log(await formData);
+
 		//validate our data with the corresponding step number zod schema.
 		const form = await superValidate(formData, steps[step - 1]);
 
@@ -80,7 +82,7 @@ export const actions = {
 		}
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
-		console.log(form);
+		//console.log(form);
 		redirect(303, '/character');
 
 		//the following resets the form to the default state.
