@@ -19,10 +19,9 @@
 	import { useId } from 'bits-ui';
 
 	//data
-	const { formInputName, formDisplayName, form, choices } = $props();
+	const { formInputName, formDisplayName, form, choices, classIndex } = $props();
 	$form[formInputName] = [];
 	const allThings = choices;
-	console.log(allThings.from.options);
 	const choiceLimit = Number(choices.choose);
 	//const choiceLimit = $derived(subSelect);
 	let limitReached = $derived($form[formInputName].length == choiceLimit);
@@ -110,7 +109,6 @@
 			<Badge
 				class="flex h-min flex-row content-between gap-1  text-white"
 				onclick={(event) => {
-					console.log(allThings.from.options.find((i) => item === i.item.index));
 					event.preventDefault();
 					$form[formInputName] = $form[formInputName].filter((l) => l !== item);
 				}}
@@ -119,7 +117,7 @@
 			</Badge>
 		{/each}
 	</div>
-	<input hidden bind:value={$form[formInputName]} name={formInputName} />
+	<input hidden bind:value={$form[formInputName]} name={classIndex} />
 {/if}
 
 
@@ -179,7 +177,6 @@
 			<Badge
 				class="flex h-min flex-row content-between gap-1  text-white"
 				onclick={(event) => {
-					console.log(allThings.from.options[subSelect].choice.from.options.find((i) => item === i.item.index));
 					event.preventDefault();
 					$form[formInputName] = $form[formInputName].filter((l) => l !== item);
 				}}
