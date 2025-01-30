@@ -20,18 +20,28 @@
 	let selectedOptionResult = $state('');
 </script>
 
+
 <Label>{choices.desc}</Label>
-<RadioGroup.Root
-	bind:value={subSelect}
-	name={`equipsubselect_${equipIndex}`}
->
-	{#each choices.from.options as option, index}
-		<div class="flex flex-row">
-			<RadioGroup.Item value={index} name={`${choices.desc}_index`} />
-			<Label for={`${choices.desc}`}>{`Option ${index + 1}`}</Label>
-		</div>
-	{/each}
-</RadioGroup.Root>
+{#if choices.hasOwnProperty('from') && choices.from.option_set_type == 'equipment_category'}
+<EquipmentCategory
+			formDisplayName={choices.desc}
+			formInputName={`equipment_${equipIndex}`}
+			choices={{choice: choices}}
+			{form}
+		/>
+{:else}
+	<RadioGroup.Root
+		bind:value={subSelect}
+		name={`equipsubselect_${equipIndex}`}
+	>
+		{#each choices.from.options as option, index}
+			<div class="flex flex-row">
+				<RadioGroup.Item value={index} name={`${choices.desc}_index`} />
+				<Label for={`${choices.desc}`}>{`Option ${index + 1}`}</Label>
+			</div>
+		{/each}
+	</RadioGroup.Root>
+{/if}
 
 <div class="flex flex-row gap-2">
 	{#if selectedOption != null && selectedOption.option_type == 'counted_reference'}
@@ -65,31 +75,5 @@
 			choices={selectedOption}
 			{form}
 		/>
-	{:else if selectedOption != null && selectedOption.option_type == ''}
 	{/if}
 </div>
-
-<!-- <div class="flex flex-row gap-2">
-{#if selectedOption != null && selectedOption.option_type == 'counted_reference'}
-		<Badge
-			class="flex h-min flex-row content-between gap-1  text-white"
-			onclick={(event) => {
-				event.preventDefault();
-			}}
-		>
-			{selectedOption.count} x {selectedOption.of.name}
-		</Badge>
-{:else if selectedOption != null && selectedOption.option_type == 'multiple'}
-	{#each selectedOption.items as item (item.of.index)}
-		<Badge
-			class="flex h-min flex-row content-between gap-1  text-white"
-			onclick={(event) => {
-				event.preventDefault();
-			}}
-		>
-			{item.count} x {item.of.name}
-		</Badge>
-	{/each}
-{/if}
-</div>
-<input hidden name={`equip_${equipIndex}`} bind:value={selectedOptionResult}/> -->
