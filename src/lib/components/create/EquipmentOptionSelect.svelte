@@ -9,6 +9,7 @@
 	$form[formInputName] = [];
 	//const choiceLimit = $derived(subSelect);
 	let subSelect = $state(null);
+	console.log(choices);
 	let selectedOption = $derived.by(() => {
 		if (subSelect != null) {
 			console.log(choices.from.options[subSelect]);
@@ -55,19 +56,26 @@
 		</Badge>
 		<input hidden name={`equipment_${equipIndex}`} value={JSON.stringify({[selectedOption.of.index] : selectedOption.count})}>
 	{:else if selectedOption != null && selectedOption.option_type == 'multiple'}
-		{#each selectedOption.items as item (item.of.index)}
-			<Badge
-				class="flex h-min flex-row gap-1 text-white"
-				onclick={(event) => {
-					event.preventDefault();
-				}}
-			>
-				{item.count} x {item.of.name}
-			</Badge>
+		{#each selectedOption.items as item, index}
+			{#if item.option_type == 'counted_reference'}
+				<Badge
+					class="flex h-min flex-row gap-1 text-white"
+					onclick={(event) => {
+						event.preventDefault();
+					}}
+				>
+					{item.count} x {item.of.name}
+				</Badge>
+				<input hidden name={`equipment_${equipIndex}_${index}`} value={JSON.stringify({[item.of.index] : item.count})}/>
+			{:else}
+				<EquipmentCategory
+				formDisplayName={item.choice.desc}
+				formInputName={`equipment_${equipIndex}_${subSelect}`}
+				choices={item}
+				{form}/>
+			{/if}
+			
 		{/each}
-		<input hidden name={`equipment_${equipIndex}`} value={JSON.stringify(selectedOption.items.map((t) => {
-			return {[t.of.index]: t.count}
-		}))}/>
 	{:else if selectedOption != null && selectedOption.option_type == 'choice' && selectedOption.choice.from.option_set_type == 'equipment_category'}
 		<EquipmentCategory
 			formDisplayName={selectedOption.choice.desc}
