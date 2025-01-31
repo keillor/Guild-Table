@@ -20,7 +20,8 @@
 			<Button href="/">Login</Button>
 			<Button variant="outline" class="w-full">Login with Google</Button>
 
-			<p>Don't have an account? <a href="/signup" class="underline"> Sign up </a></p>
+			<p>Don't have an account?</p>
+			<Button href="../register">Register New User</Button>
 		</Card.Content>
 	</Card.Root>
 </div>
