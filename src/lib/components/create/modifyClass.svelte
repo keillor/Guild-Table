@@ -2,8 +2,11 @@
 	import ClassOptionSelect from './ClassOptionSelect.svelte';
 	import * as Card from '$lib/components/ui/card/index';
 	import EquipmentOptionSelect from './EquipmentOptionSelect.svelte';
+	import Label from '../ui/label/label.svelte';
+	import Input from '../ui/input/input.svelte';
+	import ComboSelect from './ComboSelect.svelte';
 
-	const { classData, levelData, equipment,form } = $props();
+	const { classData, levelData, equipment,form, proficiencies } = $props();
 
 	let choices = [];
 	for (let key in classData) {
@@ -27,6 +30,24 @@
 		}
 	}
 </script>
+
+<Card.Root>
+	<Card.Header>
+		<h2 class="text-xl font-bold">Class Defaults</h2>
+	</Card.Header>
+	<Card.Content>
+		<Label for="name">Class</Label>
+		<Input name="name" value={classData.name} type="text" disabled />
+
+		<ComboSelect
+			formInputName="proficiencies"
+			formDisplayName="Proficiencies"
+			{form}
+			things={proficiencies}
+			raceData={classData}
+		/>
+	</Card.Content>
+</Card.Root>
 
 {#if choices.length > 0}
 	<Card.Root>
