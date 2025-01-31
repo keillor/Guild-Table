@@ -5,8 +5,14 @@
 	import Label from '../ui/label/label.svelte';
 	import Input from '../ui/input/input.svelte';
 	import ComboSelect from './ComboSelect.svelte';
+	import Badge from '../ui/badge/badge.svelte';
+	import * as Select from '$lib/components/ui/select/index';
 
 	const { classData, levelData, equipment,form, proficiencies } = $props();
+
+	$form['hit_die'] = classData['hit_die'];
+
+	//form['hit_die'] = 0
 
 	let choices = [];
 	for (let key in classData) {
@@ -39,6 +45,20 @@
 		<Label for="name">Class</Label>
 		<Input name="name" value={classData.name} type="text" disabled />
 
+		<Label for='hit_die'>Hit Die</Label>
+		<Select.Root name='hit_die' bind:value={$form['hit_die']} type='single'>
+			<Select.Trigger class="w-[180px]">
+				{$form['hit_die']}
+			</Select.Trigger>
+			<Select.Content>
+				<Select.Group>
+					{#each [4,6,8,10,12,20] as die}
+						<Select.Item value={die} label={die}>{die}</Select.Item>
+					{/each}
+				</Select.Group>
+			</Select.Content>
+		</Select.Root>
+
 		<ComboSelect
 			formInputName="proficiencies"
 			formDisplayName="Proficiencies"
@@ -46,6 +66,44 @@
 			things={proficiencies}
 			raceData={classData}
 		/>
+
+		<ComboSelect 
+			formInputName='saving_throws'
+			formDisplayName='Saving Throws'
+			{form}
+			things={{results:[
+				{
+				  "index": "cha",
+				  "name": "CHA",
+				  "url": "/api/ability-scores/cha"
+				},
+				{
+				  "index": "con",
+				  "name": "CON",
+				  "url": "/api/ability-scores/con"
+				},
+				{
+				  "index": "dex",
+				  "name": "DEX",
+				  "url": "/api/ability-scores/dex"
+				},
+				{
+				  "index": "int",
+				  "name": "INT",
+				  "url": "/api/ability-scores/int"
+				},
+				{
+				  "index": "str",
+				  "name": "STR",
+				  "url": "/api/ability-scores/str"
+				},
+				{
+				  "index": "wis",
+				  "name": "WIS",
+				  "url": "/api/ability-scores/wis"
+				}
+			  ]}}
+			raceData={classData}/>
 	</Card.Content>
 </Card.Root>
 

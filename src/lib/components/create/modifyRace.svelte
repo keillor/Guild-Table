@@ -6,6 +6,7 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import AbilityScoreBonus from './abilityScoreBonus.svelte';
 	import OptionSelect from './OptionSelect.svelte';
+	import AbilityScoreOptionSelect from './abilityScoreOptionSelect.svelte';
 	const { form, errors, raceData, languages, proficiencies, traits } = $props();
 
 	const subracesContent = $derived(
@@ -37,12 +38,16 @@
 		</Card.Header>
 		<Card.Content>
 			{#each options as option (option.key)}
-				<OptionSelect
-					formInputName={option.key}
-					formDisplayName={option.displayValue}
-					{form}
-					choices={option.data}
-				/>
+				{#if option.key == 'ability_bonus_options'}
+					<AbilityScoreOptionSelect {form} choices={option.data} formInputName={option.key}/>
+				{:else}
+					<OptionSelect
+						formInputName={option.key}
+						formDisplayName={option.displayValue}
+						{form}
+						choices={option.data}
+					/>
+				{/if}
 			{/each}
 		</Card.Content>
 	</Card.Root>
