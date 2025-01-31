@@ -9,10 +9,8 @@
 	$form[formInputName] = [];
 	//const choiceLimit = $derived(subSelect);
 	let subSelect = $state(null);
-	console.log(choices);
 	let selectedOption = $derived.by(() => {
 		if (subSelect != null) {
-			console.log(choices.from.options[subSelect]);
 			return choices.from.options[subSelect];
 		}
 		return null;

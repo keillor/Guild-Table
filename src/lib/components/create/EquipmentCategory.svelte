@@ -22,7 +22,6 @@
 
     const results = dnd5ApiEquipmentCategory(choices.choice.from.equipment_category.index);
 	$form[formInputName] = [];
-	console.log(choices);
 	//const allThings = choices;
 	const choiceLimit = Number(choices.choice.choose);
 	let limitReached = $derived($form[formInputName].length == choiceLimit);
