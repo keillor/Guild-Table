@@ -20,7 +20,7 @@
 <h1>Users</h1>
 {#if user}
 	<p>Current user email: {user.email}</p>
-	<Button on:click={logout}>Logout</Button>
+	<Button onclick={logout}>Logout</Button>
 {:else}
 	<p>No user is currently signed in</p>
 {/if}
