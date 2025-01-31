@@ -50,7 +50,7 @@
 		<input type="hidden" name="class" bind:value={$form.class} />
 
 		<ModifyRace {raceData} {form} {errors} languages={allLanguages} {proficiencies} {traits} />
-		<ModifyClass {classData} {levelData} {form} equipment={equipmentData} />
+		<ModifyClass {classData} {levelData} {form} equipment={equipmentData} {proficiencies} />
 
 		<Button onclick={(event) => goBack(event)}>Back</Button>
 		<Button type="submit">Save</Button>
