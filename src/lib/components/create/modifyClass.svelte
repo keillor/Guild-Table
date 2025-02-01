@@ -7,8 +7,9 @@
 	import ComboSelect from './ComboSelect.svelte';
 	import Badge from '../ui/badge/badge.svelte';
 	import * as Select from '$lib/components/ui/select/index';
+	import EquipmentSelect from './EquipmentSelect.svelte';
 
-	const { classData, levelData, equipment,form, proficiencies } = $props();
+	const { classData, levelData, equipment,form, proficiencies, features } = $props();
 
 	$form['hit_die'] = classData['hit_die'];
 
@@ -45,6 +46,9 @@
 		<Label for="name">Class</Label>
 		<Input name="name" value={classData.name} type="text" disabled />
 
+		<h3>Proficiency Bonus: {levelData.prof_bonus}</h3>
+		<h3>Ability Score Bonus: {levelData.ability_score_bonuses}</h3>
+
 		<Label for='hit_die'>Hit Die</Label>
 		<Select.Root name='hit_die' bind:value={$form['hit_die']} type='single'>
 			<Select.Trigger class="w-[180px]">
@@ -58,6 +62,13 @@
 				</Select.Group>
 			</Select.Content>
 		</Select.Root>
+
+		<ComboSelect
+			formInputName='features'
+			formDisplayName='Features'
+			{form}
+			things={features}
+			raceData={levelData}/>
 
 		<ComboSelect
 			formInputName="proficiencies"
@@ -104,6 +115,9 @@
 				}
 			  ]}}
 			raceData={classData}/>
+
+		<EquipmentSelect allThings={equipment} {form} formDisplayName='Starting Equipment' formInputName='starting_equipment' classData={classData}/>
+
 	</Card.Content>
 </Card.Root>
 
@@ -148,4 +162,28 @@
 			{/each}
 		</Card.Content>
 	</Card.Root>
+{/if}
+
+{#if classData.spellcasting !== null}
+	<Card.Root>
+		<Card.Header>
+			<h2 class="text-xl font-bold">Spellcasting</h2>
+		</Card.Header>
+		<Card.Content>
+			<h3>Casting Level: {classData.spellcasting.level}</h3>
+			<h3>Spell Casting Ability: {classData.spellcasting.spellcasting_ability.name}</h3>
+			
+			{#each classData.spellcasting.info as info}
+				<h4 class='text-lg font-bold'>{info.name}</h4>
+				<p>{info.desc}</p>
+				
+			{/each}
+
+			
+		</Card.Content>
+		<Card.Footer>
+
+		</Card.Footer>
+	</Card.Root>
+	
 {/if}
