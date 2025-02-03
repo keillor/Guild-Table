@@ -182,7 +182,7 @@
 			{#each Object.entries(levelData.spellcasting) as [key, value], spellLevel}
 				{#if value > 0}
 					<SpellSelect choices={{choose: value, results: spells.results.filter((s) => s.level == spellLevel)}} 
-						{form} formDisplayName={key.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())} formInputName={key}/>
+						{form} formDisplayName={key.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())} formInputName={`spells_${spellLevel}`}/>
 				{/if}
 			{/each}
 
