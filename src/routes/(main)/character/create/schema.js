@@ -1,8 +1,14 @@
 import { z } from 'zod';
 
 export const newClassSchema = z.object({
-	class: z.string().min(2).max(50),
-	race: z.string().min(2).max(50)
+	class: z
+		.string()
+		.regex(/^[a-zA-Z-]+$/)
+		.max(50),
+	race: z
+		.string()
+		.regex(/^[a-zA-Z-]+$/)
+		.max(50)
 });
 
 export const raceDataSchema = newClassSchema.extend({
