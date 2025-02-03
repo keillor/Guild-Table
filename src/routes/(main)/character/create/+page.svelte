@@ -16,6 +16,7 @@
 	const levelData = data.results.levelData;
 	const equipmentData = data.results.equipmentData;
 	const features = data.results.features;
+	const spells = data.results.spells;
 
 	const { form, formId, errors, message, capture, restore } = superForm(data.form, {
 		resetForm: false,
@@ -51,7 +52,7 @@
 		<input type="hidden" name="class" bind:value={$form.class} />
 
 		<ModifyRace {raceData} {form} {errors} languages={allLanguages} {proficiencies} {traits} />
-		<ModifyClass {classData} {levelData} {form} equipment={equipmentData} {proficiencies} {features}/>
+		<ModifyClass {classData} {levelData} {form} equipment={equipmentData} {proficiencies} {features} {spells}/>
 
 		<Button onclick={(event) => goBack(event)}>Back</Button>
 		<Button type="submit">Save</Button>

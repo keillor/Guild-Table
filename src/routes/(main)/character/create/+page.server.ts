@@ -7,6 +7,7 @@ import type { Actions } from './$types.js';
 import { goto } from '$app/navigation';
 
 //steps length is used to detemine if the form has been completed.
+
 const steps = [zod(newClassSchema), zod(raceDataSchema)];
 const lastStep = steps[steps.length - 1];
 export const load = async ({ request }) => {
@@ -30,7 +31,7 @@ export const load = async ({ request }) => {
 		results['classes'] = classes;
 	} else if (step == 2) {
 		//const levelPromise = await dnd5ApiRaw(`/api/classes/${request.locals['class']}/level/1`)
-		const [raceData, languages, proficiencies, traits, classData, levelData, equipmentData, features] = await Promise.all([
+		const [raceData, languages, proficiencies, traits, classData, levelData, equipmentData, features, spells] = await Promise.all([
 			dnd5ApiRaw(`/api/races/${request.locals['race']}`),
 			dnd5ApiRaw(`/api/languages`),
 			dnd5ApiRaw(`/api/proficiencies`),
@@ -38,7 +39,8 @@ export const load = async ({ request }) => {
 			dnd5ApiRaw(`/api/classes/${request.locals['class']}`),
 			dnd5ApiRaw(`/api/classes/${request.locals['class']}/levels/1`),
 			dnd5ApiRaw(`/api/equipment`),
-			dnd5ApiRaw(`/api/features`)
+			dnd5ApiRaw(`/api/features`),
+			dnd5ApiRaw(`/api/classes/${request.locals['class']}/spells`)
 		]);
 		results['raceData'] = raceData;
 		results['languages'] = languages;
@@ -48,6 +50,7 @@ export const load = async ({ request }) => {
 		results['levelData'] = levelData;
 		results['equipmentData'] = equipmentData;
 		results['features'] = features;
+		results['spells'] = spells;
 	}
 
 	//create a superForm with the final schema to init all the potential vars
