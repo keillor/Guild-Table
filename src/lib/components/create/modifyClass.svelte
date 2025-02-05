@@ -164,7 +164,7 @@
 	</Card.Root>
 {/if}
 
-{#if classData.spellcasting !== null}
+{#if classData.hasOwnProperty('spellcasting')}
 	<Card.Root>
 		<Card.Header>
 			<h2 class="text-xl font-bold">Spellcasting</h2>
