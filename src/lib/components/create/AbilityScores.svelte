@@ -102,7 +102,7 @@
 {:else if selectedMethod == 1}
     Feature not yet implemented. Please check back later!
 {:else if selectedMethod == 2}
-    <div class="flex flex-row">
+    <div class="flex flex-row overflow-auto flex-wrap">
         {#each scores as score (score.index)}
             <Card.Root class="flex w-min flex-col">
                 <Card.Header>
@@ -114,7 +114,7 @@
                         type="number"
                         bind:value={AbilityScores[score.index]}
                     />
-                    <div class='border rounded-full aspect-square text-center justify-center content-center'>
+                    <div class='border rounded-full aspect-square text-center justify-center content-center p-2'>
                         <p class=''>{ASModifiers[score.index] > -1 ? '+' : '-'}{Math.abs(ASModifiers[score.index])}</p>
                     </div>
                 </Card.Content>
