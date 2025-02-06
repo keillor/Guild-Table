@@ -117,7 +117,7 @@
 			</Badge>
 		{/each}
 	</div>
-	<input hidden bind:value={$form[formInputName]} name={classIndex} />
+	<input hidden bind:value={$form[formInputName]} name={`${allThings.type}_${classIndex}`} />
 {/if}
 
 
@@ -185,5 +185,5 @@
 			</Badge>
 		{/each}
 	</div>
-	<input hidden bind:value={$form[formInputName]} name={formInputName} />
+	<input hidden bind:value={$form[formInputName]} name={`${allThings.type}_${classIndex}`} />
 {/if}

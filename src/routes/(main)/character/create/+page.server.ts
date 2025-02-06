@@ -2,13 +2,14 @@ import { superValidate, message, defaultValues, type Infer } from 'sveltekit-sup
 import { zod } from 'sveltekit-superforms/adapters';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { dnd5ApiRaw, dnd5ApiRequest } from '@/api/dnd5api.js';
-import { newClassSchema, raceDataSchema } from './schema';
+import { newClassRaceSchema, raceDataSchema } from './schema';
 import type { Actions } from './$types.js';
 import { goto } from '$app/navigation';
+import { Key } from 'lucide-svelte';
 
 //steps length is used to detemine if the form has been completed.
 
-const steps = [zod(newClassSchema), zod(raceDataSchema)];
+const steps = [zod(newClassRaceSchema), zod(raceDataSchema)];
 const lastStep = steps[steps.length - 1];
 export const load = async ({ request }) => {
 	let step = 1;
@@ -51,13 +52,39 @@ export const load = async ({ request }) => {
 		results['equipmentData'] = equipmentData;
 		results['features'] = features;
 		results['spells'] = spells;
-	}
+	} 
 
 	//create a superForm with the final schema to init all the potential vars
 	// @ts-ignore
-	const form = await superValidate<Infer<typeof newClassSchema>>(lastStep);
+	const form = await superValidate<Infer<typeof newClassRaceSchema>>(lastStep);
 	return { form, results };
 };
+
+async function parseUserCharacterData(formData) {
+	let newCharacterConstruction = {};
+	const regexLettersDashesOnly = /^[a-zA-Z-]+$/;
+	for(let [key, value] of Object.entries(formData)) {
+
+	}
+	//race, class
+	if (formData.hasOwnProperty('race')) {
+		if(regexLettersDashesOnly.test(formData['race'])) {
+			newCharacterConstruction['race'] = formData['race'];
+		}
+	}
+	
+	if (formData.hasOwnProperty('class')) {
+		if(regexLettersDashesOnly.test(formData['class'])) {
+			newCharacterConstruction['class'] = formData['class'];
+		}
+	}
+
+
+}
+
+function standardListParse(list: String) {
+	return list.split(',');
+}
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
@@ -85,6 +112,9 @@ export const actions = {
 			//return next step
 			return message(form, { step: step + 1 });
 		}
+
+		//form parsing
+		parsedData = parseUserCharacterData(formData);
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
 		//console.log(form);

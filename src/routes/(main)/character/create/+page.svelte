@@ -5,6 +5,7 @@
 	import SelectClass from '@/components/create/selectClass.svelte';
 	import ModifyRace from '@/components/create/modifyRace.svelte';
 	import ModifyClass from '@/components/create/modifyClass.svelte';
+	import AbilityScores from '$lib/components/create/AbilityScores.svelte';
 	let { data } = $props();
 	const races = data.results.races;
 	const classes = data.results.classes;
@@ -47,7 +48,7 @@
 
 		<Button onclick={(event) => goBack(event)}>Cancel</Button>
 		<Button type="submit">Next</Button>
-	{:else}
+	{:else if step == 2}
 		<input type="hidden" name="race" bind:value={$form.race} />
 		<input type="hidden" name="class" bind:value={$form.class} />
 
@@ -56,5 +57,7 @@
 
 		<Button onclick={(event) => goBack(event)}>Back</Button>
 		<Button type="submit">Save</Button>
+	{:else}
+		<AbilityScores />
 	{/if}
 </form>

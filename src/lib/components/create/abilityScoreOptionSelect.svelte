@@ -94,6 +94,6 @@
 		>
 			{allThings.from.options.find((i) => item === i.ability_score.index).ability_score.name}: +{allThings.from.options.find((i) => item === i.ability_score.index).bonus}
 		</Badge>
+		<input hidden value={JSON.stringify({[item]: allThings.from.options.find((i) => item === i.ability_score.index).bonus})} name={`ability_score_bonus_${item}`}/>
 	{/each}
 </div>
-<input hidden bind:value={$form[formInputName]} name={formInputName} />

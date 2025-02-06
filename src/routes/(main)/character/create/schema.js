@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const newClassSchema = z.object({
+export const newClassRaceSchema = z.object({
 	class: z
 		.string()
 		.regex(/^[a-zA-Z-]+$/)
@@ -11,7 +11,7 @@ export const newClassSchema = z.object({
 		.max(50)
 });
 
-export const raceDataSchema = newClassSchema.extend({
+export const raceDataSchema = newClassRaceSchema.extend({
 	name: z.string(),
 	speed: z.number(),
 	int_bonus: z.number(),

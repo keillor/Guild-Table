@@ -5,7 +5,6 @@
 	import Label from '../ui/label/label.svelte';
 	import Input from '../ui/input/input.svelte';
 	import ComboSelect from './ComboSelect.svelte';
-	import Badge from '../ui/badge/badge.svelte';
 	import * as Select from '$lib/components/ui/select/index';
 	import EquipmentSelect from './EquipmentSelect.svelte';
 	import SpellSelect from './SpellSelect.svelte';
@@ -45,9 +44,14 @@
 		<Input name="name" value={classData.name} type="text" disabled />
 
     
-    <h3>Level: {levelData.level}</h3>
+    	<h3>Level: {levelData.level}</h3>
+		<input hidden name='level' value={levelData.prof_bonus}/>
+
 		<h3>Proficiency Bonus: {levelData.prof_bonus}</h3>
+		<input hidden name='proficiency_bonus' value={levelData.prof_bonus}/>
+
 		<h3>Ability Score Bonus: {levelData.ability_score_bonuses}</h3>
+		<input hidden name='ability_score_bonuses' value={levelData.ability_score_bonuses}/>
 
 		<Label for='hit_die'>Hit Die</Label>
 		<Select.Root name='hit_die' bind:value={$form['hit_die']} type='single'>
