@@ -68,7 +68,7 @@
 				<Input
 					name={`${score.index}_bonus`}
 					type="number"
-					bind:value={$form[`${score.index}_bonus`]}
+					bind:value={$form[`${formInputName}_${score.index}`]}
 				/>
 			</Card.Content>
 			<Card.Footer>

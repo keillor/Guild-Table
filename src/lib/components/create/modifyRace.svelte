@@ -83,7 +83,7 @@
 		<AbilityScoreBonus ability_scores={raceData.ability_bonuses} {form} formInputName={numberInputNames.as_bonus_race}/>
 
 		<ComboSelect
-			formInputName={listInputNames.proficiencies}
+			formInputName={listInputNames.starting_proficiencies}
 			formDisplayName="Proficiencies"
 			{form}
 			things={proficiencies}
