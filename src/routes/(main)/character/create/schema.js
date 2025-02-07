@@ -35,3 +35,42 @@ export const raceDataSchema = newClassRaceSchema.extend({
 	language_options: z.any().optional(),
 	ability_bonus_options: z.any().optional()
 });
+
+export const stringInputNames = {
+	name: 'name',
+	race: 'race',
+	subrace: 'subrace',
+	class: 'class',
+	speed: 'speed',
+	alignment: 'alignment',
+	age: 'age',
+	size: 'size',
+	size_description: 'size_description',
+	language_desc: 'language_desc'
+};
+
+export const numberInputNames = {
+	as_bonus_class: 'as_bonus_class',
+	level: 'level',
+	proficiency_bonus: 'proficiency_bonus',
+	as_bonus_race: 'as_bonus_race',
+	hit_die: 'hit_die'
+};
+export const listInputNames = {
+	ability_bonus_options: 'ability_bonus_options',
+	starting_proficiency_options: 'proficiencies_options',
+	language_options: 'language_options',
+	proficiency_choices: 'proficiencies_choices',
+	starting_proficiencies: 'proficiencies_starting',
+	proficiencies: 'proficiencies',
+	traits: 'traits',
+	languages: 'languages',
+	features: 'features',
+	saving_throws: 'saving_throws',
+	starting_equipment: 'starting_equipment',
+	spells: 'spells'
+};
+
+export const jsonListInputNames = {
+	equipment: 'equipment'
+};

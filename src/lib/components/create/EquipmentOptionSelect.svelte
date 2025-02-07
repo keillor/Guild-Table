@@ -3,6 +3,7 @@
 	import Label from '@/components/ui/label/label.svelte';
 	import Badge from '../ui/badge/badge.svelte';
 	import EquipmentCategory from './EquipmentCategory.svelte';
+	import { jsonListInputNames } from '../../../routes/(main)/character/create/schema';
 
 	//data
 	const { formInputName, formDisplayName, form, choices, equipIndex } = $props();
@@ -24,7 +25,7 @@
 {#if choices.hasOwnProperty('from') && choices.from.option_set_type == 'equipment_category'}
 <EquipmentCategory
 			formDisplayName={choices.desc}
-			formInputName={`equipment_${equipIndex}`}
+			formInputName={`${formInputName}_${equipIndex}`}
 			choices={{choice: choices}}
 			{form}
 		/>
@@ -52,7 +53,7 @@
 		>
 			{selectedOption.count} x {selectedOption.of.name}
 		</Badge>
-		<input hidden name={`equipment_${equipIndex}`} value={JSON.stringify({[selectedOption.of.index] : selectedOption.count})}>
+		<input hidden name={`${formInputName}_${equipIndex}`} value={JSON.stringify({[selectedOption.of.index] : selectedOption.count})}>
 	{:else if selectedOption != null && selectedOption.option_type == 'multiple'}
 		{#each selectedOption.items as item, index}
 			{#if item.option_type == 'counted_reference'}
@@ -64,11 +65,11 @@
 				>
 					{item.count} x {item.of.name}
 				</Badge>
-				<input hidden name={`equipment_${equipIndex}_${index}`} value={JSON.stringify({[item.of.index] : item.count})}/>
+				<input hidden name={`${formInputName}_${equipIndex}_${index}`} value={JSON.stringify({[item.of.index] : item.count})}/>
 			{:else}
 				<EquipmentCategory
 				formDisplayName={item.choice.desc}
-				formInputName={`equipment_${equipIndex}_${subSelect}`}
+				formInputName={`${formInputName}_${equipIndex}_${subSelect}`}
 				choices={item}
 				{form}/>
 			{/if}
@@ -77,7 +78,7 @@
 	{:else if selectedOption != null && selectedOption.option_type == 'choice' && selectedOption.choice.from.option_set_type == 'equipment_category'}
 		<EquipmentCategory
 			formDisplayName={selectedOption.choice.desc}
-			formInputName={`equipment_${equipIndex}_${subSelect}`}
+			formInputName={`${formInputName}_${equipIndex}_${subSelect}`}
 			choices={selectedOption}
 			{form}
 		/>

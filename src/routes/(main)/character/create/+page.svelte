@@ -6,6 +6,7 @@
 	import ModifyRace from '@/components/create/modifyRace.svelte';
 	import ModifyClass from '@/components/create/modifyClass.svelte';
 	import AbilityScores from '$lib/components/create/AbilityScores.svelte';
+	import { stringInputNames } from './schema.js';
 	let { data } = $props();
 	const races = data.results.races;
 	const classes = data.results.classes;
@@ -40,8 +41,8 @@
 {#if $message?.text}<h3 class="text-green-500">{$message.text}</h3>{/if}
 
 <form method="POST" action="?/next">
-	<input type="hidden" name="step" bind:value={step} />
-	<input type="hidden" name="__superform_id" bind:value={$formId} />
+	<input type="hidden" name="step" value={step} />
+	<input type="hidden" name="__superform_id" value={$formId} />
 	{#if step == 1}
 		<SelectRace {races} {errors} {form} />
 		<SelectClass {classes} {errors} {form} />
@@ -49,8 +50,8 @@
 		<Button onclick={(event) => goBack(event)}>Cancel</Button>
 		<Button type="submit">Next</Button>
 	{:else if step == 2}
-		<input type="hidden" name="race" bind:value={$form.race} />
-		<input type="hidden" name="class" bind:value={$form.class} />
+		<input type="hidden" name={stringInputNames.race} value={$form.race} />
+		<input type="hidden" name={stringInputNames.class} value={$form.class} />
 
 		<ModifyRace {raceData} {form} {errors} languages={allLanguages} {proficiencies} {traits} />
 		<ModifyClass {classData} {levelData} {form} equipment={equipmentData} {proficiencies} {features} {spells}/>
