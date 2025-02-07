@@ -2,10 +2,8 @@ import { superValidate, message, defaultValues, type Infer } from 'sveltekit-sup
 import { zod } from 'sveltekit-superforms/adapters';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { dnd5ApiRaw, dnd5ApiRequest } from '@/api/dnd5api.js';
-import { newClassRaceSchema, raceDataSchema } from './schema';
+import { newClassRaceSchema, numberInputNames, raceDataSchema, stringInputNames } from './schema';
 import type { Actions } from './$types.js';
-import { goto } from '$app/navigation';
-import { Key } from 'lucide-svelte';
 
 //steps length is used to detemine if the form has been completed.
 
@@ -32,7 +30,17 @@ export const load = async ({ request }) => {
 		results['classes'] = classes;
 	} else if (step == 2) {
 		//const levelPromise = await dnd5ApiRaw(`/api/classes/${request.locals['class']}/level/1`)
-		const [raceData, languages, proficiencies, traits, classData, levelData, equipmentData, features, spells] = await Promise.all([
+		const [
+			raceData,
+			languages,
+			proficiencies,
+			traits,
+			classData,
+			levelData,
+			equipmentData,
+			features,
+			spells
+		] = await Promise.all([
 			dnd5ApiRaw(`/api/races/${request.locals['race']}`),
 			dnd5ApiRaw(`/api/languages`),
 			dnd5ApiRaw(`/api/proficiencies`),
@@ -52,7 +60,7 @@ export const load = async ({ request }) => {
 		results['equipmentData'] = equipmentData;
 		results['features'] = features;
 		results['spells'] = spells;
-	} 
+	}
 
 	//create a superForm with the final schema to init all the potential vars
 	// @ts-ignore
@@ -60,26 +68,39 @@ export const load = async ({ request }) => {
 	return { form, results };
 };
 
-async function parseUserCharacterData(formData) {
+async function parseUserCharacterData(formData: any) {
 	let newCharacterConstruction = {};
-	const regexLettersDashesOnly = /^[a-zA-Z-]+$/;
-	for(let [key, value] of Object.entries(formData)) {
+	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
 
-	}
-	//race, class
-	if (formData.hasOwnProperty('race')) {
-		if(regexLettersDashesOnly.test(formData['race'])) {
-			newCharacterConstruction['race'] = formData['race'];
+	for (const [key, value] of Object.entries(stringInputNames)) {
+		console.log(key, value);
+		try {
+			const propertyToAdd = await formData.get(value);
+			console.log(propertyToAdd);
+			if (propertyToAdd !== null && regexLettersDashesOnly.test(propertyToAdd)) {
+				newCharacterConstruction[key] = propertyToAdd;
+			}
+		} catch (e) {
+			console.log(e);
 		}
 	}
-	
-	if (formData.hasOwnProperty('class')) {
-		if(regexLettersDashesOnly.test(formData['class'])) {
-			newCharacterConstruction['class'] = formData['class'];
+
+	for (const [key, value] of Object.entries(numberInputNames)) {
+		console.log(key, value);
+		try {
+			const propertyToAdd = await formData.get(value);
+			console.log(propertyToAdd);
+			if (!isNaN(propertyToAdd)) {
+				newCharacterConstruction[key] = Number(propertyToAdd);
+			}
+		} catch (e) {
+			console.log(e);
 		}
 	}
-
-
+	//BUG: parse as_bonus_race, as_bonus_class correctly.
+	//TODO: Parse list values from listInputNames.
+	//TODO: Parse JSON values from jsonInputNames.
+	console.log(newCharacterConstruction);
 }
 
 function standardListParse(list: String) {
@@ -92,8 +113,6 @@ export const actions = {
 		//retrieve formData and step number
 		const formData = await request.formData();
 		const step = +(formData.get('step') ?? '1');
-
-		console.log(await formData);
 
 		//validate our data with the corresponding step number zod schema.
 		const form = await superValidate(formData, steps[step - 1]);
@@ -114,7 +133,7 @@ export const actions = {
 		}
 
 		//form parsing
-		parsedData = parseUserCharacterData(formData);
+		const parsedData = parseUserCharacterData(formData);
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
 		//console.log(form);

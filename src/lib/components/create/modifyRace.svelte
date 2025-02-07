@@ -59,8 +59,11 @@
 		<h2 class="text-xl font-bold">Race Defaults</h2>
 	</Card.Header>
 	<Card.Content>
+		<Label for='name'>Name</Label>
+		<Input name={stringInputNames.name} type='text'/>
+
 		<Label for="name">Race</Label>
-		<Input name={stringInputNames.name} value={raceData.name} type="text" disabled />
+		<Input name={stringInputNames.race} value={raceData.name} type="text" disabled />
 
 		<Label for="speed">Speed</Label>
 		<Input name={stringInputNames.speed} value={$form.speed} type="number" />
