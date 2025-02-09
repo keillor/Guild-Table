@@ -7,7 +7,7 @@
 	import AbilityScoreBonus from './abilityScoreBonus.svelte';
 	import OptionSelect from './OptionSelect.svelte';
 	import AbilityScoreOptionSelect from './abilityScoreOptionSelect.svelte';
-	import { listInputNames, numberInputNames, stringInputNames } from '../../../routes/(main)/character/create/schema';
+	import { abilityInputNames, listInputNames, numberInputNames, stringInputNames } from '../../../routes/(main)/character/create/schema';
 	const { form, errors, raceData, languages, proficiencies, traits } = $props();
 
 	const subracesContent = $derived(
@@ -40,7 +40,7 @@
 		<Card.Content>
 			{#each options as option (option.key)}
 				{#if option.key == 'ability_bonus_options'}
-					<AbilityScoreOptionSelect {form} choices={option.data} formInputName={option.key}/>
+					<AbilityScoreOptionSelect {form} choices={option.data} formInputName={abilityInputNames.as_bonus_race_option}/>
 				{:else}
 					<OptionSelect
 						formInputName={option.key}
@@ -83,7 +83,7 @@
 		<Label for="size_description">Size Description</Label>
 		<Input name={stringInputNames.size_description} value={$form.size_description} type="text" />
 
-		<AbilityScoreBonus ability_scores={raceData.ability_bonuses} {form} formInputName={numberInputNames.as_bonus_race}/>
+		<AbilityScoreBonus ability_scores={raceData.ability_bonuses} {form} formInputName={abilityInputNames.as_bonus_race}/>
 
 		<ComboSelect
 			formInputName={listInputNames.starting_proficiencies}

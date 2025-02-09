@@ -50,12 +50,18 @@ export const stringInputNames = {
 };
 
 export const numberInputNames = {
-	as_bonus_race: 'as_bonus_race',
-	as_bonus_class: 'as_bonus_class',
 	level: 'level',
 	proficiency_bonus: 'proficiency_bonus',
-	hit_die: 'hit_die'
+	hit_die: 'hit_die',
+	as_bonus: 'as_bonus'
 };
+
+export const abilityInputNames = {
+	as_bonus_race: 'as_bonus_race',
+	as_bonus_race_option: 'as_bonus_race_option',
+	as_bonus_class: 'as_bonus_class'
+};
+
 export const listInputNames = {
 	starting_proficiency_options: 'proficiencies_options',
 	language_options: 'language_options',
@@ -71,6 +77,5 @@ export const listInputNames = {
 };
 
 export const jsonListInputNames = {
-	equipment: 'equipment',
-	ability_bonus_options: 'ability_bonus_options'
+	equipment: 'equipment'
 };

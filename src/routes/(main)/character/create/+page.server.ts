@@ -2,7 +2,13 @@ import { superValidate, message, defaultValues, type Infer } from 'sveltekit-sup
 import { zod } from 'sveltekit-superforms/adapters';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { dnd5ApiRaw, dnd5ApiRequest } from '@/api/dnd5api.js';
-import { newClassRaceSchema, numberInputNames, raceDataSchema, stringInputNames } from './schema';
+import {
+	abilityInputNames,
+	newClassRaceSchema,
+	numberInputNames,
+	raceDataSchema,
+	stringInputNames
+} from './schema';
 import type { Actions } from './$types.js';
 
 //steps length is used to detemine if the form has been completed.
@@ -72,33 +78,52 @@ async function parseUserCharacterData(formData: any) {
 	let newCharacterConstruction = {};
 	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
 
+	console.log(formData);
+
+	//grab string only values.
+	//replace invalid values (including empty) with empty string.
 	for (const [key, value] of Object.entries(stringInputNames)) {
-		console.log(key, value);
 		try {
 			const propertyToAdd = await formData.get(value);
-			console.log(propertyToAdd);
 			if (propertyToAdd !== null && regexLettersDashesOnly.test(propertyToAdd)) {
 				newCharacterConstruction[key] = propertyToAdd;
+			} else {
+				newCharacterConstruction[key] = '';
 			}
 		} catch (e) {
 			console.log(e);
 		}
 	}
 
+	//grab number only values.
+	//empty or invalid values will be replaced with 0.
 	for (const [key, value] of Object.entries(numberInputNames)) {
-		console.log(key, value);
 		try {
 			const propertyToAdd = await formData.get(value);
-			console.log(propertyToAdd);
 			if (!isNaN(propertyToAdd)) {
 				newCharacterConstruction[key] = Number(propertyToAdd);
+			} else {
+				newCharacterConstruction[key] = 0;
 			}
 		} catch (e) {
 			console.log(e);
 		}
 	}
-	//BUG: parse as_bonus_race, as_bonus_class correctly.
+
+	//grab ability bonus (from both race and class)
+	let allAS = { cha: 0, con: 0, dex: 0, int: 0, wis: 0, str: 0 };
+	for (const [ability, count] of Object.entries(allAS)) {
+		for (const inputName of Object.keys(abilityInputNames)) {
+			const propertyToAdd = formData.get(`${inputName}_${ability}`);
+			if (!isNaN(propertyToAdd)) {
+				allAS[ability] += Number(propertyToAdd);
+			}
+		}
+	}
+	newCharacterConstruction['as_bonus'] = allAS;
+
 	//TODO: Parse list values from listInputNames.
+	//		NOTE: This includes combining correlating lists together.
 	//TODO: Parse JSON values from jsonInputNames.
 	console.log(newCharacterConstruction);
 }

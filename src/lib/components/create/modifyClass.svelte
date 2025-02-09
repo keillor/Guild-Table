@@ -8,7 +8,7 @@
 	import * as Select from '$lib/components/ui/select/index';
 	import EquipmentSelect from './EquipmentSelect.svelte';
 	import SpellSelect from './SpellSelect.svelte';
-	import { jsonListInputNames, stringInputNames } from '../../../routes/(main)/character/create/schema';
+	import { abilityInputNames, jsonListInputNames, stringInputNames } from '../../../routes/(main)/character/create/schema';
 	import { numberInputNames } from '../../../routes/(main)/character/create/schema';
 	import { listInputNames } from '../../../routes/(main)/character/create/schema';
 
@@ -53,7 +53,7 @@
 		<input hidden name={numberInputNames.proficiency_bonus} value={levelData.prof_bonus} />
 
 		<h3>Ability Score Bonus: {levelData.ability_score_bonuses}</h3>
-		<input hidden name={numberInputNames.as_bonus_class} value={levelData.ability_score_bonuses} />
+		<input hidden name={numberInputNames.as_bonus} value={levelData.ability_score_bonuses} />
 
 		<Label for="hit_die">Hit Die</Label>
 		<Select.Root name={numberInputNames.hit_die} bind:value={$form['hit_die']} type="single">
