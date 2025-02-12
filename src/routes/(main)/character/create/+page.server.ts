@@ -4,6 +4,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { dnd5ApiRaw, dnd5ApiRequest } from '@/api/dnd5api.js';
 import {
 	abilityInputNames,
+	listInputNames,
 	newClassRaceSchema,
 	numberInputNames,
 	raceDataSchema,
@@ -77,6 +78,7 @@ export const load = async ({ request }) => {
 async function parseUserCharacterData(formData: any) {
 	let newCharacterConstruction = {};
 	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
+	const listRegex = /^[a-zA-Z0-9,\-]+$/;
 
 	console.log(formData);
 
@@ -122,14 +124,25 @@ async function parseUserCharacterData(formData: any) {
 	}
 	newCharacterConstruction['as_bonus'] = allAS;
 
+	const proficiencyLists = [
+		listInputNames.starting_proficiency_options,
+		listInputNames.proficiency_choices,
+		listInputNames.starting_proficiencies,
+		listInputNames.proficiencies
+	];
+	let proficiencies = [];
+	for (let i = 0; i < proficiencyLists.length; i++) {
+		const listToAppend = String(formData.get(`${proficiencyLists[i]}`));
+		if (listRegex.test(listToAppend) && listToAppend != 'null') {
+			proficiencies = proficiencies.concat(listToAppend.split(','));
+		}
+	}
+	newCharacterConstruction['proficiencies'] = proficiencies;
+
 	//TODO: Parse list values from listInputNames.
 	//		NOTE: This includes combining correlating lists together.
 	//TODO: Parse JSON values from jsonInputNames.
 	console.log(newCharacterConstruction);
-}
-
-function standardListParse(list: String) {
-	return list.split(',');
 }
 
 /** @satisfies {import('./$types').Actions} */
