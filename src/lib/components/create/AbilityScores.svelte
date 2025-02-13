@@ -78,12 +78,13 @@
 		//$form[`${score.index}_bonus`] -= 1;
 	}
 
-    const as_gen_methods = ['Standard Array', 'Point Buy', 'Custom'];
-    let selectedMethod = $state('2');
+    //const as_gen_methods = ['Standard Array', 'Point Buy', 'Custom'];
+    const as_gen_methods = ['Custom Values'];
+    let selectedMethod = $state('0');
 </script>
 
 <Label for="as_gen">Ability Scores Generation</Label>
-<Select.Root type="single" name="as_gen" bind:value={selectedMethod}>
+<Select.Root type="single" name="as_gen" bind:value={selectedMethod} disabled>
 	<Select.Trigger class="w-[180px]">
 		{as_gen_methods[Number(selectedMethod)]}
 	</Select.Trigger>
@@ -97,11 +98,11 @@
 </Select.Root>
 
 
-{#if selectedMethod == 0}
+<!-- {#if selectedMethod == 2}
     Feature not yet implemented. Please check back later!
 {:else if selectedMethod == 1}
-    Feature not yet implemented. Please check back later!
-{:else if selectedMethod == 2}
+    Feature not yet implemented. Please check back later! -->
+{#if selectedMethod == 0}
     <div class="flex flex-row overflow-auto flex-wrap">
         {#each scores as score (score.index)}
             <Card.Root class="flex w-min flex-col">
