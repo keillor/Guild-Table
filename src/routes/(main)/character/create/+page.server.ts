@@ -75,11 +75,13 @@ export const load = async ({ request }) => {
 	return { form, results };
 };
 
+/**
+ * Parses input form data data returned from the user. User input is verified using Regex.
+ * @param formData The formData object returned from the client request.
+ */
 async function parseUserCharacterData(formData: any) {
 	let newCharacterConstruction = {};
 	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
-	const listRegex = /^[a-zA-Z0-9,\-]+$/;
-
 	console.log(formData);
 
 	//grab string only values.
@@ -124,25 +126,86 @@ async function parseUserCharacterData(formData: any) {
 	}
 	newCharacterConstruction['as_bonus'] = allAS;
 
-	const proficiencyLists = [
-		listInputNames.starting_proficiency_options,
-		listInputNames.proficiency_choices,
-		listInputNames.starting_proficiencies,
-		listInputNames.proficiencies
-	];
-	let proficiencies = [];
-	for (let i = 0; i < proficiencyLists.length; i++) {
-		const listToAppend = String(formData.get(`${proficiencyLists[i]}`));
-		if (listRegex.test(listToAppend) && listToAppend != 'null') {
-			proficiencies = proficiencies.concat(listToAppend.split(','));
-		}
-	}
-	newCharacterConstruction['proficiencies'] = proficiencies;
+	newCharacterConstruction['proficiencies'] = listParse(
+		[
+			listInputNames.starting_proficiency_options,
+			listInputNames.proficiency_choices,
+			listInputNames.starting_proficiencies,
+			listInputNames.proficiencies
+		],
+		formData
+	);
 
-	//TODO: Parse list values from listInputNames.
-	//		NOTE: This includes combining correlating lists together.
+	newCharacterConstruction['languages'] = listParse(
+		[listInputNames.language_options, listInputNames.languages],
+		formData
+	);
+
+	newCharacterConstruction['traits'] = listParse([listInputNames.traits], formData);
+
+	newCharacterConstruction['features'] = listParse([listInputNames.features], formData);
+
+	newCharacterConstruction['saving_throws'] = listParse([listInputNames.saving_throws], formData);
+
+	newCharacterConstruction['spells'] = listParseTrailingNumber('spells', formData);
 	//TODO: Parse JSON values from jsonInputNames.
 	console.log(newCharacterConstruction);
+}
+
+/**
+ * Retrieves all form elements with provided names and parses it into an Array.
+ * @param inputNames - The list of inputs you would like concatinated, in the form of strings.
+ * @param formData - A formData object.
+ * @returns an array of the items contacinated.
+ */
+function listParse(inputNames: Array<String>, formData: FormData) {
+	const listRegex = /^[a-zA-Z0-9,\-]+$/;
+	let itemsToConcat: Array<String> = [];
+	for (let i = 0; i < inputNames.length; i++) {
+		const listToAppend = String(formData.get(`${inputNames[i]}`));
+		if (listRegex.test(listToAppend) && listToAppend != 'null') {
+			itemsToConcat = itemsToConcat.concat(listToAppend.split(','));
+		}
+	}
+	return itemsToConcat;
+	//newCharacterConstruction['languages'] = languages;
+}
+
+function listParseTrailingNumber(inputName: string, formData: FormData) {
+	let results: any = {};
+	const listRegex = /^[a-zA-Z0-9,\-]+$/;
+	let validInputNames = [];
+	for (const key of formData.keys()) {
+		if (key.startsWith(inputName)) {
+			validInputNames.push(key);
+		}
+	}
+	for (const key of validInputNames) {
+		const propertyToAdd: string = formData.get(key);
+		const index = key.split('_').pop();
+		if (listRegex.test(propertyToAdd) && !isNaN(index)) {
+			results[index] = propertyToAdd.split(',');
+		}
+	}
+	return results;
+}
+function jsonParseTrailingNumber(inputName: string, formData: FormData) {
+	let results: any = {};
+	const listRegex = /^[a-zA-Z0-9,\-]+$/;
+	let validInputNames = [];
+	for (const key of formData.keys()) {
+		if (key.startsWith(inputName)) {
+			validInputNames.push(key);
+		}
+	}
+	for (const key of validInputNames) {
+		const propertyToAdd: string = formData.get(key);
+		const index = key.split('_').pop();
+		if (listRegex.test(propertyToAdd) && !isNaN(index)) {
+			results[index] = propertyToAdd.split(',');
+		}
+	}
+	return results;
 }
 
 /** @satisfies {import('./$types').Actions} */
