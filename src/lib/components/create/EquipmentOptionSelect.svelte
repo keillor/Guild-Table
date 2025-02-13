@@ -27,6 +27,7 @@
 			formDisplayName={choices.desc}
 			formInputName={`${formInputName}_${equipIndex}`}
 			choices={{choice: choices}}
+			{equipIndex}
 			{form}
 		/>
 {:else}
@@ -71,6 +72,7 @@
 				formDisplayName={item.choice.desc}
 				formInputName={`${formInputName}_${equipIndex}_${subSelect}`}
 				choices={item}
+				{equipIndex}
 				{form}/>
 			{/if}
 			
@@ -81,6 +83,7 @@
 			formInputName={`${formInputName}_${equipIndex}_${subSelect}`}
 			choices={selectedOption}
 			{form}
+			{equipIndex}
 		/>
 	{/if}
 </div>

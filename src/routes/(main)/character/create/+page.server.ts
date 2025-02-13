@@ -88,7 +88,7 @@ async function parseUserCharacterData(formData: any) {
 	//replace invalid values (including empty) with empty string.
 	for (const [key, value] of Object.entries(stringInputNames)) {
 		try {
-			const propertyToAdd = await formData.get(value);
+			const propertyToAdd = formData.get(value);
 			if (propertyToAdd !== null && regexLettersDashesOnly.test(propertyToAdd)) {
 				newCharacterConstruction[key] = propertyToAdd;
 			} else {
@@ -103,7 +103,7 @@ async function parseUserCharacterData(formData: any) {
 	//empty or invalid values will be replaced with 0.
 	for (const [key, value] of Object.entries(numberInputNames)) {
 		try {
-			const propertyToAdd = await formData.get(value);
+			const propertyToAdd = formData.get(value);
 			if (!isNaN(propertyToAdd)) {
 				newCharacterConstruction[key] = Number(propertyToAdd);
 			} else {
@@ -148,8 +148,16 @@ async function parseUserCharacterData(formData: any) {
 	newCharacterConstruction['saving_throws'] = listParse([listInputNames.saving_throws], formData);
 
 	newCharacterConstruction['spells'] = listParseTrailingNumber('spells', formData);
+
+	const init_equipment = listParse([listInputNames.starting_equipment], formData);
+
+	console.log('equipment options', init_equipment);
+
+	newCharacterConstruction['equipment'] = jsonParseTrailingNumber('equipment', formData);
+
 	//TODO: Parse JSON values from jsonInputNames.
 	console.log(newCharacterConstruction);
+
 }
 
 /**
@@ -172,7 +180,7 @@ function listParse(inputNames: Array<String>, formData: FormData) {
 }
 
 function listParseTrailingNumber(inputName: string, formData: FormData) {
-	let results: any = {};
+	let results: any = [];
 	const listRegex = /^[a-zA-Z0-9,\-]+$/;
 	let validInputNames = [];
 	for (const key of formData.keys()) {
@@ -184,14 +192,14 @@ function listParseTrailingNumber(inputName: string, formData: FormData) {
 		const propertyToAdd: string = formData.get(key);
 		const index = key.split('_').pop();
 		if (listRegex.test(propertyToAdd) && !isNaN(index)) {
-			results[index] = propertyToAdd.split(',');
+			results = results.concat(propertyToAdd.split(','));
 		}
 	}
 	return results;
 }
 function jsonParseTrailingNumber(inputName: string, formData: FormData) {
-	let results: any = {};
-	const listRegex = /^[a-zA-Z0-9,\-]+$/;
+	let results: Array<object> = [];
+	const listRegex = /^[a-zA-Z0-9,\-]+$/
 	let validInputNames = [];
 	for (const key of formData.keys()) {
 		if (key.startsWith(inputName)) {
@@ -199,12 +207,27 @@ function jsonParseTrailingNumber(inputName: string, formData: FormData) {
 		}
 	}
 	for (const key of validInputNames) {
-		const propertyToAdd: string = formData.get(key);
+		let propertyToAdd: JSON;
+		try {
+			propertyToAdd = JSON.parse(formData.get(key));
+		} catch {
+			error(400, "Invalid Request");
+		}
 		const index = key.split('_').pop();
-		if (listRegex.test(propertyToAdd) && !isNaN(index)) {
-			results[index] = propertyToAdd.split(',');
+		if (!isNaN(index) && propertyToAdd != null) {
+			for(const [key,value] of Object.entries(propertyToAdd)) {
+				if(listRegex.test(key) && !isNaN(value)){
+						results.push({
+						index: key,
+						name: key,
+						count: value
+					})		
+				}
+			}
 		}
 	}
+
+	//parse through all possible equipment options (ex: equipment_1, equipment_2, etc...)
 	return results;
 }
 

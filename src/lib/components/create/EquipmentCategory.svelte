@@ -18,7 +18,7 @@
 	import { dnd5ApiEquipmentCategory } from '@/api/dnd5api';
 
 	//data
-	const { formInputName, formDisplayName, form, choices } = $props();
+	const { formInputName, formDisplayName, form, choices, equipIndex} = $props();
 
     const results = dnd5ApiEquipmentCategory(choices.choice.from.equipment_category.index);
 	$form[formInputName] = [];
@@ -89,7 +89,7 @@
 	</Popover.Content>
 </Popover.Root>
 <div class="flex flex-row gap-2">
-	{#each $form[formInputName] as item (item)}
+	{#each $form[formInputName] as item, index}
 		<Badge
 			class="flex h-min flex-row content-between gap-1  text-white"
 			onclick={(event) => {
@@ -99,7 +99,7 @@
 		>
 			{allThings.equipment.find((i) => item === i.index).name}
 		</Badge>
+		<input hidden name={`${formInputName}_${equipIndex}_${index}`} value={JSON.stringify({[item]:1})}/>
 	{/each}
 </div>
-<input hidden bind:value={$form[formInputName]} name={formInputName} />
 {/await}
