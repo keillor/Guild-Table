@@ -18,7 +18,7 @@ const steps = [zod(newClassRaceSchema), zod(raceDataSchema)];
 const lastStep = steps[steps.length - 1];
 export const load = async ({ request }) => {
 	let step = 1;
-	const results = {};
+	const results : Object = {};
 
 	//determine if we already know the step number
 	try {
@@ -80,7 +80,7 @@ export const load = async ({ request }) => {
  * @param formData The formData object returned from the client request.
  */
 async function parseUserCharacterData(formData: any) {
-	let newCharacterConstruction = {};
+	let newCharacterConstruction : any = {};
 	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
 	console.log(formData);
 
@@ -115,7 +115,7 @@ async function parseUserCharacterData(formData: any) {
 	}
 
 	//grab ability bonus (from both race and class)
-	let allAS = { cha: 0, con: 0, dex: 0, int: 0, wis: 0, str: 0 };
+	let allAS : Object = { cha: 0, con: 0, dex: 0, int: 0, wis: 0, str: 0 };
 	for (const [ability, count] of Object.entries(allAS)) {
 		for (const inputName of Object.keys(abilityInputNames)) {
 			const propertyToAdd = formData.get(`${inputName}_${ability}`);
@@ -149,11 +149,19 @@ async function parseUserCharacterData(formData: any) {
 
 	newCharacterConstruction['spells'] = listParseTrailingNumber('spells', formData);
 
+	newCharacterConstruction['equipment'] = jsonParseTrailingNumber('equipment', formData);
+	
 	const init_equipment = listParse([listInputNames.starting_equipment], formData);
 
-	console.log('equipment options', init_equipment);
+	for(let i = 0; i < init_equipment.length; i++) {
+		newCharacterConstruction['equipment'].push({
+			index: init_equipment[i],
+			name: init_equipment[i],
+			count: 1
+		})
+	} 
 
-	newCharacterConstruction['equipment'] = jsonParseTrailingNumber('equipment', formData);
+	console.log('equipment options', init_equipment);
 
 	//TODO: Parse JSON values from jsonInputNames.
 	console.log(newCharacterConstruction);
@@ -180,7 +188,7 @@ function listParse(inputNames: Array<String>, formData: FormData) {
 }
 
 function listParseTrailingNumber(inputName: string, formData: FormData) {
-	let results: any = [];
+	let results: Object = {};
 	const listRegex = /^[a-zA-Z0-9,\-]+$/;
 	let validInputNames = [];
 	for (const key of formData.keys()) {
@@ -192,11 +200,13 @@ function listParseTrailingNumber(inputName: string, formData: FormData) {
 		const propertyToAdd: string = formData.get(key);
 		const index = key.split('_').pop();
 		if (listRegex.test(propertyToAdd) && !isNaN(index)) {
-			results = results.concat(propertyToAdd.split(','));
+			results[index] = propertyToAdd.split(',');
 		}
 	}
 	return results;
 }
+
+
 function jsonParseTrailingNumber(inputName: string, formData: FormData) {
 	let results: Array<object> = [];
 	const listRegex = /^[a-zA-Z0-9,\-]+$/
@@ -217,16 +227,15 @@ function jsonParseTrailingNumber(inputName: string, formData: FormData) {
 		if (!isNaN(index) && propertyToAdd != null) {
 			for(const [key,value] of Object.entries(propertyToAdd)) {
 				if(listRegex.test(key) && !isNaN(value)){
-						results.push({
-						index: key,
+					results.push({
 						name: key,
+						index: key,
 						count: value
 					})		
 				}
 			}
 		}
 	}
-
 	//parse through all possible equipment options (ex: equipment_1, equipment_2, etc...)
 	return results;
 }

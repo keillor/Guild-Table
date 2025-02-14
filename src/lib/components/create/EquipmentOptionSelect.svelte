@@ -3,7 +3,7 @@
 	import Label from '@/components/ui/label/label.svelte';
 	import Badge from '../ui/badge/badge.svelte';
 	import EquipmentCategory from './EquipmentCategory.svelte';
-	import { jsonListInputNames } from '../../../routes/(main)/character/create/schema';
+	import EquipmentPackGenerate from './EquipmentPackGenerate.svelte';
 
 	//data
 	const { formInputName, formDisplayName, form, choices, equipIndex } = $props();
@@ -12,12 +12,11 @@
 	let subSelect = $state(null);
 	let selectedOption = $derived.by(() => {
 		if (subSelect != null) {
+			console.log(choices.from.options[subSelect]);
 			return choices.from.options[subSelect];
 		}
 		return null;
 	});
-
-	let selectedOptionResult = $state('');
 </script>
 
 
@@ -46,15 +45,21 @@
 
 <div class="flex flex-row gap-2">
 	{#if selectedOption != null && selectedOption.option_type == 'counted_reference'}
-		<Badge
+		{#key selectedOption.of.index}
+			{#if String(selectedOption.of.index).endsWith("-pack")}
+				<EquipmentPackGenerate uri={String(selectedOption.of.index)} {equipIndex} formInputName={formInputName}/>
+			{:else}
+			<Badge
 			class="flex h-min flex-row content-between gap-1  text-white"
 			onclick={(event) => {
 				event.preventDefault();
-			}}
-		>
-			{selectedOption.count} x {selectedOption.of.name}
-		</Badge>
-		<input hidden name={`${formInputName}_${equipIndex}`} value={JSON.stringify({[selectedOption.of.index] : selectedOption.count})}>
+				}}
+			>
+				{selectedOption.count} x {selectedOption.of.name}
+			</Badge>
+			<input hidden name={`${formInputName}_${equipIndex}`} value={JSON.stringify({[selectedOption.of.index] : selectedOption.count})}>
+			{/if}
+		{/key}
 	{:else if selectedOption != null && selectedOption.option_type == 'multiple'}
 		{#each selectedOption.items as item, index}
 			{#if item.option_type == 'counted_reference'}

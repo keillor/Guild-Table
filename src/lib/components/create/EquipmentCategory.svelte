@@ -15,7 +15,7 @@
 	//shadcn components
 	import Label from '@/components/ui/label/label.svelte';
 	import { useId } from 'bits-ui';
-	import { dnd5ApiEquipmentCategory } from '@/api/dnd5api';
+	import { dnd5ApiEquipmentCategory } from '@/api/dnd5api_client';
 
 	//data
 	const { formInputName, formDisplayName, form, choices, equipIndex} = $props();
