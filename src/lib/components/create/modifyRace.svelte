@@ -60,7 +60,7 @@
 	</Card.Header>
 	<Card.Content>
 		<Label for='name'>Name</Label>
-		<Input name={stringInputNames.name} type='text'/>
+		<Input name={stringInputNames.name} required type='text'/>
 
 		<Label for="name">Race</Label>
 		<Input name={stringInputNames.race} value={raceData.name} type="text" disabled />
