@@ -82,7 +82,6 @@ export const load = async ({ request }) => {
 async function parseUserCharacterData(formData: any) {
 	let newCharacterConstruction : any = {};
 	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
-	console.log(formData);
 
 	//grab string only values.
 	//replace invalid values (including empty) with empty string.
@@ -159,13 +158,7 @@ async function parseUserCharacterData(formData: any) {
 			name: init_equipment[i],
 			count: 1
 		})
-	} 
-
-	console.log('equipment options', init_equipment);
-
-	//TODO: Parse JSON values from jsonInputNames.
-	console.log(newCharacterConstruction);
-
+	}
 }
 
 /**
