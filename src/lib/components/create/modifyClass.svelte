@@ -145,7 +145,7 @@
 			{#each choices as thing (thing.key)}
 				{#each thing.data as option, index}
 					<ClassOptionSelect
-						formInputName={option.key}
+						formInputName={`${thing.key}_${index}`}
 						formDisplayName={option.desc}
 						{form}
 						choices={option}

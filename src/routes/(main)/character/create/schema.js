@@ -64,7 +64,7 @@ export const abilityInputNames = {
 
 export const listInputNames = {
 	starting_proficiency_options: 'proficiencies_options',
-	proficiency_choices: 'proficiencies_choices',
+	proficiency_choices: 'proficiency_choices',
 	starting_proficiencies: 'starting_proficiencies',
 	proficiencies: 'proficiencies',
 	language_options: 'language_options',

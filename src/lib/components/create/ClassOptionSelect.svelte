@@ -185,5 +185,5 @@
 			</Badge>
 		{/each}
 	</div>
-	<input hidden bind:value={$form[formInputName]} name={`${formInputName}_${classIndex}`} />
+	<input hidden bind:value={$form[formInputName]} name={formInputName} />
 {/if}

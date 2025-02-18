@@ -79,7 +79,7 @@ export const load = async ({ request }) => {
  * Parses input form data data returned from the user. User input is verified using Regex.
  * @param formData The formData object returned from the client request.
  */
-async function parseUserCharacterData(formData: any) {
+function parseUserCharacterData(formData: any) {
 	let newCharacterConstruction : any = {};
 	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
 
@@ -128,12 +128,14 @@ async function parseUserCharacterData(formData: any) {
 	newCharacterConstruction['proficiencies'] = listParse(
 		[
 			listInputNames.starting_proficiency_options,
-			listInputNames.proficiency_choices,
 			listInputNames.starting_proficiencies,
 			listInputNames.proficiencies
 		],
 		formData
 	);
+
+	//newCharacterConstruction['proficiencies'] = 
+	newCharacterConstruction['proficiencies'] = newCharacterConstruction['proficiencies'].concat(listParseTrailingNumber(listInputNames.proficiency_choices, formData));
 
 	newCharacterConstruction['languages'] = listParse(
 		[listInputNames.language_options, listInputNames.languages],
@@ -146,7 +148,7 @@ async function parseUserCharacterData(formData: any) {
 
 	newCharacterConstruction['saving_throws'] = listParse([listInputNames.saving_throws], formData);
 
-	newCharacterConstruction['spells'] = listParseTrailingNumber('spells', formData);
+	newCharacterConstruction['spells'] = spellParseTrailingNumber('spells', formData);
 
 	newCharacterConstruction['equipment'] = jsonParseTrailingNumber('equipment', formData);
 	
@@ -159,6 +161,8 @@ async function parseUserCharacterData(formData: any) {
 			count: 1
 		})
 	}
+
+	return newCharacterConstruction;
 }
 
 /**
@@ -181,6 +185,25 @@ function listParse(inputNames: Array<String>, formData: FormData) {
 }
 
 function listParseTrailingNumber(inputName: string, formData: FormData) {
+	let results: any = [];
+	const listRegex = /^[a-zA-Z0-9,\-]+$/;
+	let validInputNames = [];
+	for (const key of formData.keys()) {
+		if (key.startsWith(inputName)) {
+			validInputNames.push(key);
+		}
+	}
+	for (const key of validInputNames) {
+		const propertyToAdd: string = formData.get(key);
+		const index = key.split('_').pop();
+		if (listRegex.test(propertyToAdd) && !isNaN(index)) {
+			results = results.concat(propertyToAdd.split(','));
+		}
+	}
+	return results;
+}
+
+function spellParseTrailingNumber(inputName: string, formData: FormData) {
 	let results: Object = {};
 	const listRegex = /^[a-zA-Z0-9,\-]+$/;
 	let validInputNames = [];
@@ -260,6 +283,7 @@ export const actions = {
 
 		//form parsing
 		const parsedData = parseUserCharacterData(formData);
+		console.log(parsedData)
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
 		//console.log(form);
