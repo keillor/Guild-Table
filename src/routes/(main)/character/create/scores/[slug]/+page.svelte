@@ -1,13 +1,16 @@
 <script>
 	import AbilityScores from "$lib/components/create/AbilityScores.svelte";
 	import Button from "$lib/components/ui/button/button.svelte";
-	import { stringInputNames, listInputNames, numberInputNames } from "../schema";
+	import { stringInputNames, listInputNames, numberInputNames } from "../../schema";
 
-	const character = {
+	const { data } = $props();
+	const character = data.singleCharacter;
+
+	/* const character = {
 		[stringInputNames.name]: "Indiana Bones",
 		[listInputNames.saving_throws]: ['int', 'cha'],
 		[numberInputNames.proficiency_bonus]: '5'
-	};
+	}; */
 
 
 </script>

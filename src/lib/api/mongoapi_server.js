@@ -1,10 +1,9 @@
 import { MONGO_URL } from '$env/static/private';
-import { MongoClient } from 'mongodb';
-import { v4 as uuid4 } from 'uuid';
+import { MongoClient, ObjectId} from 'mongodb';
 
 const client = new MongoClient(MONGO_URL);
 
-const serializeNonPOJOs = (value: object | null) => {
+const serializeNonPOJOs = (value) => {
     return structuredClone(value)
 };
 
@@ -24,9 +23,23 @@ export async function dummyRequest() {
 
 //GET
 //export async function fetchSingleCharacter()
+export async function getSingleCharacter(slugObjectID) {
+    try {
+        const database = client.db('character');
+        const stdCharacters = database.collection('standard_characters');
+        const result = await stdCharacters.findOne(
+            {_id: new ObjectId(slugObjectID)},
+            { projection: {_id: 0}}
+        );
+        return result;
+    } catch (e) {
+        console.log("getSingleCharacter ERROR!")
+        return null;
+    }
+}
 
 //POST
-export async function postCharacter(newCharacter: object) {
+export async function postCharacter(newCharacter) {
     try {
         const database = client.db('character');
         const stdCharacters = database.collection('standard_characters');
@@ -38,3 +51,4 @@ export async function postCharacter(newCharacter: object) {
         return null;
     }
 }
+
