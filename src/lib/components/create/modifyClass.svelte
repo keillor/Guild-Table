@@ -185,7 +185,9 @@
 		</Card.Header>
 		<Card.Content>
 			<h3>Casting Level: {classData.spellcasting.level}</h3>
+			<input hidden name={numberInputNames.spellcasting_level} value={classData.spellcasting.level} />
 			<h3>Spell Casting Ability: {classData.spellcasting.spellcasting_ability.name}</h3>
+			<input hidden name={stringInputNames.spellcasting_ability} value={classData.spellcasting.spellcasting_ability.index} />
 
 			{#each classData.spellcasting.info as info}
 				<h4 class="text-lg font-bold">{info.name}</h4>

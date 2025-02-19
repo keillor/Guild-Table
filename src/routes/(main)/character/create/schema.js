@@ -46,14 +46,16 @@ export const stringInputNames = {
 	age: 'age',
 	size: 'size',
 	size_description: 'size_description',
-	language_desc: 'language_desc'
+	language_desc: 'language_desc',
+	spellcasting_ability: 'spellcasting_ability'
 };
 
 export const numberInputNames = {
 	level: 'level',
 	proficiency_bonus: 'proficiency_bonus',
 	hit_die: 'hit_die',
-	as_bonus: 'as_bonus'
+	as_bonus: 'as_bonus',
+	spellcasting_level: 'spellcasting_level'
 };
 
 export const abilityInputNames = {
@@ -73,7 +75,7 @@ export const listInputNames = {
 	features: 'features',
 	saving_throws: 'saving_throws',
 	starting_equipment: 'starting_equipment',
-	spells: 'spells'
+	spells: 'spells',
 };
 
 export const jsonListInputNames = {

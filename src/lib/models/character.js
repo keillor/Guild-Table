@@ -10,9 +10,11 @@ export const character = {
 	size: 'size',
 	size_description: 'size_description',
 	language_desc: 'language_desc',
+    spellcasting_ability: 'spellcasting_ability',
     //number values
     level: 'level',
 	proficiency_bonus: 'proficiency_bonus',
+    spellcasting_level: 'spellcasting_level',
     //arrays
 	hit_die: 'hit_die',
 	as_bonus: 'as_bonus',
