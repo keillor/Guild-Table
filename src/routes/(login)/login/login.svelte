@@ -1,30 +1,32 @@
 <script lang="ts">
+  import Label from "$lib/components/ui/label";
   import * as Form from "$lib/components/ui/form";
   import { Input } from "$lib/components/ui/input";
   import { formSchema, type FormSchema } from "./schema";
   import {
-   type SuperValidated,
-   type Infer,
-   superForm,
+    type SuperValidated,
+    type Infer,
+    superForm,
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
-  
+ 
   export let data: SuperValidated<Infer<FormSchema>>;
-  
+ 
   const form = superForm(data, {
-   validators: zodClient(formSchema),
+    validators: zodClient(formSchema),
   });
-  
+ 
   const { form: formData, enhance } = form;
 </script>
-  
-<form method="POST" use:enhance>
+
+<form method="POST" class="flex h-screen w-full items-center justify-center px-4" use:enhance>
+	<Label>Existing User Sign In</Label>
   <Form.Field {form} name="email">
     <Form.Control let:attrs>
     <Form.Label>Email</Form.Label>
     <Input {...attrs} bind:value={$formData.email} type="email"/>
     </Form.Control>
-    <Form.Description>This is your email.</Form.Description>
+    <Form.Description>Please enter your email</Form.Description>
     <Form.FieldErrors />
   </Form.Field>
 
@@ -33,8 +35,8 @@
       <Form.Label>Password</Form.Label>
       <Input {...attrs} bind:value={$formData.password} type="password"/>
     </Form.Control>
-    <Form.Description>This is your password.</Form.Description>
+    <Form.Description>Please enter your password</Form.Description>
     <Form.FieldErrors />
-    </Form.Field>
-  <Form.Button>Create New Account</Form.Button>
+	</Form.Field>
+  <Form.Button>Sign In</Form.Button>
 </form>
