@@ -1,5 +1,6 @@
 <script lang="ts">
-  import Label from "$lib/components/ui/label";
+  import { Label } from "$lib/components/ui/label";
+  import { Button } from "$lib/components/ui/button";
   import * as Form from "$lib/components/ui/form";
   import { Input } from "$lib/components/ui/input";
   import { formSchema, type FormSchema } from "./schema";
@@ -19,7 +20,7 @@
   const { form: formData, enhance } = form;
 </script>
 
-<form method="POST" class="flex h-screen w-full items-center justify-center px-4" use:enhance>
+<form method="POST" class="border border-gray-300 p-2 mb-4 w-full rounded bg-gray-100" use:enhance>
 	<Label>Existing User Sign In</Label>
   <Form.Field {form} name="email">
     <Form.Control let:attrs>
@@ -38,5 +39,8 @@
     <Form.Description>Please enter your password</Form.Description>
     <Form.FieldErrors />
 	</Form.Field>
-  <Form.Button>Sign In</Form.Button>
+  <Form.Button>Sign In to Account</Form.Button>
 </form>
+
+<Label>Don't have an account?</Label>
+<Button href="/register" class="w-full py-5">Sign Up</Button>

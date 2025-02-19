@@ -1,6 +1,7 @@
 <script>
   import * as Carousel from "$lib/components/ui/carousel/index.ts";
   import * as Card from "$lib/components/ui/card/index.js";
+  import {Button} from "$lib/components/ui/button/index.js";
   
 
   const games_info = {
@@ -30,6 +31,12 @@
       "image" : "https://via.placeholder.com/150"
     }
   }
+
+  async function disableAlert() {
+    const announcementAlert = document.getElementById("announcement-alert")?.addEventListener("click", function() {
+      document.getElementById("announcement-alert")?.remove();
+    });
+  }
 </script>
 
 <div class="w-full overflow-x-hidden px-5">
@@ -47,19 +54,21 @@
   </navigation>
   <div class="pt-16">
     <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Homepage</h1>
-    
-    <Card.Root>
-      <Card.Header>
-        <Card.Title>Announcement Alert!</Card.Title>
-        <Card.Description>January 1, 2025</Card.Description>
-      </Card.Header>
-      <Card.Content>
-        <p>Announcement content is placed here.</p>
-      </Card.Content>
-      <Card.Footer>
-        <p>Do Something</p>
-      </Card.Footer>
-    </Card.Root>
+
+    <div id="announcement-alert" class="fixed top-0 left-0 w-full bg-blue-500 text-white p-5">
+      <Card.Root>
+        <Card.Header>
+          <Card.Title>Announcement Alert!</Card.Title>
+          <Card.Description>January 1, 2025</Card.Description>
+        </Card.Header>
+        <Card.Content>
+          <p>Announcement content is placed here.</p>
+        </Card.Content>
+        <Card.Footer>
+          <Button onclick="{disableAlert()}">Dismiss</Button>
+        </Card.Footer>
+      </Card.Root>  
+    </div>
 
     <h1 class="">My Games</h1>
     <Carousel.Root

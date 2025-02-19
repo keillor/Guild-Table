@@ -22,15 +22,12 @@ export const actions: Actions = {
     // Create account with Supabase
     const supabase = event.locals.supabase;
     const { email, password } = form.data;
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: 'valid.email@supabase.io',
-      password: 'example-password',
-    })
+    const { error } = await supabase.auth.signInWithPassword({ email, password, })
     if (error) {
       console.log(error);
-      return setError(form, "password", "Error Signing In");
+      return setError(form, "password", "Invalid email.password");
     } else {
-      return redirect(303, "/");
+      return redirect(303, "/homepage");
     }
   },
 };

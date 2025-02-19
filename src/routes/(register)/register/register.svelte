@@ -18,7 +18,7 @@
   const { form: formData, enhance } = form;
 </script>
   
-<form method="POST" use:enhance>
+<form method="POST" class="border border-gray-300 p-2 mb-4 w-full rounded bg-gray-100" use:enhance>
   <Form.Field {form} name="email">
     <Form.Control let:attrs>
     <Form.Label>Email</Form.Label>
