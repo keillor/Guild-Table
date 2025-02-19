@@ -286,15 +286,14 @@ export const actions = {
 
 		//form parsing
 		const parsedData = parseUserCharacterData(formData);
-		jsonToFile('characterData.json', parsedData);
 		console.log(parsedData);
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
-		const status = postCharacter(parsedData);
-		if(status == null) {
-			
+		const returnedID = await postCharacter(parsedData);
+		if(returnedID == null) {
+			error(500, "Server error!");
 		}
-		redirect(303, '/character');
+		redirect(303, `/character/scores/${returnedID}`);
 
 		//the following resets the form to the default state.
 		///form.data = defaultValues(lastStep);
