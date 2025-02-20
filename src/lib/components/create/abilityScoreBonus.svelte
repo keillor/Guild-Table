@@ -3,7 +3,7 @@
 	import Label from '../ui/label/label.svelte';
 	import Input from '../ui/input/input.svelte';
 	import * as Card from '$lib/components/ui/card/index';
-	const { ability_scores, form } = $props();
+	const { ability_scores, form, formInputName } = $props();
 	const scores = [
 		{
 			index: 'cha',
@@ -66,7 +66,7 @@
 			</Card.Header>
 			<Card.Content>
 				<Input
-					name={`${score.index}_bonus`}
+					name={`${formInputName}_${score.index}`}
 					type="number"
 					bind:value={$form[`${score.index}_bonus`]}
 				/>

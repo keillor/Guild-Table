@@ -3,13 +3,13 @@
 	import Label from '@/components/ui/label/label.svelte';
 	import Badge from '../ui/badge/badge.svelte';
 	import EquipmentCategory from './EquipmentCategory.svelte';
+	import EquipmentPackGenerate from './EquipmentPackGenerate.svelte';
 
 	//data
 	const { formInputName, formDisplayName, form, choices, equipIndex } = $props();
 	$form[formInputName] = [];
 	//const choiceLimit = $derived(subSelect);
 	let subSelect = $state(null);
-	console.log(choices);
 	let selectedOption = $derived.by(() => {
 		if (subSelect != null) {
 			console.log(choices.from.options[subSelect]);
@@ -17,8 +17,6 @@
 		}
 		return null;
 	});
-
-	let selectedOptionResult = $state('');
 </script>
 
 
@@ -26,8 +24,9 @@
 {#if choices.hasOwnProperty('from') && choices.from.option_set_type == 'equipment_category'}
 <EquipmentCategory
 			formDisplayName={choices.desc}
-			formInputName={`equipment_${equipIndex}`}
+			formInputName={`${formInputName}_${equipIndex}`}
 			choices={{choice: choices}}
+			{equipIndex}
 			{form}
 		/>
 {:else}
@@ -46,15 +45,21 @@
 
 <div class="flex flex-row gap-2">
 	{#if selectedOption != null && selectedOption.option_type == 'counted_reference'}
-		<Badge
+		{#key selectedOption.of.index}
+			{#if String(selectedOption.of.index).endsWith("-pack")}
+				<EquipmentPackGenerate uri={String(selectedOption.of.index)} {equipIndex} formInputName={formInputName}/>
+			{:else}
+			<Badge
 			class="flex h-min flex-row content-between gap-1  text-white"
 			onclick={(event) => {
 				event.preventDefault();
-			}}
-		>
-			{selectedOption.count} x {selectedOption.of.name}
-		</Badge>
-		<input hidden name={`equipment_${equipIndex}`} value={JSON.stringify({[selectedOption.of.index] : selectedOption.count})}>
+				}}
+			>
+				{selectedOption.count} x {selectedOption.of.name}
+			</Badge>
+			<input hidden name={`${formInputName}_${equipIndex}`} value={JSON.stringify({[selectedOption.of.index] : selectedOption.count})}>
+			{/if}
+		{/key}
 	{:else if selectedOption != null && selectedOption.option_type == 'multiple'}
 		{#each selectedOption.items as item, index}
 			{#if item.option_type == 'counted_reference'}
@@ -66,12 +71,13 @@
 				>
 					{item.count} x {item.of.name}
 				</Badge>
-				<input hidden name={`equipment_${equipIndex}_${index}`} value={JSON.stringify({[item.of.index] : item.count})}/>
+				<input hidden name={`${formInputName}_${equipIndex}_${index}`} value={JSON.stringify({[item.of.index] : item.count})}/>
 			{:else}
 				<EquipmentCategory
 				formDisplayName={item.choice.desc}
-				formInputName={`equipment_${equipIndex}_${subSelect}`}
+				formInputName={`${formInputName}_${equipIndex}_${subSelect}`}
 				choices={item}
+				{equipIndex}
 				{form}/>
 			{/if}
 			
@@ -79,9 +85,10 @@
 	{:else if selectedOption != null && selectedOption.option_type == 'choice' && selectedOption.choice.from.option_set_type == 'equipment_category'}
 		<EquipmentCategory
 			formDisplayName={selectedOption.choice.desc}
-			formInputName={`equipment_${equipIndex}_${subSelect}`}
+			formInputName={`${formInputName}_${equipIndex}_${subSelect}`}
 			choices={selectedOption}
 			{form}
+			{equipIndex}
 		/>
 	{/if}
 </div>

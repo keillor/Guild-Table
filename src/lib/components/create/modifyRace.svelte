@@ -6,6 +6,8 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import AbilityScoreBonus from './abilityScoreBonus.svelte';
 	import OptionSelect from './OptionSelect.svelte';
+	import AbilityScoreOptionSelect from './abilityScoreOptionSelect.svelte';
+	import { abilityInputNames, listInputNames, numberInputNames, stringInputNames } from '../../../routes/(main)/character/create/schema';
 	const { form, errors, raceData, languages, proficiencies, traits } = $props();
 
 	const subracesContent = $derived(
@@ -37,12 +39,16 @@
 		</Card.Header>
 		<Card.Content>
 			{#each options as option (option.key)}
-				<OptionSelect
-					formInputName={option.key}
-					formDisplayName={option.displayValue}
-					{form}
-					choices={option.data}
-				/>
+				{#if option.key == 'ability_bonus_options'}
+					<AbilityScoreOptionSelect {form} choices={option.data} formInputName={abilityInputNames.as_bonus_race_option}/>
+				{:else}
+					<OptionSelect
+						formInputName={option.key}
+						formDisplayName={option.displayValue}
+						{form}
+						choices={option.data}
+					/>
+				{/if}
 			{/each}
 		</Card.Content>
 	</Card.Root>
@@ -53,31 +59,34 @@
 		<h2 class="text-xl font-bold">Race Defaults</h2>
 	</Card.Header>
 	<Card.Content>
+		<Label for='name'>Name</Label>
+		<Input name={stringInputNames.name} required type='text'/>
+
 		<Label for="name">Race</Label>
-		<Input name="name" value={raceData.name} type="text" disabled />
+		<Input name={stringInputNames.race} value={raceData.name} type="text" disabled />
 
 		<Label for="speed">Speed</Label>
-		<Input name="speed" value={$form.speed} type="number" />
+		<Input name={stringInputNames.speed} value={$form.speed} type="number" />
 
 		<!-- <Label for='ability_bonus'>Ability Bonus</Label>
         <Input name='ability_bonus' bind:value={$form.ability_bonus} type='text'/> -->
 
 		<Label for="alignment">Alignment</Label>
-		<Input name="alignment" value={$form.alignment} type="text" />
+		<Input name={stringInputNames.alignment} value={$form.alignment} type="text" />
 
 		<Label for="age">Age</Label>
-		<Input name="age" value={$form.age} type="number" />
+		<Input name={stringInputNames.age} value={$form.age} type="number" />
 
 		<Label for="size">Size</Label>
-		<Input name="size" value={$form.size} type="text" />
+		<Input name={stringInputNames.size} value={$form.size} type="text" />
 
 		<Label for="size_description">Size Description</Label>
-		<Input name="size_description" value={$form.size_description} type="text" />
+		<Input name={stringInputNames.size_description} value={$form.size_description} type="text" />
 
-		<AbilityScoreBonus ability_scores={raceData.ability_bonuses} {form} />
+		<AbilityScoreBonus ability_scores={raceData.ability_bonuses} {form} formInputName={abilityInputNames.as_bonus_race}/>
 
 		<ComboSelect
-			formInputName="starting_proficiencies"
+			formInputName={listInputNames.starting_proficiencies}
 			formDisplayName="Proficiencies"
 			{form}
 			things={proficiencies}
@@ -85,7 +94,7 @@
 		/>
 
 		<ComboSelect
-			formInputName="traits"
+			formInputName={listInputNames.traits}
 			formDisplayName="Traits"
 			{form}
 			things={traits}
@@ -93,7 +102,7 @@
 		/>
 
 		<ComboSelect
-			formInputName="languages"
+			formInputName={listInputNames.languages}
 			formDisplayName="Languages"
 			{form}
 			things={languages}
@@ -101,11 +110,11 @@
 		/>
 
 		<Label for="language_desc">Language Description</Label>
-		<Input name="language_desc" value={$form.language_desc} type="text" />
+		<Input name={stringInputNames.language_desc} value={$form.language_desc} type="text" />
 
 		{#if raceData.subraces.length > 0}
 			<Label for="subrace">Subrace</Label>
-			<Select.Root type="single" name="subrace" value={$form.subrace}>
+			<Select.Root type="single" name={stringInputNames.subrace} value={$form.subrace}>
 				<Select.Trigger class="w-[180px]">
 					{subracesContent}
 				</Select.Trigger>
@@ -121,5 +130,3 @@
 		{/if}
 	</Card.Content>
 </Card.Root>
-
-<!-- TODO: language_options, TODO: ability_bonus_options -->

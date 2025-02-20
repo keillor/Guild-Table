@@ -15,15 +15,12 @@
 	//shadcn components
 	import Label from '@/components/ui/label/label.svelte';
 	import { useId } from 'bits-ui';
-	import { dnd5ApiEquipmentCategory } from '@/api/dnd5api_client';
 
 	//data
-	const { formInputName, formDisplayName, form, choices, equipIndex} = $props();
-
-    const results = dnd5ApiEquipmentCategory(choices.choice.from.equipment_category.index);
+	const { formInputName, form, choices } = $props();
 	$form[formInputName] = [];
-	//const allThings = choices;
-	const choiceLimit = Number(choices.choice.choose);
+	const allThings = choices;
+	const choiceLimit = Number(choices.choose);
 	let limitReached = $derived($form[formInputName].length == choiceLimit);
 	let open = $state(false);
 	const triggerId = useId();
@@ -35,10 +32,8 @@
 		});
 	}
 </script>
-{#await results}
-    <p>Loading...</p>
-{:then allThings}
-<Label>{formDisplayName}</Label>
+
+<Label>Ability Bonus Options</Label>
 <Popover.Root bind:open>
 	<Popover.Trigger disabled={limitReached}>
 		{#snippet child({ props })}
@@ -60,16 +55,16 @@
 			<Command.List>
 				<Command.Empty>{`No ${formDisplayName} found.`}</Command.Empty>
 				<Command.Group>
-					{#each allThings.equipment as option (option.index)}
+					{#each allThings.from.options as option (option.ability_score.index)}
 						<Command.Item
-							value={option.index}
+							value={option.ability_score.index}
 							onSelect={() => {
-								const exists = $form[formInputName].some((i) => i === option.index);
+								const exists = $form[formInputName].some((i) => i === option.ability_score.index);
 								if (!exists) {
-									$form[formInputName] = [...$form[formInputName], option.index];
+									$form[formInputName] = [...$form[formInputName], option.ability_score.index];
 								} else {
 									$form[formInputName] = $form[formInputName].filter(
-										(l) => l !== option.index
+										(l) => l !== option.ability_score.index
 									);
 								}
 								closeAndFocusTrigger();
@@ -77,10 +72,10 @@
 						>
 							<Check
 								class={cn(
-									$form[formInputName].some((l) => l === option.index) || 'text-transparent'
+									$form[formInputName].some((l) => l === option.ability_score.index) || 'text-transparent'
 								)}
 							/>
-							{option.name}
+							{option.ability_score.name}: +{option.bonus}
 						</Command.Item>
 					{/each}
 				</Command.Group>
@@ -89,7 +84,7 @@
 	</Popover.Content>
 </Popover.Root>
 <div class="flex flex-row gap-2">
-	{#each $form[formInputName] as item, index}
+	{#each $form[formInputName] as item (item)}
 		<Badge
 			class="flex h-min flex-row content-between gap-1  text-white"
 			onclick={(event) => {
@@ -97,9 +92,8 @@
 				$form[formInputName] = $form[formInputName].filter((l) => l !== item);
 			}}
 		>
-			{allThings.equipment.find((i) => item === i.index).name}
+			{allThings.from.options.find((i) => item === i.ability_score.index).ability_score.name}: +{allThings.from.options.find((i) => item === i.ability_score.index).bonus}
 		</Badge>
-		<input hidden name={`${formInputName}_${equipIndex}_${index}`} value={JSON.stringify({[item]:1})}/>
+		<input hidden value={allThings.from.options.find((i) => item === i.ability_score.index).bonus} name={`${formInputName}_${item}`}/>
 	{/each}
 </div>
-{/await}

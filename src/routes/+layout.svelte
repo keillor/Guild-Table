@@ -17,4 +17,8 @@
   })
 </script>
 
+<svelte:head>
+  <title>Guild Table</title>
+  <meta name='description' content='A DND management platform.' />
+</svelte:head>
 {@render children()}
