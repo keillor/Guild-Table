@@ -4,7 +4,8 @@
 	import Input from '../ui/input/input.svelte';
 	import * as Card from '$lib/components/ui/card/index';
     import * as Select from '$lib/components/ui/select/index';
-	//const { form } = $props();
+	const { bonusScores, abilityScores } = $props();
+	console.log(abilityScores)
 	const scores = [
 		{
 			index: 'cha',
@@ -37,26 +38,11 @@
 			url: '/api/ability-scores/wis'
 		}
 	];
-	/* $form['int_bonus'] = 0;
-	$form['cha_bonus'] = 0;
-	$form['con_bonus'] = 0;
-	$form['dex_bonus'] = 0;
-	$form['str_bonus'] = 0;
-	$form['wis_bonus'] = 0; */
-
-    let AbilityScores = $state({
-        int: 0,
-        cha: 0,
-        con: 0,
-        dex: 0,
-        str: 0,
-        wis: 0,
-    });
 
     let ASModifiers = $derived.by(() => {
         let modified = {};
-        for (const [key, value] of Object.entries(AbilityScores)) {
-            modified[key] = asm_calc(value);
+        for (const [key, value] of Object.entries(abilityScores)) {
+            modified[key] = asm_calc(value + bonusScores[key]);
         }
         console.log(modified);
         return modified;
@@ -69,12 +55,12 @@
 
 	function incrementCount(event, score) {
 		event.preventDefault();
-        AbilityScores[score.index] += 1;
+        abilityScores[score.index] += 1;
 		//$form[`${score.index}_bonus`] += 1;
 	}
 	function decrementCount(event, score) {
 		event.preventDefault();
-        AbilityScores[score.index] -= 1;
+        abilityScores[score.index] -= 1;
 		//$form[`${score.index}_bonus`] -= 1;
 	}
 
@@ -105,16 +91,17 @@
 {#if selectedMethod == 0}
     <div class="flex flex-row overflow-auto flex-wrap">
         {#each scores as score (score.index)}
-            <Card.Root class="flex w-min flex-col">
-                <Card.Header>
+            <Card.Root class="flex w-min flex-col content-between">
+                <Card.Header class='text-center font-bold'>
                     <Label for={`${score.index}_bonus`}>{score.name}</Label>
                 </Card.Header>
                 <Card.Content>
                     <Input
                         name={score.index}
                         type="number"
-                        bind:value={AbilityScores[score.index]}
+                        bind:value={abilityScores[score.index]}
                     />
+					<p>{bonusScores[score.index] > -1 ? '+' : '-'}{Math.abs(bonusScores[score.index])} bonus</p>
                     <div class='border rounded-full aspect-square text-center justify-center content-center p-2'>
                         <p class=''>{ASModifiers[score.index] > -1 ? '+' : '-'}{Math.abs(ASModifiers[score.index])}</p>
                     </div>

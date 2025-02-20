@@ -13,7 +13,7 @@ import {
 import type { Actions } from './$types.js';
 import jsonToFile from '$lib/utilities/saveToJson';
 import { postCharacter } from '$lib/api/mongoapi_server';
-import { character } from '$lib/models/character';
+import { characterType } from '$lib/models/character';
 
 //steps length is used to detemine if the form has been completed.
 
@@ -126,9 +126,9 @@ function parseUserCharacterData(formData: any) {
 			}
 		}
 	}
-	newCharacterConstruction[character.as_bonus] = allAS;
+	newCharacterConstruction[characterType.as_bonus_mod] = allAS;
 
-	newCharacterConstruction[character.proficiencies] = listParse(
+	newCharacterConstruction[characterType.proficiencies] = listParse(
 		[
 			listInputNames.starting_proficiency_options,
 			listInputNames.starting_proficiencies,
@@ -138,27 +138,27 @@ function parseUserCharacterData(formData: any) {
 	);
 
 	//newCharacterConstruction['proficiencies'] = 
-	newCharacterConstruction[character.proficiencies] = newCharacterConstruction['proficiencies'].concat(listParseTrailingNumber(listInputNames.proficiency_choices, formData));
+	newCharacterConstruction[characterType.proficiencies] = newCharacterConstruction['proficiencies'].concat(listParseTrailingNumber(listInputNames.proficiency_choices, formData));
 
-	newCharacterConstruction[character.languages] = listParse(
+	newCharacterConstruction[characterType.languages] = listParse(
 		[listInputNames.language_options, listInputNames.languages],
 		formData
 	);
 
-	newCharacterConstruction[character.traits] = listParse([listInputNames.traits], formData);
+	newCharacterConstruction[characterType.traits] = listParse([listInputNames.traits], formData);
 
-	newCharacterConstruction[character.features] = listParse([listInputNames.features], formData);
+	newCharacterConstruction[characterType.features] = listParse([listInputNames.features], formData);
 
-	newCharacterConstruction[character.saving_throws] = listParse([listInputNames.saving_throws], formData);
+	newCharacterConstruction[characterType.saving_throws] = listParse([listInputNames.saving_throws], formData);
 
-	newCharacterConstruction[character.spells] = spellParseTrailingNumber('spells', formData);
+	newCharacterConstruction[characterType.spells] = spellParseTrailingNumber('spells', formData);
 
-	newCharacterConstruction[character.equipment] = jsonParseTrailingNumber('equipment', formData);
+	newCharacterConstruction[characterType.equipment] = jsonParseTrailingNumber('equipment', formData);
 	
 	const init_equipment = listParse([listInputNames.starting_equipment], formData);
 
 	for(let i = 0; i < init_equipment.length; i++) {
-		newCharacterConstruction[character.equipment].push({
+		newCharacterConstruction[characterType.equipment].push({
 			index: init_equipment[i],
 			name: init_equipment[i],
 			count: 1
@@ -293,7 +293,7 @@ export const actions = {
 		if(returnedID == null) {
 			error(500, "Server error!");
 		}
-		redirect(303, `/character/scores/${returnedID}`);
+		redirect(303, `/character/create/scores/${returnedID}`);
 
 		//the following resets the form to the default state.
 		///form.data = defaultValues(lastStep);

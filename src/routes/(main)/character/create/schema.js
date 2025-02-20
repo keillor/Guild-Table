@@ -79,5 +79,6 @@ export const listInputNames = {
 };
 
 export const jsonListInputNames = {
-	equipment: 'equipment'
+	equipment: 'equipment',
+	as_bonus_mod: 'as_bonus_mod'
 };

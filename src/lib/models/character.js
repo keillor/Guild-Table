@@ -1,4 +1,4 @@
-export const character = {
+export const characterType = {
     //string vaues
     name: 'name',
 	race: 'race',
@@ -11,13 +11,13 @@ export const character = {
 	size_description: 'size_description',
 	language_desc: 'language_desc',
     spellcasting_ability: 'spellcasting_ability',
+	as_bonus: 'as_bonus',
     //number values
     level: 'level',
 	proficiency_bonus: 'proficiency_bonus',
     spellcasting_level: 'spellcasting_level',
     //arrays
 	hit_die: 'hit_die',
-	as_bonus: 'as_bonus',
     ability_scores: 'ability_scores',
     proficiencies: 'proficiencies',
     languages: 'languages',
@@ -27,4 +27,5 @@ export const character = {
     //objects
     spells: 'spells',
     equipment: 'equipment',
+    as_bonus_mod: 'as_bonus_mod'
 }
