@@ -3,14 +3,14 @@
   import { Button } from '$lib/components/ui/button/index';
   import Register from "./register.svelte";
   export let data: PageData;
- </script>
+</script>
   
 <div class="flex h-screen items-center justify-center">
-  <div class="max-w-xs flex-grow">
-    <h1 class="text-2xl font-bold">Register</h1>
-    <Register data={data.form} />
+  <div class="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold mb-6">Register</h1>
+    <Register data={data.form}/>
+    <Button href="/" class="mt-4 w-full bg-blue-500 text-white py-2 rounded">Return to Main Screen</Button>
   </div>
-  <Button href="/">return to Main Screen</Button>
 </div>
 
 
