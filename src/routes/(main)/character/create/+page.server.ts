@@ -11,7 +11,6 @@ import {
 	stringInputNames
 } from './schema';
 import type { Actions } from './$types.js';
-import jsonToFile from '$lib/utilities/saveToJson';
 import { postCharacter } from '$lib/api/mongoapi_server';
 import { characterType } from '$lib/models/character';
 
@@ -261,7 +260,7 @@ function jsonParseTrailingNumber(inputName: string, formData: FormData) {
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
-	next: async ({ request }) => {
+	next: async ({ request, locals: { session } }) => {
 		//retrieve formData and step number
 		const formData = await request.formData();
 		const step = +(formData.get('step') ?? '1');
@@ -286,6 +285,7 @@ export const actions = {
 
 		//form parsing
 		const parsedData = parseUserCharacterData(formData);
+		parsedData['user'] = session?.user.id
 		console.log(parsedData);
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
