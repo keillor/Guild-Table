@@ -53,7 +53,25 @@ export async function serverGetSingleCharacter(slugObjectID) {
     }
 }
 
-//export async function get
+/**
+ * 
+ * @param {string} userID 
+ * @returns The array of characters. Array can be empty or null.
+ */
+export async function getAllUserCharacters(userID) {
+    try {
+        const database = client.db('character');
+        const stdCharacters  = database.collection('standard_characters');
+        const query = { user: userID };
+        console.log(query);
+        const cursor = await stdCharacters.find(query);
+        const results = await cursor.toArray();
+        return serializeNonPOJOs(results);
+    } catch (e) {
+        console.log("getAllUserCharacters ERROR!", e);
+        return null;
+    }
+}
 
 //POST
 

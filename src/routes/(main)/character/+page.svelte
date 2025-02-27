@@ -1,10 +1,13 @@
-<script>
+<script lang='ts'>
 	import { Button } from '$lib/components/ui/button/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Avatar from '$lib/components/ui/avatar/index';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Pencil, Trash, Shield, Heart, Eye } from 'lucide-svelte/icons';
-	const characters = [
+	import type { CharacterTypeTS } from '$lib/models/character.js';
+	const {data} = $props();
+	const characters : CharacterTypeTS[] = data.characters;
+	/* const characters = [
 		{
 			name: 'Percy Jackson',
 			race: 'Elf',
@@ -39,7 +42,7 @@
 				'https://parade.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTkwNTc4NzQ2NjU0ODYxMTgw/tom-holland-spider-man-ftr.jpg',
 			campaign: 'Toads'
 		}
-	];
+	]; */
 	const list = [
 		{ attribute: 'Strength', score: 14, modifier: 2 },
 		{ attribute: 'Consitution', score: 14, modifier: 2 },
@@ -67,10 +70,6 @@
 			<Card.Header>
 				<div class="flex flex-row items-center justify-between">
 					<h3 class="text-xl font-semibold">{character.name}</h3>
-					<Avatar.Root class="h-12 w-12">
-						<Avatar.Image src={character.avatar} />
-						<Avatar.Fallback>N/A</Avatar.Fallback>
-					</Avatar.Root>
 				</div>
 			</Card.Header>
 			<Card.Content>
@@ -79,17 +78,16 @@
 						<p>Race: {character.race}</p>
 						<p>Class: {character.class}</p>
 						<p>Level: {character.level}</p>
-						<p>Campaign: {character.campaign}</p>
 					</div>
 					<div class="grid grid-cols-3 gap-5">
 						<!-- <Shield class='size-12 border-2 rounded-md'/> -->
-						{#each list as attribute, i}
+						{#each character.ability_scores as attribute}
 							<div
 								class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center"
 							>
-								<p class="italic">{attribute.attribute}</p>
-								<p class="text-xl font-bold">{attribute.score}</p>
-								<p class="h-min rounded-full border-2 px-2">{attribute.modifier}</p>
+								<p class="italic">{attribute}</p>
+								<p class="text-xl font-bold">{attribute}</p>
+								<p class="h-min rounded-full border-2 px-2">{attribute}</p>
 							</div>
 						{/each}
 					</div>
