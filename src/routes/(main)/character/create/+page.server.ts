@@ -12,7 +12,7 @@ import {
 } from './schema';
 import type { Actions } from './$types.js';
 import { postCharacter } from '$lib/api/mongoapi_server';
-import { characterType } from '$lib/models/character';
+import { type CharacterTypeTS } from '$lib/models/character.ts';
 
 //steps length is used to detemine if the form has been completed.
 
@@ -82,7 +82,7 @@ export const load = async ({ request }) => {
  * @param formData The formData object returned from the client request.
  */
 function parseUserCharacterData(formData: any) {
-	let newCharacterConstruction : any = {};
+	let newCharacterConstruction : CharacterTypeTS = {};
 	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
 
 	//grab string only values.
@@ -125,9 +125,9 @@ function parseUserCharacterData(formData: any) {
 			}
 		}
 	}
-	newCharacterConstruction[characterType.as_bonus_mod] = allAS;
+	newCharacterConstruction.as_bonus_mod = allAS;
 
-	newCharacterConstruction[characterType.proficiencies] = listParse(
+	newCharacterConstruction.proficiencies = listParse(
 		[
 			listInputNames.starting_proficiency_options,
 			listInputNames.starting_proficiencies,
@@ -137,27 +137,27 @@ function parseUserCharacterData(formData: any) {
 	);
 
 	//newCharacterConstruction['proficiencies'] = 
-	newCharacterConstruction[characterType.proficiencies] = newCharacterConstruction['proficiencies'].concat(listParseTrailingNumber(listInputNames.proficiency_choices, formData));
+	newCharacterConstruction.proficiencies = newCharacterConstruction['proficiencies'].concat(listParseTrailingNumber(listInputNames.proficiency_choices, formData));
 
-	newCharacterConstruction[characterType.languages] = listParse(
+	newCharacterConstruction.languages = listParse(
 		[listInputNames.language_options, listInputNames.languages],
 		formData
 	);
 
-	newCharacterConstruction[characterType.traits] = listParse([listInputNames.traits], formData);
+	newCharacterConstruction.traits = listParse([listInputNames.traits], formData);
 
-	newCharacterConstruction[characterType.features] = listParse([listInputNames.features], formData);
+	newCharacterConstruction.features = listParse([listInputNames.features], formData);
 
-	newCharacterConstruction[characterType.saving_throws] = listParse([listInputNames.saving_throws], formData);
+	newCharacterConstruction.saving_throws = listParse([listInputNames.saving_throws], formData);
 
-	newCharacterConstruction[characterType.spells] = spellParseTrailingNumber('spells', formData);
+	newCharacterConstruction.spells = spellParseTrailingNumber('spells', formData);
 
-	newCharacterConstruction[characterType.equipment] = jsonParseTrailingNumber('equipment', formData);
+	newCharacterConstruction.equipment = jsonParseTrailingNumber('equipment', formData);
 	
 	const init_equipment = listParse([listInputNames.starting_equipment], formData);
 
 	for(let i = 0; i < init_equipment.length; i++) {
-		newCharacterConstruction[characterType.equipment].push({
+		newCharacterConstruction.equipment.push({
 			index: init_equipment[i],
 			name: init_equipment[i],
 			count: 1
