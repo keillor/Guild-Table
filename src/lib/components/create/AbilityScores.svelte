@@ -5,7 +5,6 @@
 	import * as Card from '$lib/components/ui/card/index';
     import * as Select from '$lib/components/ui/select/index';
 	const { bonusScores, abilityScores } = $props();
-	console.log(abilityScores)
 	const scores = [
 		{
 			index: 'cha',
@@ -44,7 +43,6 @@
         for (const [key, value] of Object.entries(abilityScores)) {
             modified[key] = asm_calc(value + bonusScores[key]);
         }
-        console.log(modified);
         return modified;
     })
     function asm_calc(ability_score) {
