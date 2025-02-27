@@ -1,4 +1,4 @@
-import { getSingleCharacter, replaceCharacter, serverGetSingleCharacter } from '$lib/api/mongoapi_server.js';
+import { getSingleCharacter, patchCharacter, serverGetSingleCharacter } from '$lib/api/mongoapi_server.js';
 import { ability_scores } from '$lib/models/abilityscores.js';
 import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
@@ -47,7 +47,7 @@ export const actions = {
             console.log(oldCharacter);
 
             //update character
-            const results = replaceCharacter(oldCharacter._id, oldCharacter);
+            const results = patchCharacter(oldCharacter._id, oldCharacter);
             if(!results) {
                 error(500, "Error updating character");
             }

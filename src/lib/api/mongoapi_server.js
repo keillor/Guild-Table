@@ -53,6 +53,8 @@ export async function serverGetSingleCharacter(slugObjectID) {
     }
 }
 
+//export async function get
+
 //POST
 
 /**
@@ -81,7 +83,7 @@ export async function postCharacter(newCharacter) {
  * @param {import('$lib/models/character').CharacterTypeTS} characterReplacement 
  * @returns The number of docs updated.
  */
-export async function replaceCharacter(characterID, characterReplacement) {
+export async function patchCharacter(characterID, characterReplacement) {
     try {
         const database = client.db('character');
         const stdCharacters = database.collection('standard_characters');
