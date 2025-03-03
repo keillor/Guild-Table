@@ -1,11 +1,11 @@
 <script lang='ts'>
 	import { Button } from '$lib/components/ui/button/index';
 	import * as Card from '$lib/components/ui/card/index';
-	import * as Avatar from '$lib/components/ui/avatar/index';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Pencil, Trash, Shield, Heart, Eye } from 'lucide-svelte/icons';
 	import type { CharacterTypeTS } from '$lib/models/character.js';
-	const {data} = $props();
+	import as_mod_calc from '$lib/utilities/character/character_calculations.js';
+	const {data, message} = $props();
 	const characters : CharacterTypeTS[] = data.characters;
 	/* const characters = [
 		{
@@ -43,14 +43,7 @@
 			campaign: 'Toads'
 		}
 	]; */
-	const list = [
-		{ attribute: 'Strength', score: 14, modifier: 2 },
-		{ attribute: 'Consitution', score: 14, modifier: 2 },
-		{ attribute: 'Dexterity', score: 14, modifier: 2 },
-		{ attribute: 'Intelligence', score: 14, modifier: 2 },
-		{ attribute: 'Wisdom', score: 14, modifier: 2 },
-		{ attribute: 'Charisma', score: 14, modifier: 2 }
-	];
+	const as_names = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
 </script>
 
 <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Character Manage</h1>
@@ -64,6 +57,7 @@
 >
 	Your Characters
 </h2>
+
 <div class="grid md:grid-cols-3 md:gap-3">
 	{#each characters as character}
 		<Card.Root>
@@ -78,16 +72,16 @@
 						<p>Race: {character.race}</p>
 						<p>Class: {character.class}</p>
 						<p>Level: {character.level}</p>
+						<p>Age: {character.age}</p>
+						<p>Hit Die: {character.hit_die}d</p>
 					</div>
 					<div class="grid grid-cols-3 gap-5">
 						<!-- <Shield class='size-12 border-2 rounded-md'/> -->
-						{#each character.ability_scores as attribute}
-							<div
-								class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center"
-							>
-								<p class="italic">{attribute}</p>
-								<p class="text-xl font-bold">{attribute}</p>
-								<p class="h-min rounded-full border-2 px-2">{attribute}</p>
+						{#each as_names as strKey}
+							<div class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center">
+								<p class='underline'>{strKey}</p>
+								<p class="text-xl font-bold">{character.ability_scores[strKey]}</p>
+								<p class="h-min rounded-full border-2 px-2">{as_mod_calc(character.ability_scores[strKey])}</p>
 							</div>
 						{/each}
 					</div>
@@ -104,7 +98,7 @@
 				</Button>
 
 				<AlertDialog.Root>
-					<AlertDialog.Trigger>
+					<AlertDialog.Trigger variant='outline'>
 						<Button variant="outline">
 							<!-- THIS BUTTON MIGHT CAUSE HYDRATION ISSUES -->
 							<Trash class="mr-2 size-4" />
@@ -121,7 +115,10 @@
 						</AlertDialog.Header>
 						<AlertDialog.Footer>
 							<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-							<AlertDialog.Action class="bg-red-300 hover:bg-red-500">Delete</AlertDialog.Action>
+							<form method='POST' action='?/delete'>
+								<input hidden name='id' value={character._id}/>
+								<AlertDialog.Action class="bg-red-300 hover:bg-red-500">Delete</AlertDialog.Action>
+							</form>
 						</AlertDialog.Footer>
 					</AlertDialog.Content>
 				</AlertDialog.Root>

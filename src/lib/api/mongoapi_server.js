@@ -63,10 +63,13 @@ export async function getAllUserCharacters(userID) {
         const database = client.db('character');
         const stdCharacters  = database.collection('standard_characters');
         const query = { user: userID };
-        console.log(query);
         const cursor = await stdCharacters.find(query);
         const results = await cursor.toArray();
-        return serializeNonPOJOs(results);
+        const serializedCharacters = results.map(c => ({
+            ...c,
+            _id: c._id.toString(),
+        }));
+        return serializedCharacters;
     } catch (e) {
         console.log("getAllUserCharacters ERROR!", e);
         return null;
@@ -128,7 +131,7 @@ export async function deleteCharacter(characterID) {
         const database = client.db('character');
         const stdCharacters = database.collection('standard_characters');
         
-        const filter = { _id: characterID};
+        const filter = { _id: new ObjectId(characterID)};
         const results = await stdCharacters.deleteOne(filter);
         return results.deletedCount;
     } catch (e) {
@@ -136,4 +139,3 @@ export async function deleteCharacter(characterID) {
         return null;
     }
 }
-
