@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import { Button } from '$lib/components/ui/button/index';
+	import { Button, buttonVariants } from '$lib/components/ui/button/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Pencil, Trash, Shield, Heart, Eye } from 'lucide-svelte/icons';
@@ -58,6 +58,7 @@
 	Your Characters
 </h2>
 
+{#if characters.length > 0}
 <div class="grid md:grid-cols-3 md:gap-3">
 	{#each characters as character}
 		<Card.Root>
@@ -88,7 +89,7 @@
 				</div>
 			</Card.Content>
 			<Card.Footer class="flex justify-between">
-				<Button variant="outline">
+				<Button href={`/character/${character._id}`} variant="outline">
 					<Eye class="mr-2 size-4" />
 					View
 				</Button>
@@ -117,7 +118,7 @@
 							<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
 							<form method='POST' action='?/delete'>
 								<input hidden name='id' value={character._id}/>
-								<AlertDialog.Action class="bg-red-300 hover:bg-red-500">Delete</AlertDialog.Action>
+								<AlertDialog.Action class={buttonVariants({variant: 'destructive'})}>Delete</AlertDialog.Action>
 							</form>
 						</AlertDialog.Footer>
 					</AlertDialog.Content>
@@ -126,3 +127,6 @@
 		</Card.Root>
 	{/each}
 </div>
+{:else}
+<p>Looks like you don't have any characters yet. Click the button above to get started!</p>
+{/if}

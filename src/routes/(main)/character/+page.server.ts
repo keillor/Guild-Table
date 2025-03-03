@@ -1,6 +1,5 @@
 import { deleteCharacter, getAllUserCharacters, serverGetSingleCharacter} from '$lib/api/mongoapi_server.js';
-import { json, redirect } from '@sveltejs/kit';
-import { User } from 'lucide-svelte';
+import { redirect } from '@sveltejs/kit';
 
 const validateWithRegex = (value) => {
     const regex = new RegExp(/^[a-fA-F0-9]{24}$/);
@@ -30,7 +29,6 @@ export const actions = {
                 console.log("deleted", characterId)
             } else {
                 console.log('delete failed', characterId);
-                console.log(characterData, session?.user.id)
             }
         }
         redirect(303, '/character');
