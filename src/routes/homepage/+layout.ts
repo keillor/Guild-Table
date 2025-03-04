@@ -1,4 +1,4 @@
-import type { LayoutLoad } from '../$types';
+import type { LayoutLoad } from './$types';
 import { createBrowserClient, createServerClient, isBrowser } from '@supabase/ssr';
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
 
@@ -24,6 +24,7 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 
   const session = data.session;
   const user = data.user;
+  const allCharacters = data.allCharacters;
 
-  return { session, supabase, user };
+  return { session, supabase, user, allCharacters };
 }

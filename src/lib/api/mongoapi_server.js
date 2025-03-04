@@ -38,6 +38,18 @@ export async function getSingleCharacter(slugObjectID) {
     }
 }
 
+export async function getAllCharacters() {
+    try {
+        const database = client.db('character');
+        const stdCharacters = database.collection('standard_characters');
+        const queryResults = stdCharacters.find({});
+        return serializeNonPOJOs(await queryResults.toArray());
+    } catch (e) {
+        console.log("getAllCharacters ERROR!")
+        return null;
+    }
+}
+
 //POST
 export async function postCharacter(newCharacter) {
     try {
