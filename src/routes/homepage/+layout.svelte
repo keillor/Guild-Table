@@ -1,5 +1,5 @@
 <script>
-  import "../app.css";
+  import "../../app.css";
   import { invalidate } from '$app/navigation'
   import { onMount } from 'svelte'
 
@@ -18,7 +18,7 @@
 </script>
 
 <svelte:head>
-  <title>Guild Table</title>
+  <title>Guild Table: Home </title>
   <meta name='description' content='A DND management platform.' />
 </svelte:head>
 {@render children()}
