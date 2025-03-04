@@ -4,8 +4,8 @@
 	import Input from '../ui/input/input.svelte';
 	import * as Card from '$lib/components/ui/card/index';
     import * as Select from '$lib/components/ui/select/index';
+	import as_mod_calc from '$lib/utilities/character/character_calculations';
 	const { bonusScores, abilityScores } = $props();
-	console.log(abilityScores)
 	const scores = [
 		{
 			index: 'cha',
@@ -42,15 +42,10 @@
     let ASModifiers = $derived.by(() => {
         let modified = {};
         for (const [key, value] of Object.entries(abilityScores)) {
-            modified[key] = asm_calc(value + bonusScores[key]);
+            modified[key] = as_mod_calc(value + bonusScores[key]);
         }
-        console.log(modified);
         return modified;
     })
-    function asm_calc(ability_score) {
-        return Math.floor((ability_score - 10)/2);
-    }
-
 
 
 	function incrementCount(event, score) {

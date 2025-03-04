@@ -8,22 +8,17 @@ const serializeNonPOJOs = (value) => {
 };
 
 
-//TESTING FUNCTIONS
-export async function dummyRequest() {
-    try {
-        const database = client.db('test');
-        const movies = database.collection('movies');
-        const queryResults = movies.find({});
-        return serializeNonPOJOs(await queryResults.toArray());
-    } catch (e) {
-        console.log("ERROR!", e);
-        return null;
-    }
-}
-
 //GET
-//export async function fetchSingleCharacter()
+/**
+ * 
+ * @param {ObjectId} slugObjectID 
+ * @returns The quiered character if exists.
+ *          `result` can be null.
+ */
 export async function getSingleCharacter(slugObjectID) {
+    //WARNING:  must use this if returning to client.
+    //          sveltekit does not like ObjectId instance. Runtime will complain that you may
+    //          only return plain-old-json from server to client.
     try {
         const database = client.db('character');
         const stdCharacters = database.collection('standard_characters');
@@ -38,19 +33,13 @@ export async function getSingleCharacter(slugObjectID) {
     }
 }
 
-export async function getAllCharacters() {
-    try {
-        const database = client.db('character');
-        const stdCharacters = database.collection('standard_characters');
-        const queryResults = stdCharacters.find({});
-        return serializeNonPOJOs(await queryResults.toArray());
-    } catch (e) {
-        console.log("getAllCharacters ERROR!")
-        return null;
-    }
-}
-
 //POST
+
+/**
+ * 
+ * @param {import('$lib/models/character').CharacterTypeTS} newCharacter 
+ * @returns 
+ */
 export async function postCharacter(newCharacter) {
     try {
         const database = client.db('character');
@@ -64,3 +53,46 @@ export async function postCharacter(newCharacter) {
     }
 }
 
+
+//PATCH
+/**
+ * 
+ * @param {ObjectId} characterID 
+ * @param {import('$lib/models/character').CharacterTypeTS} characterReplacement 
+ * @returns The number of docs updated.
+ */
+export async function patchCharacter(characterID, characterReplacement) {
+    try {
+        const database = client.db('character');
+        const stdCharacters = database.collection('standard_characters');
+
+        const filter = { _id: characterID};
+        const results = await stdCharacters.replaceOne(filter, characterReplacement);
+        console.log("REPLACEMENT RESULT:", results);
+        return results.upsertedCount;
+    } catch (e) {
+        console.log("ERROR!", e);
+        return null;
+    }
+}
+
+//DELETE
+
+/**
+ * 
+ * @param {ObjectId} characterID 
+ * @returns the number of documents deleted.
+ */
+export async function deleteCharacter(characterID) {
+    try {
+        const database = client.db('character');
+        const stdCharacters = database.collection('standard_characters');
+        
+        const filter = { _id: new ObjectId(characterID)};
+        const results = await stdCharacters.deleteOne(filter);
+        return results.deletedCount;
+    } catch (e) {
+        console.log("ERROR!", e);
+        return null;
+    }
+}

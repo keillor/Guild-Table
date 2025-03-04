@@ -1,10 +1,13 @@
-<script>
-	import { Button } from '$lib/components/ui/button/index';
+<script lang='ts'>
+	import { Button, buttonVariants } from '$lib/components/ui/button/index';
 	import * as Card from '$lib/components/ui/card/index';
-	import * as Avatar from '$lib/components/ui/avatar/index';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Pencil, Trash, Shield, Heart, Eye } from 'lucide-svelte/icons';
-	const characters = [
+	import type { CharacterTypeTS } from '$lib/models/character.js';
+	import as_mod_calc from '$lib/utilities/character/character_calculations.js';
+	const {data, message} = $props();
+	const characters : CharacterTypeTS[] = data.characters;
+	/* const characters = [
 		{
 			name: 'Percy Jackson',
 			race: 'Elf',
@@ -39,15 +42,8 @@
 				'https://parade.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTkwNTc4NzQ2NjU0ODYxMTgw/tom-holland-spider-man-ftr.jpg',
 			campaign: 'Toads'
 		}
-	];
-	const list = [
-		{ attribute: 'Strength', score: 14, modifier: 2 },
-		{ attribute: 'Consitution', score: 14, modifier: 2 },
-		{ attribute: 'Dexterity', score: 14, modifier: 2 },
-		{ attribute: 'Intelligence', score: 14, modifier: 2 },
-		{ attribute: 'Wisdom', score: 14, modifier: 2 },
-		{ attribute: 'Charisma', score: 14, modifier: 2 }
-	];
+	]; */
+	const as_names = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
 </script>
 
 <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Character Manage</h1>
@@ -61,16 +57,14 @@
 >
 	Your Characters
 </h2>
+
+{#if characters.length > 0}
 <div class="grid md:grid-cols-3 md:gap-3">
 	{#each characters as character}
 		<Card.Root>
 			<Card.Header>
 				<div class="flex flex-row items-center justify-between">
 					<h3 class="text-xl font-semibold">{character.name}</h3>
-					<Avatar.Root class="h-12 w-12">
-						<Avatar.Image src={character.avatar} />
-						<Avatar.Fallback>N/A</Avatar.Fallback>
-					</Avatar.Root>
 				</div>
 			</Card.Header>
 			<Card.Content>
@@ -79,24 +73,23 @@
 						<p>Race: {character.race}</p>
 						<p>Class: {character.class}</p>
 						<p>Level: {character.level}</p>
-						<p>Campaign: {character.campaign}</p>
+						<p>Age: {character.age}</p>
+						<p>Hit Die: {character.hit_die}d</p>
 					</div>
 					<div class="grid grid-cols-3 gap-5">
 						<!-- <Shield class='size-12 border-2 rounded-md'/> -->
-						{#each list as attribute, i}
-							<div
-								class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center"
-							>
-								<p class="italic">{attribute.attribute}</p>
-								<p class="text-xl font-bold">{attribute.score}</p>
-								<p class="h-min rounded-full border-2 px-2">{attribute.modifier}</p>
+						{#each as_names as strKey}
+							<div class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center">
+								<p class='underline'>{strKey}</p>
+								<p class="text-xl font-bold">{character.ability_scores[strKey]}</p>
+								<p class="h-min rounded-full border-2 px-2">{as_mod_calc(character.ability_scores[strKey])}</p>
 							</div>
 						{/each}
 					</div>
 				</div>
 			</Card.Content>
 			<Card.Footer class="flex justify-between">
-				<Button variant="outline">
+				<Button href={`/character/${character._id}`} variant="outline">
 					<Eye class="mr-2 size-4" />
 					View
 				</Button>
@@ -106,7 +99,7 @@
 				</Button>
 
 				<AlertDialog.Root>
-					<AlertDialog.Trigger>
+					<AlertDialog.Trigger variant='outline'>
 						<Button variant="outline">
 							<!-- THIS BUTTON MIGHT CAUSE HYDRATION ISSUES -->
 							<Trash class="mr-2 size-4" />
@@ -123,7 +116,10 @@
 						</AlertDialog.Header>
 						<AlertDialog.Footer>
 							<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-							<AlertDialog.Action class="bg-red-300 hover:bg-red-500">Delete</AlertDialog.Action>
+							<form method='POST' action='?/delete'>
+								<input hidden name='id' value={character._id}/>
+								<AlertDialog.Action class={buttonVariants({variant: 'destructive'})}>Delete</AlertDialog.Action>
+							</form>
 						</AlertDialog.Footer>
 					</AlertDialog.Content>
 				</AlertDialog.Root>
@@ -131,3 +127,6 @@
 		</Card.Root>
 	{/each}
 </div>
+{:else}
+<p>Looks like you don't have any characters yet. Click the button above to get started!</p>
+{/if}
