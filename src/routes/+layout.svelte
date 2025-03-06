@@ -2,6 +2,7 @@
   import "../app.css";
   import { invalidate } from '$app/navigation'
   import { onMount } from 'svelte'
+  import { Toaster } from "svelte-sonner";
 
   let { data, children } = $props()
   let { session, supabase } = $derived(data)
@@ -21,4 +22,5 @@
   <title>Guild Table</title>
   <meta name='description' content='A DND management platform.' />
 </svelte:head>
+<Toaster richColors/>
 {@render children()}

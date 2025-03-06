@@ -11,9 +11,9 @@ export interface CharacterTypeTS {
     size_description: string;
     language_desc: string;
     spellcasting_ability: string | null;
-    as_bonus: string;
-  
+    
     // Number values
+    as_bonus: number;
     level: number;
     proficiency_bonus: number;
     spellcasting_level: number;
@@ -25,10 +25,10 @@ export interface CharacterTypeTS {
     traits: string[];
     features: string[];
     saving_throws: string[];
+    equipment: object[];
     
     // Objects
     ability_scores: Record<string, any>;
     spells: Record<string, any> | null; 
-    equipment: Record<string, any>;
     as_bonus_mod: Record<string, any>; 
   }
