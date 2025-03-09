@@ -37,6 +37,8 @@
                 <h3 class='font-bold'>{key}: </h3>
                 <p>{value}</p>
             {/each}
+        {:catch error}
+            <p class='text-red-500'>Error! Please try again later.</p>
         {/await}
     </Popover.Content>
 </Popover.Root>
