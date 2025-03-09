@@ -23,3 +23,16 @@ export async function dnd5ApiEquipmentQuery(equipment: string) {
         return fetchResults.json();
     }
 }
+
+export async function dnd5ApiSpellDetails(spell: string) {
+    const regex = /^[a-zA-Z\-]+$/;
+    const isValid = regex.test(spell);
+    if(isValid) {
+        const fetchResults = await fetch(`${APIURL}/api/spells/${spell}`);
+        if(!fetchResults.ok) {
+            return error(404, "Resource not found.");  
+        }
+        return fetchResults.json();
+    }
+
+}

@@ -15,12 +15,13 @@ export const load = async ({params, locals: {session}}) => {
         const languagesList = dnd5ApiRequest('languages');
         const traitsList = dnd5ApiRequest('traits');
         const featuresList = dnd5ApiRequest('features'); 
+        const spellsList = dnd5ApiRequest('spells');
         const formValidate = superValidate(zod(characterSchema));
         const character = {
             ...characterData,
             _id: characterData._id.toString(),
         }
-        return {character: character, form: await formValidate, languages: await languagesList, proficiencies: await proficiencyList, traits: await traitsList, features: await featuresList};
+        return {character: character, form: await formValidate, languages: await languagesList, proficiencies: await proficiencyList, traits: await traitsList, features: await featuresList, spells: await spellsList};
     }
     error(404, 'Character not found');
 };
