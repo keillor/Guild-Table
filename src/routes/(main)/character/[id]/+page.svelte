@@ -11,7 +11,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import * as Form from '$lib/components/ui/form/index.js';
-  import * as Popover from "$lib/components/ui/popover/index.js";
+	import * as Popover from '$lib/components/ui/popover/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { characterSchema, type FormSchema } from './schema';
@@ -21,6 +21,7 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import AsyncPopover from '$lib/components/view/SpellAsyncPopover.svelte';
 	import { dnd5ApiSpellDetails } from '$lib/api/dnd5api_client';
+	import EquipmentAsyncPopover from '$lib/components/view/EquipmentAsyncPopover.svelte';
 
 	const data = $props();
 	let character: CharacterTypeTS = data.data.character;
@@ -52,26 +53,25 @@
 		$formData.spells[level] = $formData.spells[level].filter((s) => s !== spellName);
 	}
 
-  function addSpellLevel(number) {
-	if(!$formData.spells.hasOwnProperty(number)) {
-	  //add it to the list
-	  $formData.spells[number] = [];
+	function addSpellLevel(number) {
+		if (!$formData.spells.hasOwnProperty(number)) {
+			//add it to the list
+			$formData.spells[number] = [];
+		}
 	}
-  }
 
-  function removeSpellLevel(level) {
-	$formData.spells[level] = undefined;
-  }
+	function removeSpellLevel(level) {
+		$formData.spells[level] = undefined;
+	}
 
 	const { form: formData, enhance, restore } = form;
-  let spellLevelToAdd = $state(0);
+	let spellLevelToAdd = $state(0);
 	const all_dice = [4, 6, 8, 10, 12, 20, 100];
 	const as_names = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
 	const savingThrowsList = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
 
-
 	function deleteEquipment(name: any) {
-    $formData.equipment = $formData.equipment.filter((e) => e.index !== name);
+		$formData.equipment = $formData.equipment.filter((e) => e.index !== name);
 	}
 </script>
 
@@ -302,6 +302,9 @@
 						<div class="flex items-center">
 							<span>{$formData.equipment[index].name}</span>
 							<Input bind:value={$formData.equipment[index].count} type="number" class="w-24" />
+							<EquipmentAsyncPopover equipment={$formData.equipment[index].index}>
+								<Info class="size-4"/>
+							</EquipmentAsyncPopover>
 							<Button variant="outline" class="self-end" onclick={() => deleteEquipment(item.name)}>
 								<Trash class="size-4" />
 							</Button>
@@ -311,21 +314,21 @@
 				<Form.FieldErrors />
 			</Form.Field>
 
-      <Label for='addSpellLevel'>Add Spell Level</Label>
-      <div class='flex flex-row'>
-        <Input name='addSpellLevel' bind:value={spellLevelToAdd} type="number" class="w-24"  />
-        <Button variant="outline" class="self-end" onclick={() => addSpellLevel(spellLevelToAdd)}>
-          <Plus class="size-4" />
-        </Button>
-      </div>
+			<Label for="addSpellLevel">Add Spell Level</Label>
+			<div class="flex flex-row">
+				<Input name="addSpellLevel" bind:value={spellLevelToAdd} type="number" class="w-24" />
+				<Button variant="outline" class="self-end" onclick={() => addSpellLevel(spellLevelToAdd)}>
+					<Plus class="size-4" />
+				</Button>
+			</div>
 
 			{#each Object.entries($formData.spells) as [level, spells]}
 				<Form.Field {form} name={`spells.${level}`}>
 					<Form.Control>
 						<Form.Label>Level {level} Spells</Form.Label>
-            <Button variant="outline" onclick={() => removeSpellLevel(level)} class="">
-              <Trash class="size-4" />
-            </Button>
+						<Button variant="outline" onclick={() => removeSpellLevel(level)} class="">
+							<Trash class="size-4" />
+						</Button>
 						<Select.Root type="single" onValueChange={(e) => addSpell(e)}>
 							<Select.Trigger class="w-[180px]">Add Spell</Select.Trigger>
 							<Select.Content>
@@ -340,14 +343,14 @@
 							{#each spells as spell}
 								<li class="flex items-center justify-between">
 									<span>{spell}</span>
-                  <div>
-                    <AsyncPopover {spell}>
-                      <Info class="size-4"/>
-                    </AsyncPopover>
-                    <Button variant="outline" onclick={() => removeSpell(level, spell)} class="">
-                      <Trash class="size-4" />
-                    </Button>
-                  </div>
+									<div>
+										<AsyncPopover {spell}>
+											<Info class="size-4" />
+										</AsyncPopover>
+										<Button variant="outline" onclick={() => removeSpell(level, spell)} class="">
+											<Trash class="size-4" />
+										</Button>
+									</div>
 								</li>
 							{/each}
 						</ul>

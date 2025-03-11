@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Circle } from 'svelte-loading-spinners';
-	import { dnd5ApiSpellDetails } from '$lib/api/dnd5api_client';
+	import { dnd5ApiEquipmentQuery, dnd5ApiSpellDetails } from '$lib/api/dnd5api_client';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { buttonVariants } from '../ui/button';
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte';
-	import SpellDetail from './SpellDetail.svelte';
-	const { spell, children } = $props();
+	import EquipmentDetail from './EquipmentDetail.svelte';
+	const { equipment, children } = $props();
 
 	let isOpen = $state(false);
 	let requested = $state(false);
@@ -17,7 +17,7 @@
 			isOpen = open;
 			if (!requested) {
 				requested = true;
-				dnd5ApiSpellDetails(spell).then(resolve);
+				dnd5ApiEquipmentQuery(equipment).then(resolve);
 			}
 		} else {
 			isOpen = open;
@@ -30,14 +30,14 @@
 		{@render children()}
 	</Popover.Trigger>
 	<Popover.Content>
-		<ScrollArea class="h-[500px]">
+		<ScrollArea class="max-h-[500px]">
 			{#await promise}
 				<div>
 					<Circle />
 					<span>loading...</span>
 				</div>
 			{:then details}
-				<SpellDetail spell={details}/>
+				<EquipmentDetail equipment={details}/>
 			{:catch error}
 				<p class="text-red-500">Error! Please try again later.</p>
 			{/await}
