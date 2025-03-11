@@ -13,7 +13,7 @@ export async function dnd5ApiEquipmentCategory(equipmentCategory: string) {
 }
 
 export async function dnd5ApiEquipmentQuery(equipment: string) {
-    const regex = /^[a-zA-Z\-]+$/;
+    const regex = /^[0-9a-zA-Z\-]+$/;
     const isValid = regex.test(equipment);
     if (isValid) {
         const fetchResults = await fetch(`${APIURL}/api/equipment/${equipment}`);

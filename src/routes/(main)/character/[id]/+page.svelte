@@ -31,6 +31,9 @@
 		validators: zodClient(characterSchema),
 		dataType: 'json',
 		resetForm: false,
+		onError: ({result}) => {
+			console.log(result);
+		},
 		onUpdated: ({ form: f }) => {
 			if (f.valid) {
 				toast.success('Character saved.');
@@ -229,7 +232,7 @@
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
-			<BasicChipEach list={$formData.proficiencies} />
+			<BasicChipEach {formData} key='proficiencies'/>
 
 			<Form.Field {form} name="languages">
 				<Form.Control>
@@ -245,7 +248,7 @@
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
-			<BasicChipEach list={$formData.languages} />
+			<BasicChipEach {formData} key='languages'/>
 
 			<Form.Field {form} name="traits">
 				<Form.Control>
@@ -261,7 +264,7 @@
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
-			<BasicChipEach list={$formData.traits} />
+			<BasicChipEach {formData} key='traits' />
 
 			<Form.Field {form} name="features">
 				<Form.Control>
@@ -277,7 +280,7 @@
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
-			<BasicChipEach list={$formData.features} />
+			<BasicChipEach {formData} key='features' />
 
 			<Form.Field {form} name="saving_throws">
 				<Form.Control>
@@ -293,7 +296,7 @@
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
-			<BasicChipEach list={$formData.saving_throws} />
+			<BasicChipEach {formData} key='saving_throws' />
 
 			<Form.Field {form} name="equipment">
 				<Form.Control>
