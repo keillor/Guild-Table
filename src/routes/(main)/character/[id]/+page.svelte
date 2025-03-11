@@ -11,7 +11,6 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import * as Form from '$lib/components/ui/form/index.js';
-	import * as Popover from '$lib/components/ui/popover/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { characterSchema, type FormSchema } from './schema';
@@ -20,7 +19,6 @@
 	import BasicChipEach from '$lib/components/create/BasicChipEach.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import AsyncPopover from '$lib/components/view/SpellAsyncPopover.svelte';
-	import { dnd5ApiSpellDetails } from '$lib/api/dnd5api_client';
 	import EquipmentAsyncPopover from '$lib/components/view/EquipmentAsyncPopover.svelte';
 
 	const data = $props();
@@ -302,7 +300,7 @@
 				<Form.Control>
 					<Form.Label>Equipment</Form.Label>
 					{#each $formData.equipment as item, index}
-						<div class="flex items-center">
+						<div class='flex flex-row'>
 							<span>{$formData.equipment[index].name}</span>
 							<Input bind:value={$formData.equipment[index].count} type="number" class="w-24" />
 							<EquipmentAsyncPopover equipment={$formData.equipment[index].index}>
@@ -344,7 +342,7 @@
 						<!-- Render selected spells -->
 						<ul class="mt-2">
 							{#each spells as spell}
-								<li class="flex items-center justify-between">
+								<li class="flex flex-row">
 									<span>{spell}</span>
 									<div>
 										<AsyncPopover {spell}>
