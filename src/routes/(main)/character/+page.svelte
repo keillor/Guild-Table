@@ -5,44 +5,9 @@
 	import { Pencil, Trash, Shield, Heart, Eye } from 'lucide-svelte/icons';
 	import type { CharacterTypeTS } from '$lib/models/character.js';
 	import as_mod_calc from '$lib/utilities/character/character_calculations.js';
+	import { enhance } from '$app/forms';
 	const {data, message} = $props();
-	const characters : CharacterTypeTS[] = data.characters;
-	/* const characters = [
-		{
-			name: 'Percy Jackson',
-			race: 'Elf',
-			class: 'Mage',
-			level: 3,
-			avatar: 'https://i.pinimg.com/736x/7f/f0/d8/7ff0d8a948987b7660a09fea4e7de228.jpg',
-			campaign: 'Toads'
-		},
-		{
-			name: 'Harry Potter',
-			race: 'Human',
-			class: 'Ranger',
-			level: 3,
-			avatar: 'https://assets-prd.ignimgs.com/2021/01/26/harry-potter-button-1611619333944.jpg',
-			campaign: 'Toads'
-		},
-		{
-			name: 'Hercules',
-			race: 'Dragonborn',
-			class: 'Rogue',
-			level: 3,
-			avatar:
-				'https://s.yimg.com/ny/api/res/1.2/IvwOWc7HAW93981UTEeEYw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTQ1Mw--/https://media.zenfs.com/en/huffpost_uk_744/c3f7711ac372f2e3a47008733738a6ba',
-			campaign: 'Toads'
-		},
-		{
-			name: 'Spiderman',
-			race: 'Spider',
-			class: 'Bard',
-			level: 3,
-			avatar:
-				'https://parade.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTkwNTc4NzQ2NjU0ODYxMTgw/tom-holland-spider-man-ftr.jpg',
-			campaign: 'Toads'
-		}
-	]; */
+	let characters : CharacterTypeTS[] = $state(data.characters);
 	const as_names = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
 </script>
 
@@ -68,7 +33,7 @@
 				</div>
 			</Card.Header>
 			<Card.Content>
-				<div class="flex justify-between">
+				<div class="flex justify-between flex-wrap">
 					<div class="flex flex-col">
 						<p>Race: {character.race}</p>
 						<p>Class: {character.class}</p>
@@ -78,13 +43,20 @@
 					</div>
 					<div class="grid grid-cols-3 gap-5">
 						<!-- <Shield class='size-12 border-2 rounded-md'/> -->
-						{#each as_names as strKey}
-							<div class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center">
-								<p class='underline'>{strKey}</p>
-								<p class="text-xl font-bold">{character.ability_scores[strKey]}</p>
-								<p class="h-min rounded-full border-2 px-2">{as_mod_calc(character.ability_scores[strKey])}</p>
+						 {#if character.ability_scores !== undefined}
+							{#each as_names as strKey}
+								<div class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center">
+									<p class='underline'>{strKey}</p>
+									<p class="text-xl font-bold">{character.ability_scores[strKey]}</p>
+									<p class="h-min rounded-full border-2 px-2">{as_mod_calc(character.ability_scores[strKey])}</p>
+								</div>
+							{/each}
+						{:else}
+							<div class='col-span-3 flex flex-col content-center justify-around'>
+								<p><b>Whoops!</b> Looks like this character doesn't any ability scores yet.</p>
+								<Button href={`/character/create/scores/${character._id}`} class={buttonVariants({variant: 'destructive'})}>Add Ablity Scores</Button>
 							</div>
-						{/each}
+						 {/if}
 					</div>
 				</div>
 			</Card.Content>
@@ -116,7 +88,13 @@
 						</AlertDialog.Header>
 						<AlertDialog.Footer>
 							<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-							<form method='POST' action='?/delete'>
+							<form method='POST' action='?/delete' use:enhance={() => {
+								return async({result}) => {
+									const results = await result;
+									console.log(results);
+									characters = characters.filter((c) => c._id !== character._id);
+								}
+							}}>
 								<input hidden name='id' value={character._id}/>
 								<AlertDialog.Action class={buttonVariants({variant: 'destructive'})}>Delete</AlertDialog.Action>
 							</form>

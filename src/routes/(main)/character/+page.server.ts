@@ -1,5 +1,5 @@
 import { deleteCharacter, getAllUserCharacters, serverGetSingleCharacter} from '$lib/api/mongoapi_server.js';
-import { redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 const validateWithRegex = (value) => {
     const regex = new RegExp(/^[a-fA-F0-9]{24}$/);
@@ -26,11 +26,13 @@ export const actions = {
             console.log(characterData, session);
             const result = await deleteCharacter(characterId);
             if(result) {
-                console.log("deleted", characterId)
+                console.log("deleted", characterId);
+                return true;
             } else {
                 console.log('delete failed', characterId);
+                return error(500, "Whoops! Looks like something went wrong.");
             }
         }
-        redirect(303, '/character');
+        return error(400, "Bad request.");
     }
 };
