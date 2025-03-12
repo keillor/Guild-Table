@@ -10,14 +10,20 @@
 	let isOpen = $state(false);
 	let requested = $state(false);
 	let resolve = null;
-	let promise = new Promise((newResolve, _) => (resolve = newResolve));
+	let reject = null;
+	let promise = new Promise((newResolve, newReject) => {
+		resolve = newResolve
+		reject = newReject
+	});
 
 	const openChange = (open) => {
 		if (open) {
 			isOpen = open;
 			if (!requested) {
 				requested = true;
-				dnd5ApiSpellDetails(spell).then(resolve);
+				dnd5ApiSpellDetails(spell).then(resolve).catch((data) => {
+					reject(data.body.message)
+				});
 			}
 		} else {
 			isOpen = open;
@@ -39,7 +45,7 @@
 			{:then details}
 				<SpellDetail spell={details}/>
 			{:catch error}
-				<p class="text-red-500">Error! Please try again later.</p>
+				<p class="text-red-500">{error}</p>
 			{/await}
 		</ScrollArea>
 	</Popover.Content>

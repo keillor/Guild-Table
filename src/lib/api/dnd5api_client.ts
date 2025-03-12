@@ -9,6 +9,8 @@ export async function dnd5ApiEquipmentCategory(equipmentCategory: string) {
         const fetchResults = await fetch(`${APIURL}/api/equipment-categories/${equipmentCategory}`);
         const results = await fetchResults.json();
         return results;
+    } else {
+        return error(400, "Invalid format.")
     }
 }
 
@@ -18,9 +20,11 @@ export async function dnd5ApiEquipmentQuery(equipment: string) {
     if (isValid) {
         const fetchResults = await fetch(`${APIURL}/api/equipment/${equipment}`);
         if(!fetchResults.ok) {
-            return error(400, "Something went wrong!");
+            return error (400, "Dynamic information not avalible for this object.")
         }
         return fetchResults.json();
+    } else {
+        return error (400, "Dynamic information not avalible for this object.")
     }
 }
 
@@ -30,9 +34,10 @@ export async function dnd5ApiSpellDetails(spell: string) {
     if(isValid) {
         const fetchResults = await fetch(`${APIURL}/api/spells/${spell}`);
         if(!fetchResults.ok) {
-            return error(404, "Resource not found.");  
+            return error (400, "Dynamic information not avalible for this object.")
         }
         return fetchResults.json();
+    } else {
+        return error (400, "Dynamic information not avalible for this spell.")
     }
-
 }

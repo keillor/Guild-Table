@@ -28,7 +28,7 @@ export const characterSchema = z.object({
           index: z.string(),
           count: z.number().min(1),
         })
-      ),    
+      ).min(0),    
 
       ability_scores: z.object({
         cha: z.number().int(),
