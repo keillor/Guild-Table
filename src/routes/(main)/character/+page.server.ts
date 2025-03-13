@@ -23,7 +23,6 @@ export const actions = {
         const characterId = formData.get('id');
         const characterData = await serverGetSingleCharacter(characterId);
         if(characterData && characterData.user == session?.user.id) {
-            console.log(characterData, session);
             const result = await deleteCharacter(characterId);
             if(result) {
                 console.log("deleted", characterId);

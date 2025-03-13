@@ -299,6 +299,18 @@
 			<Form.Field {form} name="equipment">
 				<Form.Control>
 					<Form.Label>Equipment</Form.Label>
+					<Select.Root type="single" onValueChange={(o) => $formData.equipment = [...$formData.equipment,{
+						name: o,
+						index: o,
+						count: 1,
+					}]}>
+						<Select.Trigger class="w-[180px]">Equipment</Select.Trigger>
+						<Select.Content>
+							{#each data.data.equipment.results as equipment}
+								<Select.Item value={equipment.index}>{equipment.name}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
 					{#each $formData.equipment as item, index}
 						<div class='flex flex-row'>
 							<span>{$formData.equipment[index].name}</span>
