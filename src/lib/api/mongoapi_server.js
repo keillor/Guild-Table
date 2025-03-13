@@ -11,7 +11,7 @@ const serializeNonPOJOs = (value) => {
 //GET
 /**
  * 
- * @param {ObjectId} slugObjectID 
+ * @param {string} slugObjectID 
  * @returns The quiered character if exists.
  *          `result` can be null.
  */
@@ -35,7 +35,7 @@ export async function getSingleCharacter(slugObjectID) {
 
 /**
  * 
- * @param {ObjectId} slugObjectID 
+ * @param {string} slugObjectID 
  * @returns The result of querying the character collection. 
  *          `result` can be null.
  */
