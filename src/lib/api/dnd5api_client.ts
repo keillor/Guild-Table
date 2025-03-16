@@ -41,3 +41,17 @@ export async function dnd5ApiSpellDetails(spell: string) {
         return error (400, "Dynamic information not avalible for this spell.")
     }
 }
+
+export async function dnd5ApiDetails(item: string) {
+    const regex = /((proficiencies)|(languages)|(features)|(traits))\/[a-zA-Z\-0-9]+$/;
+    const isValid = regex.test(item);
+    if(isValid) {
+        const fetchResults = await fetch(`${APIURL}/api/${item}`);
+        if(!fetchResults.ok) {
+            return error (400, "Dynamic information not avalible for this item.")
+        }
+        return fetchResults.json();
+    } else {
+        return error (400, "Dynamic information not avalible for this item.")
+    }
+}

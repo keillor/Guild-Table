@@ -16,7 +16,7 @@
 	import { characterSchema, type FormSchema } from './schema';
 	import { toast } from 'svelte-sonner';
 	import { Trash, Plus, Info } from 'lucide-svelte/icons';
-	import BasicChipEach from '$lib/components/create/BasicChipEach.svelte';
+	import BasicChipEach from '$lib/components/view/BasicChipEach.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import AsyncPopover from '$lib/components/view/SpellAsyncPopover.svelte';
 	import EquipmentAsyncPopover from '$lib/components/view/EquipmentAsyncPopover.svelte';
