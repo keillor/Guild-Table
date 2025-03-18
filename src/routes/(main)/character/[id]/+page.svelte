@@ -23,7 +23,8 @@
 
 	const data = $props();
 	let character: CharacterTypeTS = data.data.character;
-	const serverFormType: SuperValidated<Infer<FormSchema>> = data.data.form;
+	let characterName = $state(character.name);
+	//const serverFormType: SuperValidated<Infer<FormSchema>> = data.data.form;
 
 	const form = superForm(defaults(character, zodClient(characterSchema)), {
 		validators: zodClient(characterSchema),
@@ -35,6 +36,7 @@
 		onUpdated: ({ form: f }) => {
 			if (f.valid) {
 				toast.success('Character saved.');
+				characterName = f.data.name;
 			} else {
 				toast.error('Character not saved. Please review errors.');
 				console.log(f.errors);
@@ -79,7 +81,7 @@
 <Card.Root>
 	<Card.Header>
 		<h1 class="lg:text-5x scroll-m-20 text-4xl font-extrabold tracking-tight">
-			Character Edit: <b class="underline">{character.name}</b>
+			Character Edit: <b class="underline">{characterName}</b>
 		</h1>
 	</Card.Header>
 	<Card.Content>
