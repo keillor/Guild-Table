@@ -43,7 +43,9 @@
 				<p class='underline'>Language: <span class='font-bold'>{details.name}</span></p>
 				<p>Type: <span>{details.type}</span></p>
 				<p>Typical Speakers: <span>{details.typical_speakers}</span></p>
+				{#if details.hasOwnProperty('desc')}
 				<p class='text-wrap'>Description: {details.desc}</p>
+				{/if}
 			{:else if type == 'features'}
 					<p class='underline'>Feature: <span class='font-bold'>{details.name}</span></p>
 					<p class='text-wrap'>Description: {details.desc}</p>
