@@ -5,7 +5,6 @@
 	import GenericAsyncPopover from "./GenericAsyncPopover.svelte";
     const { formData, key } = $props();
     const removeItem = (item: string) => {
-        //$formData[key] = $formData[key].filter((i) => i !== item);
         $formData[key] = $formData[key].filter((i: string) => i != item);
     }
 </script>
@@ -20,12 +19,15 @@
           <DropdownMenu.Group>
             <DropdownMenu.GroupHeading>Options</DropdownMenu.GroupHeading>
             <DropdownMenu.Separator />
-            <DropdownMenu.Item>
-                <GenericAsyncPopover {item}>
+            <DropdownMenu.Sub>
+                <DropdownMenu.SubTrigger>
                     <Info class='mr-2 size-4'/>
                     <span>Details</span>
-                </GenericAsyncPopover>
-            </DropdownMenu.Item>
+                </DropdownMenu.SubTrigger>
+                <DropdownMenu.SubContent>
+                    <GenericAsyncPopover {item} type={key}/>
+                </DropdownMenu.SubContent>
+              </DropdownMenu.Sub>
             <DropdownMenu.Item onclick={() => removeItem(item)}>
                 <Trash class='mr-2 size-4'/>
                 <span>Delete</span>
