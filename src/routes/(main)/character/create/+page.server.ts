@@ -11,7 +11,7 @@ import {
 	stringInputNames
 } from './schema';
 import type { Actions } from './$types.js';
-import { postCharacter } from '$lib/api/mongoapi_server';
+import { postCharacter, postCharacterVerify } from '$lib/api/mongoapi_server';
 import { type CharacterTypeTS } from '$lib/models/character.ts';
 
 //steps length is used to detemine if the form has been completed.
@@ -285,19 +285,18 @@ export const actions = {
 
 		//form parsing
 		const parsedData = parseUserCharacterData(formData);
-		parsedData['user'] = session?.user.id
 		console.log(parsedData);
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
-		const returnedID = await postCharacter(parsedData);
-		if(returnedID == null) {
-			error(500, "Server error!");
+		const result = await postCharacterVerify(session, parsedData);
+		if(result) {
+			redirect(303, `/character/create/scores/${result}`);
 		}
-		redirect(303, `/character/create/scores/${returnedID}`);
+		error(500, "Server error!");
 
 		//the following resets the form to the default state.
 		///form.data = defaultValues(lastStep);
 
-		return message(form, { text: 'Form posted successfully!', step: 1 });
+		//return message(form, { text: 'Form posted successfully!', step: 1 });
 	}
 } satisfies Actions;

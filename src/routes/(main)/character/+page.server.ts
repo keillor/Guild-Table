@@ -1,4 +1,4 @@
-import { deleteCharacter, getAllUserCharacters, serverGetSingleCharacter} from '$lib/api/mongoapi_server.js';
+import { deleteCharacter, deleteCharacterVerify, getAllUserCharacters, serverGetSingleCharacter} from '$lib/api/mongoapi_server.js';
 import { error } from '@sveltejs/kit';
 
 const validateWithRegex = (value) => {
@@ -21,17 +21,13 @@ export const actions = {
     delete: async ({request, locals: {session}}) => {
         const formData = await request.formData();
         const characterId = formData.get('id');
-        const characterData = await serverGetSingleCharacter(characterId);
-        if(characterData && characterData.user == session?.user.id) {
-            const result = await deleteCharacter(characterId);
-            if(result) {
-                console.log("deleted", characterId);
-                return true;
-            } else {
-                console.log('delete failed', characterId);
-                return error(500, "Whoops! Looks like something went wrong.");
-            }
+        const deletedCount = await deleteCharacterVerify(session, characterId);
+        if(deletedCount) {
+            console.log("deleted", characterId);
+            return true;
+        } else {
+            console.log('delete failed', characterId);
+            return error(500, "Whoops! Looks like something went wrong.");
         }
-        return error(400, "Bad request.");
     }
 };

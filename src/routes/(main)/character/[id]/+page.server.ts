@@ -1,4 +1,4 @@
-import { getSingleCharacter, patchCharacter, postCharacter, serverGetSingleCharacter } from '$lib/api/mongoapi_server.js';
+import { getSingleCharacter, getSingleCharacterVerified, patchCharacter, patchCharacterVerify, postCharacter, serverGetSingleCharacter } from '$lib/api/mongoapi_server.js';
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
@@ -9,8 +9,8 @@ import { dnd5ApiRequest } from '$lib/api/dnd5api.js';
 
 export const load = async ({params, locals: {session}}) => {
     const characterId = params.id;
-    const characterData = await serverGetSingleCharacter(characterId);
-    if(characterData && characterData.user == session?.user.id) {
+    const characterData = await getSingleCharacterVerified(session, characterId);
+    if(characterData) {
         const proficiencyList = dnd5ApiRequest('proficiencies');
         const languagesList = dnd5ApiRequest('languages');
         const traitsList = dnd5ApiRequest('traits');
@@ -29,7 +29,6 @@ export const load = async ({params, locals: {session}}) => {
 
 export const actions = {
     default: async (event) => {
-      console.log(event.params.id);
         console.log('form submitted!')
       const form = await superValidate(event, zod(characterSchema));
       console.log(form.data);
@@ -41,11 +40,9 @@ export const actions = {
         //insert userID back into Character object
         const newCharacter = form.data;
         newCharacter['user'] = event.locals.session?.user.id;
-        const serverCharacter = await serverGetSingleCharacter(event.params.id);
-        console.log("Getting server character.");
-        console.log(serverCharacter?._id.toString(), event.params.id, event.locals.session?.user.id, serverCharacter?.user)
-        if(serverCharacter != null && event.params.id === serverCharacter?._id.toString() && event.locals.session?.user.id == serverCharacter?.user) {
-          const results = patchCharacter(serverCharacter._id, newCharacter);
+        console.log("FORM ACTION", event.locals.session?.user.id, event.params.id);
+        const serverCharacter = await patchCharacterVerify(event.locals.session, event.params.id, newCharacter);
+        if(serverCharacter) {
           return message(form, "Character updated!")
         } else {
           console.log("post failed.")
