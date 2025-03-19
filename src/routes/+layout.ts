@@ -25,7 +25,8 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
           },
         },
       })
-
+    
+  // Fetch the user's session
   const session = data.session
   const user = data.user
   
