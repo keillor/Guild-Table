@@ -2,7 +2,7 @@
   const {spell} = $props();
 </script>
 
-<div class="p-4 rounded-lg shadow-md">
+<div>
   <h2 class="text-2xl font-bold mb-2">{spell.name}</h2>
   <p class="text-sm">Level {spell.level} {spell.school.name}</p>
   <p class="text-sm">Casting Time: {spell.casting_time}</p>

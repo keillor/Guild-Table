@@ -36,7 +36,7 @@
 		{@render children()}
 	</Popover.Trigger>
 	<Popover.Content>
-		<ScrollArea class="h-min max-h-[500px]">
+		<ScrollArea class="max-h-[500px]">
 			{#await promise}
 				<div>
 					<Circle />

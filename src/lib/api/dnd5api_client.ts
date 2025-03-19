@@ -43,7 +43,7 @@ export async function dnd5ApiSpellDetails(spell: string) {
 }
 
 export async function dnd5ApiDetails(item: string) {
-    const regex = /((proficiencies)|(languages)|(features)|(traits))\/[a-zA-Z\-0-9]+$/;
+    const regex = /((proficiencies)|(languages)|(equipment)|(spells)|(features)|(traits))\/[a-zA-Z\-0-9]+$/;
     const isValid = regex.test(item);
     if(isValid) {
         const fetchResults = await fetch(`${APIURL}/api/${item}`);

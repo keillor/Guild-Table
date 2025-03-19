@@ -3,6 +3,8 @@
 	import { dnd5ApiDetails } from '$lib/api/dnd5api_client';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte';
+	import SpellDetail from './SpellDetail.svelte';
+	import EquipmentDetail from './EquipmentDetail.svelte';
 	const { item, type } = $props();
 
 	let isOpen = $state(false);
@@ -49,6 +51,10 @@
 			{:else if type == 'features'}
 					<p class='underline'>Feature: <span class='font-bold'>{details.name}</span></p>
 					<p class='text-wrap'>Description: {details.desc}</p>
+			{:else if type == 'spells'}
+				<SpellDetail spell={details} />
+			{:else if type == 'equipment'}
+				<EquipmentDetail equipment={details}/>
 			{/if}
 	{:catch error}
 		<p class="text-red-500">{error}</p>
