@@ -1,12 +1,12 @@
 import { deleteCharacter, getAllUserCharacters, serverGetSingleCharacter} from '$lib/api/mongoapi_server.js';
 import { redirect } from '@sveltejs/kit';
 
-const validateWithRegex = (value) => {
+const validateWithRegex = (value: string) => {
     const regex = new RegExp(/^[a-fA-F0-9]{24}$/);
   
     if (value !== "" && typeof value === "string") {
       const result = value.match(regex);
-      return result?.length > 0;
+      return result !== null && result !== undefined && result.length > 0;
     }
     return false;
   };

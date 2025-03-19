@@ -33,6 +33,49 @@ export async function getSingleCharacter(slugObjectID) {
     }
 }
 
+/**
+ * 
+ * @param {ObjectId} slugObjectID 
+ * @returns The result of querying the character collection. 
+ *          `result` can be null.
+ */
+export async function serverGetSingleCharacter(slugObjectID) {
+    try {
+        const database = client.db('character');
+        const stdCharacters = database.collection('standard_characters');
+        const result = await stdCharacters.findOne(
+            {_id: new ObjectId(slugObjectID)},
+        );
+        return result;
+    } catch (e) {
+        console.log("getSingleCharacter ERROR!")
+        return null;
+    }
+}
+
+/**
+ * 
+ * @param {string} userID 
+ * @returns The array of characters. Array can be empty or null.
+ */
+export async function getAllUserCharacters(userID) {
+    try {
+        const database = client.db('character');
+        const stdCharacters  = database.collection('standard_characters');
+        const query = { user: userID };
+        const cursor = await stdCharacters.find(query);
+        const results = await cursor.toArray();
+        const serializedCharacters = results.map(c => ({
+            ...c,
+            _id: c._id.toString(),
+        }));
+        return serializedCharacters;
+    } catch (e) {
+        console.log("getAllUserCharacters ERROR!", e);
+        return null;
+    }
+}
+
 //POST
 
 /**

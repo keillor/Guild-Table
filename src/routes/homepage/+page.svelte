@@ -139,7 +139,7 @@ afterUpdate (() => {
 
     <section>
       <h1 class="text-2xl font-bold">Characters</h1>
-      {#if allCharacters != null}
+      {#if allCharacters.length > 0}
         <Carousel.Root
           opts={{
             align: "start"
@@ -147,7 +147,7 @@ afterUpdate (() => {
           class="w-full mx-5 max-w-8xl"
         >
           <Carousel.Content>
-            {#each allCharacters as character (character._id)}
+            {#each allCharacters as character}
               <Carousel.Item class="md:basis-1/3 lg:basis-1/4">
                 <div class="p-1">
                   <Card.Root class="h-30 w-25">
@@ -157,7 +157,15 @@ afterUpdate (() => {
                     <Card.Content
                       class="flex aspect-square items-center justify-center p-6"
                     >
-                      <Card.Description>{character.description}</Card.Description>
+                      <Card.Description>
+                        <p> Character description: uncommenting currently results in white screen </p>
+                        <!-- <div class="flex flex-col"></div>
+                          <p>Race: {character.race}</p>
+                          <p>Class: {character.class}</p>
+                          <p>Level: {character.level}</p>
+                          <p>Age: {character.age}</p>
+                        </div> -->
+                      </Card.Description>
                     </Card.Content>
                   </Card.Root>
                 </div>

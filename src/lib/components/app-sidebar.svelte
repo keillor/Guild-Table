@@ -11,11 +11,27 @@
 	import MessageSquareCode from 'lucide-svelte/icons/message-square-code';
 	import { Users } from 'lucide-svelte';
 
+	import { createClient } from '@supabase/supabase-js';
+	import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
+
+	const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+
+	let fetchedUser = null;
+
+	async function fetchUser() {
+			const { data: { user } } = await supabase.auth.getUser();
+			if (user) {
+					fetchedUser = user;
+			}
+	}
+
+	fetchUser();
+
 	// This is sample data.
 	const data = {
 		user: {
-			name: 'shadcn',
-			email: 'm@example.com',
+			name: 'Insert Name',
+			email: 'Insert Email',
 			avatar:
 				'https://imgcdn.stablediffusionweb.com/2024/4/13/9b63df72-55ff-46fd-a5b4-7941b198db95.jpg'
 		},
@@ -38,6 +54,20 @@
 		],
 		navMain: [
 			{
+				title: 'Home',
+				url: './homepage',
+				items: [
+					{
+						title: 'Dashboard',
+						url: './homepage'
+					},
+					{
+						title: 'Campaigns',
+						url: './homepage/campaigns'
+					}
+				]
+			},
+			{
 				title: 'Campaigns',
 				url: '/',
 				icon: Frame,
@@ -45,7 +75,7 @@
 				items: [
 					{
 						title: 'Dungeon Master',
-						url: '/play/dm'
+						url: '/campaigns'
 					},
 					{
 						title: 'Campaign Player',
