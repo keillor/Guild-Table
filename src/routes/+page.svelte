@@ -1,19 +1,36 @@
 <script>
+// @ts-nocheck
+
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button/index';
 	import { Users } from 'lucide-svelte';
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { Description } from 'formsnap';
+	import { onMount, afterUpdate } from 'svelte';
 
 	export let data;
-	$: ({ supabase } = data);
-	export let backgroundImage = 'https://th.bing.com/th/id/R.659c35d34d7428699f4c64615e19ee10?rik=RBT0EggNnx4rQA&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f2%2f1%2ff%2f884800-vertical-dungeons-and-dragons-wallpapers-2560x1600-samsung.jpg&ehk=gxnocWgr1iMEASl%2b15MjeSmpmOPDDPrsRA7ckWHuoEM%3d&risl=&pid=ImgRaw&r=0';
+	let { session, supabase } = data;
+	let fetchedUser;
 
-	let user;
-	$: (async () => {
-		const { data: { user: fetchedUser } } = await supabase.auth.getUser();
-		user = fetchedUser;
-	})();
+
+	async function renderUser() {
+		const { data: { user } } = await supabase.auth.getUser();
+		if (user) {
+			fetchedUser = user;
+		} else {
+			fetchedUser = null;
+		}
+	}
+
+	onMount (() => {
+		renderUser()
+	})
+
+	afterUpdate (() => {
+		renderUser()
+	})
+	
+	const backgroundImage = 'https://th.bing.com/th/id/R.659c35d34d7428699f4c64615e19ee10?rik=RBT0EggNnx4rQA&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f2%2f1%2ff%2f884800-vertical-dungeons-and-dragons-wallpapers-2560x1600-samsung.jpg&ehk=gxnocWgr1iMEASl%2b15MjeSmpmOPDDPrsRA7ckWHuoEM%3d&risl=&pid=ImgRaw&r=0';
 
 	async function logout() {
 		await supabase.auth.signOut();
@@ -25,12 +42,12 @@
 	}
 </script>
 
-{#if user}
+{#if fetchedUser}
 	<div class="flex justify-center items-center h-screen bg-cover bg-center" style="background-image: url({backgroundImage});">
 		<div class="bg-white bg-opacity-80 p-5 rounded-lg shadow-lg">
 			<Card.Root>
 				<Card.Header>
-					<Card.Title>Welcome Back {user.email}!</Card.Title>
+					<Card.Title>Welcome Back {fetchedUser.email}!</Card.Title>
 					<Card.Description>An Online Dungeons & Dragons Tabletop</Card.Description>
 				</Card.Header>
 				<Card.Content>
