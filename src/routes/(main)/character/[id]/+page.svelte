@@ -15,7 +15,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { characterSchema, type FormSchema } from './schema';
 	import { toast } from 'svelte-sonner';
-	import { Trash, Plus, Info } from 'lucide-svelte/icons';
+	import { Trash, Plus, Info, Save } from 'lucide-svelte/icons';
 	import BasicChipEach from '$lib/components/view/BasicChipEach.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import AsyncPopover from '$lib/components/view/SpellAsyncPopover.svelte';
@@ -374,7 +374,9 @@
 				</Form.Field>
 			{/each}
 
-			<Form.Button>Submit</Form.Button>
+			<Form.Button>
+				Save
+			</Form.Button>
 		</form>
 	</Card.Content>
 	<Card.Footer>
