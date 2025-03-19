@@ -382,5 +382,3 @@
 		<a class="underline" href={`/character/create/scores/${character._id}`}>Edit Ability Scores</a>
 	</Card.Footer>
 </Card.Root>
-
-<SuperDebug data={$formData} />

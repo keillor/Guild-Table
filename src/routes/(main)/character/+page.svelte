@@ -2,7 +2,7 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import { Pencil, Trash, Shield, Heart, Eye } from 'lucide-svelte/icons';
+	import { Pencil, Trash, Shield, Heart, Eye, Plus } from 'lucide-svelte/icons';
 	import type { CharacterTypeTS } from '$lib/models/character.js';
 	import as_mod_calc from '$lib/utilities/character/character_calculations.js';
 	import { enhance } from '$app/forms';
@@ -14,7 +14,10 @@
 <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Character Manage</h1>
 
 <Card.Root class="p-3">
-	<Button href="/character/create">Create New Character</Button>
+	<Button href="/character/create">
+		<Plus class="mr-2 size-4" />
+		Create New Character
+	</Button>
 </Card.Root>
 
 <h2
@@ -61,11 +64,11 @@
 				</div>
 			</Card.Content>
 			<Card.Footer class="flex justify-between">
-				<Button href={`/character/${character._id}`} variant="outline">
+				<Button href={`/character/${character._id}/view`} variant="outline">
 					<Eye class="mr-2 size-4" />
 					View
 				</Button>
-				<Button variant="outline">
+				<Button href={`/character/${character._id}`} variant="outline">
 					<Pencil class="mr-2 size-4" />
 					Edit
 				</Button>
