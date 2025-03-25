@@ -4,6 +4,7 @@
     import * as Card from '$lib/components/ui/card/index.js';
 	import as_mod_calc from "$lib/utilities/character/character_calculations";
 	import GenericAsyncPopover from "$lib/components/view/GenericAsyncPopover.svelte";
+	import CharacterLinks from "$lib/components/view/characterLinks.svelte";
 
     const { data } = $props();
     const character = data.character;
@@ -105,10 +106,8 @@
         {@render equipChips(character.equipment, 'equipment')}
 
 	</Card.Content>
-	<Card.Footer class='flex flex-col'>
-		<h3 class="font-bold">Relevant Links:</h3>
-		<a class="underline" href={`/character/create/scores/${character._id}`}>Edit Ability Scores</a>
-        <a class="underline" href={`/character/${character._id}`}>Edit Character</a>
+	<Card.Footer>
+		<CharacterLinks id={character._id}/>
 	</Card.Footer>
 </Card.Root>
 
