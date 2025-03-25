@@ -1,53 +1,75 @@
-<script lang='ts'>
-    import Badge from "$lib/components/ui/badge/badge.svelte";
-    import * as Popover from "$lib/components/ui/popover/index.js";
-    import * as Card from '$lib/components/ui/card/index.js';
-	import as_mod_calc from "$lib/utilities/character/character_calculations";
-	import GenericAsyncPopover from "$lib/components/view/GenericAsyncPopover.svelte";
+<script lang="ts">
+  import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
+  import { enhance } from '$app/forms';
+  import { SvelteSet } from 'svelte/reactivity';
+  import Button from '$lib/components/ui/button/button.svelte';
+	import CharacterLinks from '$lib/components/view/characterLinks.svelte';
 
-    const { data } = $props();
-    const character = data.character;
-    let equipmentList = character.equipment;
-    let selectedItems = $state(new Set());
-    const toggleItem = (item) => {
+  const { data } = $props();
+  const character = data.character;
+
+  let selectedItems = new SvelteSet();
+  let totalWeight = $state(0);
+
+  const toggleItem = (item) => {
     if (selectedItems.has(item)) {
-        selectedItems.delete(item);
+      selectedItems.delete(item);
     } else {
-        selectedItems.add(item);
+      selectedItems.add(item);
     }
-    };
-const submitForm = () => {
-  const equippedItems = Array.from(selectedItems);
-  console.log('Equipped Items:', equippedItems);
-  // You can handle form submission here (e.g., POST request)
-};
+    calculateTotalWeight();
+  };
+
+  const calculateTotalWeight = () => {
+    totalWeight = Array.from(selectedItems).reduce((sum, item) => sum + (item.weight || 0), 0);
+  };
 </script>
-  
+
+<form method="POST" use:enhance>
   <div class="p-4 rounded-lg">
     <h2 class="text-xl font-bold mb-4">Select Equipment</h2>
-    <ul class="mb-4">
-      {#each equipmentList as equipment}
-        <li>
-          <label>
-            <input
-              type="checkbox"
-              onchange={() => toggleItem(equipment)}
-            />
-            {equipment.name}
-          </label>
-        </li>
-      {/each}
-    </ul>
-  
-    <button onclick={submitForm} class="px-4 py-2 border rounded">
-      Submit Equipped Items
-    </button>
+    <table class="table-auto w-full mb-4 border-collapse border border-gray-300">
+      <thead>
+        <tr>
+          <th class="border border-gray-300 px-4 py-2">Select</th>
+          <th class="border border-gray-300 px-4 py-2">Name</th>
+          <th class="border border-gray-300 px-4 py-2">Weight</th>
+          <th class="border border-gray-300 px-4 py-2">Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each character.equipment as equipment}
+          <tr>
+            <td class="border border-gray-300 px-4 py-2">
+              <input
+                type="checkbox"
+                name="equipment"
+                value={equipment.index}
+                onchange={() => toggleItem(equipment)}
+              />
+            </td>
+            <td class="border border-gray-300 px-4 py-2">{equipment.name}</td>
+            <td class="border border-gray-300 px-4 py-2">{equipment.weight}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              {equipment.cost.quantity} {equipment.cost.unit}
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+    <Button>Submit</Button>
   </div>
+</form>
 
-  <div class="p-4 rounded-lg">
-    <h2 class='text-xl font-bold mb-4'>Equipted Items</h2>
-    {#each selectedItems as item}
-        <p>{item}</p>
+
+<div>
+  <h2 class="text-xl font-bold mb-4">Equipped Items</h2>
+  <ul class="mb-4">
+    {#each Array.from(selectedItems) as item}
+      <li>{item.name}</li>
     {/each}
-  </div>
-  
+  </ul>
+  <p class="font-bold">Total Weight: {totalWeight}</p>
+</div>
+
+<CharacterLinks id={character._id}/>

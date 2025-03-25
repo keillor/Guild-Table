@@ -20,6 +20,8 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import AsyncPopover from '$lib/components/view/SpellAsyncPopover.svelte';
 	import EquipmentAsyncPopover from '$lib/components/view/EquipmentAsyncPopover.svelte';
+	import { dnd5ApiEquipmentQuery } from '$lib/api/dnd5api_client.js';
+	import CharacterLinks from '$lib/components/view/characterLinks.svelte';
 
 	const data = $props();
 	let character: CharacterTypeTS = data.data.character;
@@ -73,7 +75,29 @@
 	const as_names = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
 	const savingThrowsList = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
 
+	async function addEquipment(equipment) {
+		try {
+			// Fetch additional details for the selected equipment
+			const details = await dnd5ApiEquipmentQuery(equipment.index);
+			$formData.equipment = [
+				...$formData.equipment,
+				{
+					name: details.name,
+					index: details.index,
+					weight: details.weight || 0,
+					cost: details.cost || { quantity: 0, unit: 'gp' },
+					count: 1
+				}
+			];
+			toast.success(`${details.name} added successfully!`);
+		} catch (error) {
+			toast.error(`Failed to fetch details for ${equipment.name}.`);
+			console.error(error);
+		}
+	}
+
 	function deleteEquipment(name: any) {
+		console.log(name);
 		$formData.equipment = $formData.equipment.filter((e) => e.index !== name);
 	}
 </script>
@@ -301,26 +325,22 @@
 			<Form.Field {form} name="equipment">
 				<Form.Control>
 					<Form.Label>Equipment</Form.Label>
-					<Select.Root type="single" onValueChange={(o) => $formData.equipment = [...$formData.equipment,{
-						name: o,
-						index: o,
-						count: 1,
-					}]}>
-						<Select.Trigger class="w-[180px]">Equipment</Select.Trigger>
+					<Select.Root type="single" onValueChange={(equipment) => addEquipment(equipment)}>
+						<Select.Trigger class="w-[180px]">Add Equipment</Select.Trigger>
 						<Select.Content>
 							{#each data.data.equipment.results as equipment}
-								<Select.Item value={equipment.index}>{equipment.name}</Select.Item>
+								<Select.Item value={equipment}>{equipment.name}</Select.Item>
 							{/each}
 						</Select.Content>
 					</Select.Root>
 					{#each $formData.equipment as item, index}
-						<div class='flex flex-row'>
-							<span>{$formData.equipment[index].name}</span>
-							<Input bind:value={$formData.equipment[index].count} type="number" class="w-24" />
-							<EquipmentAsyncPopover equipment={$formData.equipment[index].index}>
-								<Info class="size-4"/>
+						<div class="flex flex-row items-center gap-2">
+							<span class="flex-1">{item.name}</span>
+							<Input bind:value={$formData.equipment[index].count} type="number" class="w-16" />
+							<EquipmentAsyncPopover equipment={item.index}>
+								<Info class="size-4" />
 							</EquipmentAsyncPopover>
-							<Button variant="outline" class="self-end" onclick={() => deleteEquipment(item.name)}>
+							<Button variant="outline" class="self-end" onclick={() => deleteEquipment(item.index)}>
 								<Trash class="size-4" />
 							</Button>
 						</div>
@@ -380,7 +400,6 @@
 		</form>
 	</Card.Content>
 	<Card.Footer>
-		<h3 class="font-bold">Relevant Links:</h3>
-		<a class="underline" href={`/character/create/scores/${character._id}`}>Edit Ability Scores</a>
+		<CharacterLinks id={character._id}/>
 	</Card.Footer>
 </Card.Root>

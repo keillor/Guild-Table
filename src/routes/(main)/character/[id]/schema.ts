@@ -27,6 +27,11 @@ export const characterSchema = z.object({
           name: z.string(),
           index: z.string(),
           count: z.number().min(1),
+          weight: z.number(),
+          cost: z.object({
+            quantity: z.number(),
+            unit: z.string()
+          })
         })
       ).min(0),    
 
