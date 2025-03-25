@@ -1,0 +1,124 @@
+
+h1 {
+	@apply text-3xl font-bold;
+}
+
+/* Milkdown Editor */
+.milkdown {
+	@apply py-4 m-4 border rounded;
+	overflow-y: scroll;
+}
+
+.milkdown .editor {
+	@apply mx-auto;
+	line-height: 1.5;
+}
+
+/* Headings */
+.milkdown .editor h2 {
+	@apply mt-5 text-2xl font-semibold;
+}
+
+.milkdown .editor h3 {
+	@apply mt-4 text-xl font-semibold;
+}
+
+.milkdown .editor h4 {
+	@apply mt-3 text-lg font-semibold;
+}
+
+/* Paragraphs and Text */
+.milkdown .editor p {
+	@apply mt-2 mb-4;
+}
+
+.milkdown .editor strong {
+	@apply font-bold;
+}
+
+.milkdown .editor em {
+	@apply italic;
+}
+
+.milkdown .editor blockquote {
+	@apply pl-4 border-l-4 border-gray-400 italic text-gray-600;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+/* Code blocks and Inline Code */
+.milkdown .editor pre {
+	@apply bg-gray-800 text-white p-4 rounded-md overflow-auto;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.milkdown .editor code {
+	@apply bg-gray-200 text-red-600 px-1 rounded;
+	font-family: 'Courier New', monospace;
+}
+
+.milkdown .editor pre code {
+	@apply bg-transparent text-white;
+}
+
+/* Lists */
+.milkdown .editor ul {
+	@apply list-disc pl-6;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.milkdown .editor ol {
+	@apply list-decimal pl-6;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.milkdown .editor li {
+	@apply mb-1;
+}
+
+/* Links */
+.milkdown .editor a {
+	@apply text-blue-600 underline;
+	&:hover {
+		@apply text-blue-800;
+	}
+}
+
+/* Tables */
+.milkdown .editor table {
+	@apply border-collapse w-full my-4;
+}
+
+.milkdown .editor th,
+.milkdown .editor td {
+	@apply border border-gray-300 p-2;
+}
+
+.milkdown .editor th {
+	@apply bg-gray-200 font-semibold;
+}
+
+/* Images */
+.milkdown .editor img {
+	width: 100%;
+	border: 0.15rem solid rebeccapurple;
+	border-radius: 0.3rem;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+/* Horizontal Rule */
+.milkdown .editor hr {
+	@apply border-t border-gray-300 my-4;
+}
+
+/* Media Query */
+@media screen and (max-width: 900px) {
+	.milkdown {
+		@apply bg-slate-100 p-4 m-4 border rounded;
+		max-height: calc(100vh - 10rem);
+	}
+}

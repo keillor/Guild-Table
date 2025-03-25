@@ -46,6 +46,8 @@
 		"zod": "^3.24.1"
 	},
 	"dependencies": {
+		"@milkdown/kit": "^7.6.4",
+		"@milkdown/theme-nord": "^7.6.4",
 		"@supabase/auth-helpers-sveltekit": "^0.13.0",
 		"@supabase/ssr": "^0.5.2",
 		"@supabase/supabase-js": "^2.48.1",
