@@ -1,7 +1,7 @@
-import { MONGO_URL } from '$env/static/private';
-import { MongoClient, ObjectId} from 'mongodb';
+import { ObjectId} from 'mongodb';
+import { client } from './db';
 
-const client = new MongoClient(MONGO_URL);
+
 
 const serializeNonPOJOs = (value) => {
     return structuredClone(value)
@@ -49,6 +49,8 @@ export async function getSingleCharacterVerified(session, slugObjectID) {
         return false;
     }
 }
+
+
 
 /**
  * 
