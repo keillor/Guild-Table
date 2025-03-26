@@ -32,3 +32,23 @@ export interface CharacterTypeTS {
     spells: Record<string, any> | null; 
     as_bonus_mod: Record<string, any>; 
   }
+
+
+export const currency: string[] = ['cp', 'sp', 'gp', 'pp']
+
+export interface Equipment {
+  name: string,
+  index: string,
+  count: number,
+  weight: number,
+  cost: {
+    quantity: number,
+    unit: 'cp' | 'sp' | 'gp' | 'pp'
+  }
+}
+
+export interface equipted {
+  objects: equipment[],
+  weight: number,
+  characterId: string
+}

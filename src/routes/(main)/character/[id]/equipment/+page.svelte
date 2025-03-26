@@ -1,75 +1,132 @@
 <script lang="ts">
-  import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-  import { enhance } from '$app/forms';
-  import { SvelteSet } from 'svelte/reactivity';
   import Button from '$lib/components/ui/button/button.svelte';
 	import CharacterLinks from '$lib/components/view/characterLinks.svelte';
+	import { Info, Trash } from 'lucide-svelte';
+	import type { Equipment } from '$lib/models/character';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { equipmentSchema } from './schema.js';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+  import * as Select from "$lib/components/ui/select/index.js";
+	import { dnd5ApiEquipmentQuery } from '$lib/api/dnd5api_client.js';
+	import EquipmentAsyncPopover from '$lib/components/view/EquipmentAsyncPopover.svelte';
+	import { toast } from 'svelte-sonner';
+	import Label from '$lib/components/ui/label/label.svelte';
 
   const { data } = $props();
   const character = data.character;
+  const allEquipment = data.allEquipment.results;
+  console.log(allEquipment)
+  let equipment : Equipment[] = character.equipment;
 
-  let selectedItems = new SvelteSet();
-  let totalWeight = $state(0);
+  let totalWeight = $derived.by(() => {
+    return equipment.reduce((accumulator, currentVal) => accumulator + currentVal.weight, 0)
+  })
 
-  const toggleItem = (item) => {
-    if (selectedItems.has(item)) {
-      selectedItems.delete(item);
-    } else {
-      selectedItems.add(item);
+  const removeItem = (item: Equipment) => {
+    $formData.equipment = $formData.equipment.filter((o) => o.index !== item.index);
+  }
+
+  async function addEquipment(item) {
+		try {
+			// Fetch additional details for the selected equipment
+			const details = await dnd5ApiEquipmentQuery(item.index);
+			$formData.equipment = [
+				...$formData.equipment,
+				{
+					name: details.name,
+					index: details.index,
+					weight: details.weight || 0,
+					cost: details.cost || { quantity: 0, unit: 'gp' },
+					count: 1
+				}
+			];
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+  const form = superForm(defaults({'equipment': equipment}, zodClient(equipmentSchema)), {
+		validators: zodClient(equipmentSchema),
+		dataType: 'json',
+		resetForm: false,
+		onError: ({result}) => {
+			console.log(result);
+      toast.error('Equipment save failed.')
+		},
+    onUpdated: ({form: f}) => {
+      if(f.valid) {
+        toast.success('Equipment saved!');
+      }
     }
-    calculateTotalWeight();
-  };
-
-  const calculateTotalWeight = () => {
-    totalWeight = Array.from(selectedItems).reduce((sum, item) => sum + (item.weight || 0), 0);
-  };
+	});
+  
+  const { form: formData, enhance, restore } = form;
 </script>
 
-<form method="POST" use:enhance>
+{#if character.equipment.length == 0}
+<h1>{character.name} doesn't have any equipment yet! Please go to <a href='/character/{character._id}'>character edit</a> to equip items</h1>
+{:else}
   <div class="p-4 rounded-lg">
     <h2 class="text-xl font-bold mb-4">Select Equipment</h2>
     <table class="table-auto w-full mb-4 border-collapse border border-gray-300">
       <thead>
         <tr>
-          <th class="border border-gray-300 px-4 py-2">Select</th>
+          <th class="border border-gray-300 px-4 py-2">Active</th>
           <th class="border border-gray-300 px-4 py-2">Name</th>
           <th class="border border-gray-300 px-4 py-2">Weight</th>
           <th class="border border-gray-300 px-4 py-2">Cost</th>
+          <th class="border border-gray-300 px-4 py-2">Action</th>
         </tr>
       </thead>
       <tbody>
-        {#each character.equipment as equipment}
+        {#each $formData.equipment as item}
           <tr>
             <td class="border border-gray-300 px-4 py-2">
               <input
                 type="checkbox"
-                name="equipment"
-                value={equipment.index}
-                onchange={() => toggleItem(equipment)}
+                name="item"
+                value={item.index}
               />
             </td>
-            <td class="border border-gray-300 px-4 py-2">{equipment.name}</td>
-            <td class="border border-gray-300 px-4 py-2">{equipment.weight}</td>
+            <td class="border border-gray-300 px-4 py-2">{item.name}</td>
+            <td class="border border-gray-300 px-4 py-2">{item.weight}</td>
             <td class="border border-gray-300 px-4 py-2">
-              {equipment.cost.quantity} {equipment.cost.unit}
+              {item.cost.quantity} {item.cost.unit}
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <Button variant='outline' onclick={() => removeItem(item)}>
+                <Trash class="size-4" />
+              </Button>
+              <EquipmentAsyncPopover equipment={item.index}>
+								<Info class="size-4" />
+							</EquipmentAsyncPopover>
             </td>
           </tr>
         {/each}
       </tbody>
     </table>
-    <Button>Submit</Button>
+
+    <div class="mb-4">
+      <Label for="equipment" >Add Equipment</Label>
+      <Select.Root type="single" name="equipment" onValueChange={(i) => addEquipment(i)}>
+        <Select.Trigger>
+          Click here to add an item.
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Group>
+            <Select.GroupHeading>Equipment</Select.GroupHeading>
+            {#each allEquipment as item (item.index)}
+              <Select.Item value={item} label={item.name} />
+            {/each}
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+    </div>
+
+    <p class="font-bold">Total Weight: {totalWeight}</p>
+    <form method='POST' use:enhance>
+      <Button type='submit'>Save</Button>
+    </form>
   </div>
-</form>
-
-
-<div>
-  <h2 class="text-xl font-bold mb-4">Equipped Items</h2>
-  <ul class="mb-4">
-    {#each Array.from(selectedItems) as item}
-      <li>{item.name}</li>
-    {/each}
-  </ul>
-  <p class="font-bold">Total Weight: {totalWeight}</p>
-</div>
-
+{/if}
 <CharacterLinks id={character._id}/>
