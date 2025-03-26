@@ -74,12 +74,9 @@
 				</Button>
 
 				<AlertDialog.Root>
-					<AlertDialog.Trigger variant='outline'>
-						<Button variant="outline">
-							<!-- THIS BUTTON MIGHT CAUSE HYDRATION ISSUES -->
+					<AlertDialog.Trigger class={buttonVariants({variant: 'outline'})}>
 							<Trash class="mr-2 size-4" />
 							Delete
-						</Button>
 					</AlertDialog.Trigger>
 					<AlertDialog.Content>
 						<AlertDialog.Header>
