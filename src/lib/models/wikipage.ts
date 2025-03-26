@@ -1,4 +1,7 @@
 export interface Wiki {
+    title: string,
     text: string,
-    user: string,
+    owner: string,
+    campaign: string,
+    users: string[]
 }
