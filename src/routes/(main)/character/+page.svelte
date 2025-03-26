@@ -90,7 +90,7 @@
 							</AlertDialog.Description>
 						</AlertDialog.Header>
 						<AlertDialog.Footer>
-							<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+							<AlertDialog.Cancel type='button'>Cancel</AlertDialog.Cancel>
 							<form method='POST' action='?/delete' use:enhance={() => {
 								return async({result}) => {
 									const results = await result;
