@@ -140,6 +140,7 @@ export async function patchCharacter(characterID, characterReplacement) {
     try {
         const database = client.db('character');
         const stdCharacters = database.collection('standard_characters');
+        characterReplacement._id = new ObjectId(characterID);
 
         const filter = { _id: new ObjectId(characterID)};
         const results = await stdCharacters.replaceOne(filter, characterReplacement);
