@@ -4,11 +4,12 @@
 	import '../../app.css';
 	import * as Sidebar from '$lib/components/ui/sidebar/index';
 	import AppSidebar from '@/components/app-sidebar.svelte';
-	let { children } = $props();
+	let { children, data } = $props();
+	const user = data.user;
 </script>
 
 <Sidebar.Provider>
-	<AppSidebar />
+	<AppSidebar {user} />
 	<Sidebar.Inset>
 		{@render children()}
 	</Sidebar.Inset>
