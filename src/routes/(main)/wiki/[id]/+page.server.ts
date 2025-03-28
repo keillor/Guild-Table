@@ -17,7 +17,6 @@ export const load = async ({ locals: { session }, params }) => {
 
 export const actions = {
 	default: async (event) => {
-		console.log('form submitted');
 		const session = event.locals.session;
 		const form = await superValidate(event, zod(wikiSchema));
 		if (!form.valid) {
@@ -26,6 +25,7 @@ export const actions = {
 			});
 		} else {
 			const newWiki: Wiki = form.data;
+			console.log(form.data);
 			const updateResult = await UpdateWikiVerified(session, newWiki);
 
 			if (updateResult) {
