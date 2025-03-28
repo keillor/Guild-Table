@@ -138,13 +138,17 @@ export async function DeleteWikiVerified(session, objectId) {
 export async function GetWikiTitlesByUser(session) {
     try {
         if (!session || !session.user || !session.user.id) {
+            console.error('session error! throwing error');
             throw new Error('Invalid session object.');
         }
 
+        console.info('define database wiki')
         const database = client.db('wiki');
+        console.info('define collection pages')
         const pages = database.collection('pages');
 
         // Query the database for all wikis owned by the user and project only the title and _id fields
+        console.info('call pages query')
         const results = await pages
             .find({ owner: session.user.id }, { projection: { title: 1, campaign: 1} })
             .toArray();
