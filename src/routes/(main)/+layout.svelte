@@ -11,6 +11,8 @@
 <Sidebar.Provider>
 	<AppSidebar {user} />
 	<Sidebar.Inset>
-		{@render children()}
+		<div class='p-3'>
+			{@render children()}
+		</div>
 	</Sidebar.Inset>
 </Sidebar.Provider>

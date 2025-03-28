@@ -37,10 +37,6 @@
 						title: 'Dashboard',
 						url: './homepage'
 					},
-					{
-						title: 'Campaigns',
-						url: './homepage/campaigns'
-					}
 				]
 			},
 			{
@@ -51,7 +47,7 @@
 				items: [
 					{
 						title: 'Dungeon Master',
-						url: '/campaigns'
+						url: '/campaign'
 					},
 					{
 						title: 'Campaign Player',

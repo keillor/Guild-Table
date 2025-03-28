@@ -20,17 +20,25 @@
 
 	const form = superForm(defaults({ ...myWiki }, zodClient(wikiSchema)), {
 		validators: zodClient(wikiSchema),
-		dataType: 'json',
+		dataType: "json",
 		resetForm: false,
+		onSubmit: ({jsonData}) => {
+			return jsonData({
+				title: $formData.title,
+				text: handleSave(),
+				owner: $formData.owner,
+				campaign: $formData.campaign,
+				users: $formData.users,
+				_id: $formData._id
+			});
+		},
 		onError: ({ result }) => {
-			console.log(result);
 			toast.error('Failed to save wiki!');
 		},
 		onUpdated: ({ form: f }) => {
 			if (f.valid) {
 				toast.success('Wiki saved!');
 			}
-			console.log(f);
 		}
 	});
 
