@@ -4,8 +4,13 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { ObjectId } from 'mongodb';
 
 export const load = async ({locals: {session}, params}) => {
+    console.log('session object: ', session);
+    console.info('enter wiki function')
     const wikiPages = await GetWikiTitlesByUser(session);
+    console.info('got wiki page data')
+    console.log(wikiPages);
     if(wikiPages) {
+        console.info('wiki page data is valid. returning wikiPages')
         return {wikiPages};
     }
     redirect(302, "/character");
