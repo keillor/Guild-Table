@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 export const load = async ({locals: {session}, params}) => {
     console.log('session object: ', session);
     console.info('enter wiki function')
-    const wikiPages = await GetWikiTitlesByUser(session);
+    const wikiPages = GetWikiTitlesByUser(session);
     console.info('got wiki page data')
     console.log(wikiPages);
     if(wikiPages) {

@@ -13,6 +13,7 @@
 	let wikiPages = $state(data.wikiPages);
 </script>
 
+
 <h1 class="mb-4 text-3xl font-bold">Wiki Pages</h1>
 <AlertDialog.Root>
 	<AlertDialog.Trigger class={`${buttonVariants({ variant: 'default' })} w-min`}>
@@ -53,6 +54,10 @@
 		</form>
 	</AlertDialog.Content>
 </AlertDialog.Root>
+
+{#await wikiPages}
+	<!-- //empty -->
+{:then wikiPages}
 
 {#if wikiPages.length == 0}
 	<h1 class='text-3xl'>Looks like you don't have any wiki pages yet...</h1>
@@ -98,7 +103,7 @@
 												await result;
 												console.log(result);
 												if (result.type == 'success') {
-													wikiPages = wikiPages.filter((w) => w._id !== wiki._id);
+													//wikiPages = wikiPages.filter((w) => w._id !== wiki._id);
 												}
 											};
 										}}
@@ -118,3 +123,5 @@
 		</tbody>
 	</table>
 {/if}
+
+{/await}
