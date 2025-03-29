@@ -54,7 +54,7 @@
 	</AlertDialog.Content>
 </AlertDialog.Root>
 
-{#await wikiPages}
+{#await data.wikiPages}
 	<!-- //empty -->
 {:then wikiPages}
 	{#if wikiPages.length == 0}
@@ -69,7 +69,7 @@
 				</tr>
 			</thead>
 			<tbody>	
-				{#each pageState as wiki}
+				{#each wikiPages as wiki}
 					<tr>
 						<td class="border border-gray-300 px-4 py-2">{wiki.title}</td>
 						<td class="border border-gray-300 px-4 py-2">{wiki.campaign || 'No Campaign'}</td>
@@ -101,7 +101,7 @@
 													await result;
 													console.log(result);
 													if (result.type == 'success') {
-														pageState = pageState.filter((w) => w._id !== wiki._id);
+														//wikiPages = wikiPages.filter((w) => w._id !== wiki._id);
 													}
 												};
 											}}
