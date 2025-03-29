@@ -119,3 +119,39 @@ export async function GetCampaignsByUser(session) {
         return [];
     }
 }
+
+/**
+ * Retrieves a campaign by its ObjectId.
+ * @param {import('@supabase/supabase-js').Session} session - The user's session object.
+ * @param {string} campaignId - The ObjectId of the campaign to retrieve.
+ * @returns {Promise<{ _id: string, name: string, description: string } | null>} The campaign object if found and authorized, otherwise `null`.
+ */
+export async function GetCampaignById(session, campaignId) {
+    try {
+        if (!session || !session.user || !session.user.id) {
+            throw new Error('Invalid session object.');
+        }
+
+        const database = client.db('campaign');
+        const campaigns = database.collection('campaign_data');
+
+        // Fetch the campaign by its ObjectId
+        const campaign = await campaigns.findOne({ _id: new ObjectId(campaignId) });
+
+        // Check if the campaign exists and the user is authorized to access it
+        if (!campaign || campaign.owner !== session.user.id) {
+            console.error('Unauthorized or campaign not found.');
+            return null;
+        }
+
+        // Convert ObjectId to string for client compatibility
+        return {
+            _id: campaign._id.toString(),
+            name: campaign.name,
+            description: campaign.description || 'No description provided',
+        };
+    } catch (e) {
+        console.error('Error retrieving campaign by ID:', e);
+        return null;
+    }
+}
