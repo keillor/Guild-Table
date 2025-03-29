@@ -153,6 +153,8 @@ export async function GetWikiTitlesByUser(session) {
             .find({ owner: session.user.id }, { projection: { title: 1, campaign: 1} })
             .toArray();
 
+        console.info('got results: ', results);
+
         // Convert ObjectId to string for client compatibility
         return results.map((wiki) => ({
             _id: wiki._id.toString(),
