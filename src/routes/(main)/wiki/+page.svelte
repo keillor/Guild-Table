@@ -101,7 +101,7 @@
 													await result;
 													console.log(result);
 													if (result.type == 'success') {
-														pageState = wikiPages.filter((w) => w._id !== wiki._id);
+														pageState = pageState.filter((w) => w._id !== wiki._id);
 													}
 												};
 											}}
