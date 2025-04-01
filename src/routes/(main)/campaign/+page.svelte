@@ -50,7 +50,7 @@
 <h1 class="mb-4 text-3xl font-bold">Game Management</h1>
 
 <AlertDialog.Root bind:open>
-	<AlertDialog.Trigger class={buttonVariants({ variant: 'outline' })}>
+	<AlertDialog.Trigger class={buttonVariants({ variant: 'default' })}>
 		<Plus class="size-4" />
 		New Campaign
 	</AlertDialog.Trigger>

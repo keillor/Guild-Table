@@ -11,14 +11,12 @@
 	const as_names = ['cha', 'con', 'dex', 'int', 'str', 'wis'];
 </script>
 
-<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Character Manage</h1>
+<h1 class="mb-4 text-3xl font-bold">Character Manage</h1>
 
-<Card.Root class="p-3">
-	<Button href="/character/create">
-		<Plus class="mr-2 size-4" />
-		Create New Character
-	</Button>
-</Card.Root>
+<Button href="/character/create">
+	<Plus class="mr-2 size-4" />
+	New Character
+</Button>
 
 <h2
 	class="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
