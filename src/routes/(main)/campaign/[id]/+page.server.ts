@@ -1,14 +1,96 @@
-import { GetCampaignById } from '$lib/api/campaign_manage.js'
-import { error, redirect } from '@sveltejs/kit';
+import { GetCampaignById, UpdateCampaign } from '$lib/api/campaign_manage.js';
+import { inviteUser } from '$lib/api/user_manage.js';
+import { error, fail } from '@sveltejs/kit';
 
+export const load = async ({ params, locals: { safeGetSession } }) => {
+    let session = await safeGetSession();
+    session = session.session;
 
-
-export const load = async ({params, locals: {safeGetSession}}) => {
-    let session = await safeGetSession()
-    session = session.session
     const campaign = await GetCampaignById(session, params.id);
-    if(campaign) {
-        return {campaign}
+    if (campaign) {
+        return { campaign };
     }
-    error(404, 'Looks like this campaign doesn\'t exist.')
-}
+    throw error(404, "Looks like this campaign doesn't exist.");
+};
+
+export const actions = {
+    // Action to update name and description
+    changeName: async ({ request, params, locals: { safeGetSession } }) => {
+        const session = (await safeGetSession()).session;
+        const formData = await request.formData();
+        const name = formData.get('name')?.toString();
+        const description = formData.get('description')?.toString();
+
+        if (!name || !description) {
+            return fail(400, { error: 'Name and description are required.' });
+        }
+
+        const updated = await UpdateCampaign(session, params.id, { name, description });
+        if (!updated) {
+            return fail(500, { error: 'Failed to update campaign name and description.' });
+        }
+
+        return { success: true };
+    },
+
+    // Action to add an invite
+    inviteUser: async ({ request, params, locals: { safeGetSession } }) => {
+        const session = (await safeGetSession()).session;
+        const formData = await request.formData();
+        const invite = formData.get('invite')?.toString();
+
+        if (!invite) {
+            return fail(400, { error: 'Invite is required.' });
+        }
+
+        const campaign = await GetCampaignById(session, params.id);
+        if (!campaign) {
+            throw error(404, "Campaign not found.");
+        }
+
+        const v4 = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i);
+        const regex = v4.test(invite)
+        
+        if(!regex) {
+            throw error(400, 'Enter a valid user id.');
+        }
+
+        const invitation = await inviteUser(invite, params.id);
+
+        if(!invitation) {
+            throw error(500, 'Server error. User not invited.');
+        }
+
+        const updatedInvites = [...campaign.invites, invite];
+        const updated = await UpdateCampaign(session, params.id, { invites: updatedInvites });
+        if (!updated) {
+            return fail(500, { error: 'Failed to add invite.' });
+        }
+
+        return { success: true };
+    },
+
+    // Action to add a map ID
+    addMap: async ({ request, params, locals: { safeGetSession } }) => {
+        const session = (await safeGetSession()).session;
+        const formData = await request.formData();
+        const mapId = formData.get('mapId')?.toString();
+
+        if (!mapId) {
+            return fail(400, { error: 'Map ID is required.' });
+        }
+
+        const campaign = await GetCampaignById(session, params.id);
+        if (!campaign) {
+            throw error(404, "Campaign not found.");
+        }
+
+        const updatedMapIds = [...campaign.mapIds, mapId];
+        const updated = await UpdateCampaign(session, params.id, { mapIds: updatedMapIds });
+        if (!updated) {
+            return fail(500, { error: 'Failed to add map ID.' });
+        }
+
+        return { success: true };
+    }
+};
