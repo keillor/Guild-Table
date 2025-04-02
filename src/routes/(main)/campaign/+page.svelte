@@ -34,9 +34,15 @@
 				console.error('Validation failed:', result);
 			},
 			onUpdate({ form: f, result }) {
+				console.log(f);
 				if (f.valid) {
+					console.log(f)
+					const newName = result.data.form.name
+					const newDesc = result.data.form.description
+					const campaignId = result.data.campaignId
+					campaigns = [...campaigns, {name: newName, description: newDesc, _id: campaignId}]
+
 					goto(`/campaign/${result.data.campaignId}`);
-					//console.log(result.data.campaignId)
 				} else {
 					open = true;
 				}
@@ -136,7 +142,6 @@
 									<form method='POST' action='?/delete' use:svelteEnhance={() => {
 										return async({result}) => {
 											const results = await result;
-											console.log(results);
 											campaigns = campaigns.filter((c) => c._id !== campaign._id);
 										}
 									}}>

@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import { House, Library, Users, MessageSquareCode, GalleryVerticalEnd, Frame, Command, ChartPie, AudioWaveform } from 'lucide-svelte';
+	import { House, Library, Users, MessageSquareCode, GalleryVerticalEnd, Frame, Command, ChartPie, AudioWaveform, Settings } from 'lucide-svelte';
 	
 	let { ref = $bindable(null), collapsible = 'icon', user, ...restProps } = $props();
 
@@ -81,6 +81,21 @@
 						url: '/wiki'
 					},
 					
+				]
+			},
+			{
+				title: 'Settings',
+				url: '/account',
+				icon: Settings,
+				items: [
+					{
+						title: 'Account',
+						url: '/account'
+					},
+					{
+						title: 'Invites',
+						url: '/account/invites'
+					}
 				]
 			},
 			{
