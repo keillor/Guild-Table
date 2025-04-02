@@ -19,9 +19,25 @@
   const allEquipment = data.allEquipment.results;
   console.log(allEquipment)
   let equipment : Equipment[] = character.equipment;
+  const form = superForm(defaults({'equipment': equipment}, zodClient(equipmentSchema)), {
+    validators: zodClient(equipmentSchema),
+    dataType: 'json',
+    resetForm: false,
+    onError: ({result}) => {
+      console.log(result);
+      toast.error('Equipment save failed.')
+    },
+    onUpdated: ({form: f}) => {
+      if(f.valid) {
+        toast.success('Equipment saved!');
+      }
+    }
+  });
+  
+  const { form: formData, enhance, restore } = form;
 
   let totalWeight = $derived.by(() => {
-    return $formData.equipment.reduce((accumulator, currentVal) => accumulator + currentVal.weight, 0)
+    return $formData.equipment.reduce((accumulator, currentVal) => accumulator + (currentVal.weight)*(currentVal.count), 0)
   })
 
   const removeItem = (item: Equipment) => {
@@ -55,22 +71,6 @@
 		}
 	}
 
-  const form = superForm(defaults({'equipment': equipment}, zodClient(equipmentSchema)), {
-		validators: zodClient(equipmentSchema),
-		dataType: 'json',
-		resetForm: false,
-		onError: ({result}) => {
-			console.log(result);
-      toast.error('Equipment save failed.')
-		},
-    onUpdated: ({form: f}) => {
-      if(f.valid) {
-        toast.success('Equipment saved!');
-      }
-    }
-	});
-  
-  const { form: formData, enhance, restore } = form;
 </script>
 
 {#if character.equipment.length == 0}
