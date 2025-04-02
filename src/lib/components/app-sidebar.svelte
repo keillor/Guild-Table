@@ -30,12 +30,12 @@
 		navMain: [
 			{
 				title: 'Home',
-				url: './homepage',
+				url: '/homepage',
 				icon: House,
 				items: [
 					{
 						title: 'Dashboard',
-						url: './homepage'
+						url: '/homepage'
 					},
 				]
 			},

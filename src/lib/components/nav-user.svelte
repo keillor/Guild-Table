@@ -3,6 +3,7 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { useSidebar } from '$lib/components/ui/sidebar/index.js';
+	import { UserPlus } from 'lucide-svelte';
 	import BadgeCheck from 'lucide-svelte/icons/badge-check';
 	import Bell from 'lucide-svelte/icons/bell';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
@@ -12,6 +13,18 @@
 
 	let { user } = $props();
 	const sidebar = useSidebar();
+	const accountButtons = [
+		{
+			name: 'Invites',
+			url: '/account/invites',
+			icon: UserPlus
+		},
+		{
+			name: 'Account',
+			url: '/account/',
+			icon: BadgeCheck
+		},
+	]
 </script>
 
 <Sidebar.Menu>
@@ -55,27 +68,18 @@
 					</div>
 				</DropdownMenu.Label>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Group>
-					<DropdownMenu.Item>
-						<Sparkles />
-						Upgrade to Pro
-					</DropdownMenu.Item>
-				</DropdownMenu.Group>
-				<DropdownMenu.Separator />
-				<DropdownMenu.Group>
-					<DropdownMenu.Item>
-						<BadgeCheck />
-						Account
-					</DropdownMenu.Item>
-					<DropdownMenu.Item>
-						<CreditCard />
-						Billing
-					</DropdownMenu.Item>
-					<DropdownMenu.Item>
-						<Bell />
-						Notifications
-					</DropdownMenu.Item>
-				</DropdownMenu.Group>
+				{#each accountButtons as item}
+					<DropdownMenu.Group>
+						<DropdownMenu.Item>
+							{#snippet child({ props })}
+								<a href={item.url} {...props}>
+									<item.icon />
+									<span>{item.name}</span>
+								</a>
+							{/snippet}
+						</DropdownMenu.Item>
+					</DropdownMenu.Group>
+				{/each}
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item>
 					<LogOut />
