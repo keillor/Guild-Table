@@ -145,10 +145,8 @@ export async function GetCampaignById(session, campaignId) {
         }
 
         // Convert ObjectId to string for client compatibility
-        return {
-            _id: campaign._id.toString(),
-            name: campaign.name,
-            description: campaign.description || 'No description provided',
+        return {...campaign,
+            _id: campaign._id.toString()
         };
     } catch (e) {
         console.error('Error retrieving campaign by ID:', e);
