@@ -1,5 +1,8 @@
+import { PRIVATE_SUPABASE_KEY } from '$env/static/private';
+import { PUBLIC_SUPABASE_URL } from '$env/static/public';
 import { GetCampaignById, UpdateCampaign } from '$lib/api/campaign_manage.js';
 import { inviteUser } from '$lib/api/user_manage.js';
+import { createClient } from '@supabase/supabase-js';
 import { error, fail } from '@sveltejs/kit';
 
 export const load = async ({ params, locals: { safeGetSession } }) => {
@@ -59,6 +62,13 @@ export const actions = {
 
         if(!invitation) {
             throw error(500, 'Server error. User not invited.');
+        }
+
+        const supabase = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_KEY);
+        const adminAuthClient = supabase.auth.admin;
+        const userQuery = await adminAuthClient.getUserById(invite);
+        if(!userQuery.data.user) {
+            throw error(400, 'User does not exist.');
         }
 
         const updatedInvites = [...campaign.invites, invite];
