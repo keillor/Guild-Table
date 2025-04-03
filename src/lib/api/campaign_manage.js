@@ -153,3 +153,41 @@ export async function GetCampaignById(session, campaignId) {
         return null;
     }
 }
+
+
+/**
+ * Retrieves the name and description of campaigns by their ObjectIds.
+ * @param {string[]} campaignIds - An array of campaign ObjectIds as strings.
+ * @returns {Promise<Array<{ _id: string, name: string, description: string }>>} An array of campaigns with their IDs, names, and descriptions.
+ */
+export async function GetCampaignsByIds(campaignIds) {
+    try {
+        if (!Array.isArray(campaignIds) || campaignIds.length === 0) {
+            throw new Error('Invalid campaignIds array.');
+        }
+
+        const database = client.db('campaign');
+        const campaigns = database.collection('campaign_data');
+
+        // Convert string IDs to ObjectId
+        const objectIds = campaignIds.map((id) => new ObjectId(id));
+
+        // Query the database for campaigns with the given IDs
+        const results = await campaigns
+            .find(
+                { _id: { $in: objectIds } }, // Match campaigns with the given ObjectIds
+                { projection: { name: 1, description: 1 } } // Only return name and description
+            )
+            .toArray();
+
+        // Convert ObjectId to string for client compatibility
+        return results.map((campaign) => ({
+            _id: campaign._id.toString(),
+            name: campaign.name,
+            description: campaign.description || 'No description provided',
+        }));
+    } catch (e) {
+        console.error('Error retrieving campaigns by IDs:', e);
+        return [];
+    }
+}
