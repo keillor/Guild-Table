@@ -113,3 +113,35 @@ export async function getAllInvitesByUserID(userId) {
         return false;
     }
 }
+
+/**
+ * Retrieves the `standard_users` object for a user based on their session.
+ * @param {import('@supabase/supabase-js').Session} session - The user's session object.
+ * @returns {Promise<Object|null>} The user's `standard_users` object, or `null` if not found.
+ */
+export async function getUserBySession(session) {
+    try {
+        if (!session || !session.user || !session.user.id) {
+            throw new Error('Invalid session object.');
+        }
+
+        const userId = session.user.id;
+
+        const database = client.db('users');
+        const users = database.collection('standard_users');
+
+        // Find the user by their userId
+        const user = await users.findOne({ userId });
+
+        if (!user) {
+            console.error(`User with ID ${userId} not found.`);
+            return null;
+        }
+
+        // Convert the MongoDB ObjectId to a string for client compatibility
+        return { ...user, _id: user._id.toString() };
+    } catch (e) {
+        console.error('Error retrieving user by session:', e);
+        return null;
+    }
+}
