@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Campaign } from '$lib/models/Campaign';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import { Trash, Plus } from 'lucide-svelte/icons';
@@ -11,10 +11,8 @@
 	const { data } = $props();
 
 	let campaignInstance = $state(data.campaign);
-	$inspect(campaignInstance);
-
-	let inviteToAdd = '';
-	let mapIdToAdd = '';
+	let inviteToAdd = $state('');
+	let mapIdToAdd = $state('');
 </script>
 
 <h1 class="mb-4 text-3xl font-bold">Edit Campaign: {campaignInstance.name}</h1>
@@ -63,7 +61,7 @@
 			}
 		};
 	}}
-> 
+>
 	<div class="mb-4">
 		<Label for="invite">Invite User (UID)</Label>
 		<div class="flex items-center gap-2">
@@ -114,5 +112,44 @@
 				<Trash class="size-4" />
 			</Button>
 		</li>
+	{/each}
+</ul>
+
+<Label>Users</Label>
+<ul class="mt-2 flex flex-row gap-2">
+	{#if campaignInstance.users.length < 1}
+		<p>Looks like you haven't invited anyone yet. When you do, they will appear here.</p>
+	{/if}
+	{#each campaignInstance.users as user}
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger>
+				<Badge>{user}</Badge>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content class="w-56">
+				<DropdownMenu.Group>
+					<DropdownMenu.GroupHeading>User Actions</DropdownMenu.GroupHeading>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Group>
+						<form action='?/removeUser' method='POST' use:enhance={({ formData }) => {
+							return async ({ result }) => {
+								const response = await result;
+								if (response.type === 'success') {
+									toast.success(`Removed user ${user}.`);
+									campaignInstance.users = campaignInstance.users.filter((u) => u !== user);
+								} else {
+									toast.error(`Failed to remove user ${user}.`);
+								}
+							};
+						}}>
+							<input hidden name='campaignId' value={campaignInstance._id}/>
+							<input hidden name='uid' value={user}/>
+							<DropdownMenu.Item onclick={() => event.target.closest('form').requestSubmit()}>
+								Remove from Campaign
+							</DropdownMenu.Item>
+						</form>
+					</DropdownMenu.Group>
+				</DropdownMenu.Group>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
 	{/each}
 </ul>
