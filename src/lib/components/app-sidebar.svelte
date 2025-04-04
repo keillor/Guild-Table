@@ -51,7 +51,7 @@
 					},
 					{
 						title: 'Campaign Player',
-						url: '/play/player'
+						url: '/campaign/play'
 					}
 				]
 			},
