@@ -28,7 +28,7 @@
 
 
 {#snippet equipChips(list, key)}
-    <div class='flex flex-row gap-2'>
+    <div class='flex flex-row gap-2 flex-wrap'>
         {#each list as item}
         <Popover.Root>
             <Popover.Trigger>
