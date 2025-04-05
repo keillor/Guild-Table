@@ -41,7 +41,7 @@
 				<AlertDialog.Description>
 					<Label for="wikiname">New Wiki Title</Label>
 					{#if errorText}
-						<p class="text-red-500">{errorText}</p>
+						<p class="text-destructive">{errorText}</p>
 					{/if}
 					<Input name="wikiname" placeholder="wiki name" />
 				</AlertDialog.Description>

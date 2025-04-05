@@ -67,7 +67,7 @@
 		</form>
 		<Milkdown bind:this={milkdownRef} markdown={myWiki} />
 	{:else}
-		<h1 class="text-red-500">Whoops!</h1>
+		<h1 class="text-destructive">Whoops!</h1>
 		<p>Looks like there was a problem! Please try again later.</p>
 	{/if}
 </div>
