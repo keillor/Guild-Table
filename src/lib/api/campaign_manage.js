@@ -1,5 +1,7 @@
+import { error } from '@sveltejs/kit';
 import { client } from './db';
 import { ObjectId } from 'mongodb';
+import { Body } from '$lib/components/ui/table';
 
 /**
  * Creates a new campaign in the database.
@@ -126,7 +128,7 @@ export async function GetCampaignsByUser(session) {
  * @param {string} campaignId - The ObjectId of the campaign to retrieve.
  * @returns {Promise<{ _id: string, name: string, description: string } | null>} The campaign object if found and authorized, otherwise `null`.
  */
-export async function GetCampaignById(session, campaignId) {
+export async function GetCampaignByIdAdmin(session, campaignId) {
     try {
         if (!session || !session.user || !session.user.id) {
             throw new Error('Invalid session object.');
@@ -140,8 +142,9 @@ export async function GetCampaignById(session, campaignId) {
 
         // Check if the campaign exists and the user is authorized to access it
         if (!campaign || campaign.owner !== session.user.id) {
+            if(session.user.id)
             console.error('Unauthorized or campaign not found.');
-            return null;
+            throw error(404, 'Campaign not found.');
         }
 
         // Convert ObjectId to string for client compatibility
@@ -149,8 +152,8 @@ export async function GetCampaignById(session, campaignId) {
             _id: campaign._id.toString()
         };
     } catch (e) {
-        console.error('Error retrieving campaign by ID:', e);
-        return null;
+        console.log(e);
+        throw error(e.status, e.body.message);
     }
 }
 
@@ -189,5 +192,41 @@ export async function GetCampaignsByIds(campaignIds) {
     } catch (e) {
         console.error('Error retrieving campaigns by IDs:', e);
         return [];
+    }
+}
+
+/**
+ * Retrieves a campaign by its ObjectId for a user.
+ * Ensures the user is authorized to view the campaign by checking the `users` array.
+ * @param {import('@supabase/supabase-js').Session} session - The user's session object.
+ * @param {string} campaignId - The ObjectId of the campaign to retrieve.
+ * @returns {Promise<{ _id: string, name: string, description: string } | null>} The campaign object if found and authorized, otherwise throws an error.
+ */
+export async function GetCampaignByIdUser(session, campaignId) {
+    try {
+        if (!session || !session.user || !session.user.id) {
+            throw new Error('Invalid session object.');
+        }
+
+        const database = client.db('campaign');
+        const campaigns = database.collection('campaign_data');
+
+        // Fetch the campaign by its ObjectId
+        const campaign = await campaigns.findOne({ _id: new ObjectId(campaignId) });
+
+        // Check if the campaign exists and the user is authorized to access it
+        if (!campaign || !campaign.users.includes(session.user.id)) {
+            console.error('Unauthorized or campaign not found.');
+            throw error(404, 'Campaign not found.');
+        }
+
+        // Convert ObjectId to string for client compatibility
+        return {
+            ...campaign,
+            _id: campaign._id.toString(),
+        };
+    } catch (e) {
+        console.error('Error retrieving campaign by ID for user:', e);
+        throw error(e.status || 500, e.message || 'Failed to retrieve campaign.');
     }
 }

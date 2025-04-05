@@ -1,6 +1,6 @@
 import { PRIVATE_SUPABASE_KEY } from '$env/static/private';
 import { PUBLIC_SUPABASE_URL } from '$env/static/public';
-import { GetCampaignById, UpdateCampaign } from '$lib/api/campaign_manage.js';
+import { GetCampaignByIdAdmin, UpdateCampaign } from '$lib/api/campaign_manage.js';
 import { client } from '$lib/api/db';
 import { inviteUser } from '$lib/api/user_manage.js';
 import { createClient } from '@supabase/supabase-js';
@@ -11,7 +11,7 @@ export const load = async ({ params, locals: { safeGetSession } }) => {
     let session = await safeGetSession();
     session = session.session;
 
-    const campaign = await GetCampaignById(session, params.id);
+    const campaign = await GetCampaignByIdAdmin(session, params.id);
     if (campaign) {
         return { campaign };
     }
@@ -48,7 +48,7 @@ export const actions = {
             return fail(400, { error: 'Invite is required.' });
         }
 
-        const campaign = await GetCampaignById(session, params.id);
+        const campaign = await GetCampaignByIdAdmin(session, params.id);
         if (!campaign) {
             throw error(404, "Campaign not found.");
         }
@@ -92,7 +92,7 @@ export const actions = {
             return fail(400, { error: 'Map ID is required.' });
         }
 
-        const campaign = await GetCampaignById(session, params.id);
+        const campaign = await GetCampaignByIdAdmin(session, params.id);
         if (!campaign) {
             throw error(404, "Campaign not found.");
         }
