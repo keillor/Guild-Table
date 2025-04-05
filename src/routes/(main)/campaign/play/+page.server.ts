@@ -19,8 +19,9 @@ export const load = async ({ locals: { session } }) => {
 
         return { user, campaigns };
     } catch (e) {
-        console.error('Error in load function:', e);
-        throw error(500, 'Failed to load user data.');
+        console.info('User object does not exist yet.', e);
+        return {user: {}, campaings: []};
+
     }
 };
 
