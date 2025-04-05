@@ -22,4 +22,4 @@
 		</Select.Group>
 	</Select.Content>
 </Select.Root>
-{#if $errors.class}<span class="font-bold text-red-500 underline">{$errors.class}</span>{/if}
+{#if $errors.class}<span class="font-bold text-destructive underline">{$errors.class}</span>{/if}

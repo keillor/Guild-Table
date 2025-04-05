@@ -45,7 +45,7 @@
 			{:then details}
 				<EquipmentDetail equipment={details}/>
 			{:catch error}
-				<p class="text-red-500">{error}</p>
+				<p class="text-destructive">{error}</p>
 			{/await}
 		</ScrollArea>
 	</Popover.Content>

@@ -29,7 +29,7 @@
     <h3 class="font-bold">Relevant Links:</h3>
     <ul>
         {#each characterLinks as link}
-            <li class='underline target:text-red-500'><a href={link.url}>{link.name}</a></li>
+            <li class='underline target:text-destructive'><a href={link.url}>{link.name}</a></li>
         {/each}
     </ul>
 </div>
