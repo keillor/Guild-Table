@@ -41,8 +41,10 @@ export const actions = {
         const newCharacter = form.data;
         newCharacter['user'] = event.locals.session?.user.id;
         console.log("FORM ACTION", event.locals.session?.user.id, event.params.id);
-        const serverCharacter = await patchCharacterVerify(event.locals.session, event.params.id, newCharacter);
+        let serverCharacter = await patchCharacterVerify(event.locals.session, event.params.id, newCharacter);
         if(serverCharacter) {
+          console.log(form)
+          form.data._id = form.data._id.toString();
           return message(form, "Character updated!")
         } else {
           console.log("post failed.")
