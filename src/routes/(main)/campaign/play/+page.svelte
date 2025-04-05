@@ -77,7 +77,7 @@
 									}}
 								>
 									<input type="hidden" name="campaignId" value={campaign._id} />
-									<AlertDialog.Action type="submit" class="btn btn-destructive">
+									<AlertDialog.Action type="submit" class={buttonVariants({variant: 'destructive'})}>
 										Continue
 									</AlertDialog.Action>
 								</form>
