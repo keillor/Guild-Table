@@ -3,14 +3,15 @@
   import * as Card from "$lib/components/ui/card/index.js";
   import * as Popover from "$lib/components/ui/popover/index.js";
   import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
-  import { Backpack, Dices, Heart, ScrollText, Sparkles, Swords, UserRound } from "lucide-svelte";
+  import { Backpack, Dices, Heart, House, ScrollText, Sparkles, Swords, UserRound } from "lucide-svelte";
 	import Input from "$lib/components/ui/input/input.svelte";
+	import VttRolls from "$lib/components/vtt-rolls.svelte";
 
   const items = [
     {
       title: "rolls",
       icon: Dices,
-      component: Input
+      component: VttRolls
     },
     { title: "character-attributes",
       icon: UserRound,
@@ -48,13 +49,8 @@
     }
   ];
 
-  let ActiveItem = $state(null);
   let gameDivRef = $state<HTMLElement>(null!);
 
-  function setActiveComponent(item) {
-    console.log('item set', item);
-    ActiveItem = item.icon;
-  }
 
   
 </script>
@@ -63,25 +59,22 @@
   id="button-container-card" 
   class="absolute left-0 w-20 h-full m-5 p-0 rounded-lg shadow-lg">
   <Card.Content>
-    <div id="button-container" class="flex flex-col items-center">
+    <div id="button-container" class="flex flex-col items-center gap-2">
       {#each items as item}
         <Popover.Root open={false}>
           <Popover.Trigger 
-            class="${buttonVariants({ variant: 'outline' })} flex items-center mx-0 p-2 m-1 aspect-square"
-            onclick={() => setActiveComponent(item)}
+            class="${buttonVariants({ variant: 'outline' })} flex items-center mx-0 p-2 aspect-square"
             >
-              <item.icon class="w-7 h-10"/>
+              <item.icon class='size-6'/>
           </Popover.Trigger>
-          <Popover.Content customAnchor={gameDivRef}>
-            <item.icon/>
+          <Popover.Content side='right'>
+            <item.component />
           </Popover.Content>
         </Popover.Root>
-      {/each}
+        {/each}
+        <Button href="/homepage"><House/></Button>
     </div>
   </Card.Content>
-  <Card.Footer>
-    <Button href="/homepage">Home</Button>
-  </Card.Footer>
 </Card.Root>
 
 <!-- Render game on the right side-->
@@ -90,9 +83,6 @@
   class="absolute left-20 right-0 h-full m-5 p-0 rounded-lg shadow-lg">
   <Card.Content>
     <div bind:this={gameDivRef}>
-  <!--     {#if ActiveItem != null}
-        <ActiveItem />
-      {/if} -->
       <p>Game</p>
     </div>
   </Card.Content>
