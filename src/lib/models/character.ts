@@ -11,6 +11,7 @@ export interface CharacterTypeTS {
     size_description: string;
     language_desc: string;
     spellcasting_ability: string | null;
+    avatar: Boolean | null;
     
     // Number values
     as_bonus: number;
@@ -30,7 +31,7 @@ export interface CharacterTypeTS {
     // Objects
     ability_scores: Record<string, any>;
     spells: Record<string, any> | null; 
-    as_bonus_mod: Record<string, any>; 
+    as_bonus_mod: Record<string, any>;
   }
 
 

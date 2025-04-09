@@ -160,6 +160,9 @@ export async function patchCharacter(characterID, characterReplacement) {
  */
 export async function patchCharacterVerify(session, characterID, characterReplacement) {
     const serverCharacter = await serverGetSingleCharacter(characterID)
+    if(serverCharacter.hasOwnProperty('avatar')) {
+        characterReplacement.avatar = serverCharacter.avatar
+    }
     if(serverCharacter && session.user.id == serverCharacter.user) {
         return await patchCharacter(characterID, characterReplacement);
     } else {
