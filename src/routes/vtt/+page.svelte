@@ -6,7 +6,6 @@
   import { Backpack, Dices, Heart, ScrollText, BookOpen, Sparkles, Swords, UserRound, Skull, DoorOpen } from "lucide-svelte";
   import { Toaster } from "$lib/components/ui/sonner";
   import { toast } from "svelte-sonner";
-	import Input from "$lib/components/ui/input/input.svelte";
   import VTTRolls from "$lib/components/vtt-rolls.svelte";
   import VTTCharacter from "$lib/components/vtt-character.svelte";
   import VTTSkills from "$lib/components/vtt-skills.svelte";
@@ -190,14 +189,6 @@
     }
   ];
 
-  let ActiveItem = $state(null);
-  let customAnchor = $state<HTMLElement>(null!);
-
-  function setActiveComponent(item) {
-    console.log('item set', item);
-    ActiveItem = item.component;
-  }
-
   // Roll D20 with ability bonus
   function rollTwenty(ability, bonus, rollType) {
     const roll = Math.floor(Math.random() * 20) + 1;
@@ -229,18 +220,17 @@
   <Card.Content>
     <div id="button-container" class="flex flex-col items-center gap-2">
       {#each items as item}
-        <Popover.Root open={false}>
+        <Popover.Root>
           <Popover.Trigger 
-            class="${buttonVariants({ variant: 'outline' })} flex items-center mx-0 p-2 aspect-square"
+            class="${buttonVariants({ variant: 'outline' })}"
             >
               <item.icon class='size-6'/>
           </Popover.Trigger>
-          <Popover.Content {customAnchor}>
-            <ActiveItem {character} abilityRoll={rollTwenty} {toastMain} {parseName}/>
+          <Popover.Content side='right'>
+            <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName}/>
           </Popover.Content>
         </Popover.Root>
         {/each}
-        <Button href="/homepage"><House/></Button>
     </div>
   </Card.Content>
   <Card.Footer>
@@ -253,7 +243,7 @@
   id="game-card" 
   class="absolute left-20 right-0 h-full m-5 p-0 rounded-lg shadow-lg">
   <Card.Content>
-    <div bind:this={customAnchor}>
+    <div>
       <p>Game</p>
     </div>
     <Toaster position="bottom-right" />
