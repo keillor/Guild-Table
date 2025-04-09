@@ -2,7 +2,7 @@
     import Badge from "$lib/components/ui/badge/badge.svelte";
     import * as Popover from "$lib/components/ui/popover/index.js";
     import * as Card from '$lib/components/ui/card/index.js';
-	import as_mod_calc from "$lib/utilities/character/character_calculations";
+	import as_mod_calc from "$lib/utilities/character/character.js";
 	import GenericAsyncPopover from "$lib/components/view/GenericAsyncPopover.svelte";
 	import CharacterLinks from "$lib/components/view/characterLinks.svelte";
 
@@ -12,11 +12,11 @@
 </script>
 
 {#snippet chips(list, key)}
-    <div class='flex flex-row gap-2'>
+    <div class='flex flex-row flex-wrap gap-2'>
         {#each list as item}
         <Popover.Root>
             <Popover.Trigger>
-                <Badge class='flex h-min flex-row content-between gap-1 text-white rounded-lg'>{item}</Badge>
+                <Badge class='h-min content-between'>{item}</Badge>
             </Popover.Trigger>
             <Popover.Content>
                 <GenericAsyncPopover {item} type={key}/>
@@ -28,11 +28,11 @@
 
 
 {#snippet equipChips(list, key)}
-    <div class='flex flex-row gap-2 flex-wrap'>
+    <div class='flex flex-row flex-wrap gap-2'>
         {#each list as item}
         <Popover.Root>
             <Popover.Trigger>
-                <Badge class='flex h-min flex-row content-between gap-1 text-white rounded-lg'>{item.name} x {item.count}</Badge>
+                <Badge class='h-min content-between'>{item.name} x {item.count}</Badge>
             </Popover.Trigger>
             <Popover.Content>
                 <GenericAsyncPopover item={item.index} type={key}/>
@@ -78,11 +78,11 @@
         {@render chips(character.saving_throws, 'saving_throws')}
 
         <p><b>Ability Scores:</b></p>
-        <div class="flex flex-row gap-2">
+        <div class="flex flex-row flex-wrap gap-2">
             <!-- <Shield class='size-12 border-2 rounded-md'/> -->
              {#if character.ability_scores !== undefined}
                 {#each as_names as strKey}
-                    <div class="flex h-24 w-24 flex-col content-center justify-between rounded-lg border-2 p-1 text-center">
+                    <div class="flex h-24 w-24 flex-col content-center justify-between flex-wrap border-2 p-1 text-center">
                         <p class='underline'>{strKey}</p>
                         <p class="text-xl font-bold">{character.ability_scores[strKey]}</p>
                         <p class="h-min rounded-full border-2 px-2">{as_mod_calc(character.ability_scores[strKey])}</p>
