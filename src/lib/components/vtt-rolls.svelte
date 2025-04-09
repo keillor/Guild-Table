@@ -4,7 +4,7 @@
   import { Button } from '$lib/components/ui/button/index.js';
 	import { Root } from './ui/alert-dialog';
 
-  $: numRolls = 1;
+  let numRolls = $state(1);
 
   const diceNum = [
     { name: 'D4', num: 4 },
@@ -40,13 +40,13 @@
   {#each diceNum as die}
     <Tabs.Content value="dice-{die.num}">
       <div class="button-container">
-        <Button on:click={() => addDiceRoll()}>+</Button>
-        <Button on:click={() => removeDiceRoll()}>-</Button>
+        <Button onclick={() => addDiceRoll()}>+</Button>
+        <Button onclick={() => removeDiceRoll()}>-</Button>
       </div>
       <h1>
         {numRolls}
       </h1>
-      <Button on:click={() => rollDice(numRolls)}>Roll</Button>
+      <Button onclick={() => rollDice(numRolls)}>Roll</Button>
     </Tabs.Content>
   {/each}
  </Tabs.Root>
