@@ -7,7 +7,6 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { toast } from 'svelte-sonner';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-
 	const { data } = $props();
 
 	let campaignInstance = $state(data.campaign);
@@ -153,3 +152,6 @@
 		</DropdownMenu.Root>
 	{/each}
 </ul>
+
+<Button variant='outline'>Wiki Pages</Button>
+<Button variant='outline'>Wiki Pages</Button>

@@ -1,25 +1,33 @@
 <script>
 	import Button from "../ui/button/button.svelte";
-
+    import { page } from "$app/state";
     const settingsPages = [
         {
-            name: 'Campaign',
-            url: '.'
+            name: 'General',
+            urlFrag: `campaign/${page.params.id}/general`
         },
         {
             name: 'Wiki',
-            url: './wiki'
+            urlFrag: `campaign/${page.params.id}/wiki`
         },
         {
-            name: 'Characters',
-            url: './characters'
-        }
+            name: 'Users',
+            urlFrag: `campaign/${page.params.id}/users`
+        },
+        {
+            name: 'Monsters',
+            urlFrag: `campaign/${page.params.id}/monsters`
+        },
+        {
+            name: 'Maps',
+            urlFrag: `campaign/${page.params.id}/maps`
+        },
     ]
 </script>
 
 <div class='flex flex-row w-min'>
     {#each settingsPages as link}
-        <Button variant='outline' href={link.url}>
+        <Button variant='outline' href={`/${link.urlFrag}`}>
             {link.name}
         </Button>
     {/each}

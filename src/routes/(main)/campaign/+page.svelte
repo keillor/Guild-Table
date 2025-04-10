@@ -121,7 +121,7 @@
 							<Swords class='size-4'/>
 							Play
 						</Button>
-						<Button variant='outline' href={`/campaign/${campaign._id}`}>
+						<Button variant='outline' href={`/campaign/${campaign._id}/general`}>
 							<Settings class='size-4'/>
 							Settings
 						</Button>
