@@ -1,5 +1,4 @@
 <script lang='ts'>
-
   import * as Card from "$lib/components/ui/card/index.js";
   import * as Popover from "$lib/components/ui/popover/index.js";
   import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
@@ -242,9 +241,9 @@
 <!-- Render game on the right side-->
 <Card.Root 
   id="game-card" 
-  class="absolute left-20 right-0 h-full m-5 p-0 rounded-lg shadow-lg">
-  <Card.Content>
-    <CampaignMap />
+  class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
+  <Card.Content class="w-screen h-screen">
+    <CampaignMap/>
     <Toaster position="bottom-right" />
   </Card.Content>
 </Card.Root>
