@@ -15,6 +15,7 @@
   import VTTTraits from "$lib/components/vtt-traits.svelte";
   import VTTInventory from "$lib/components/vtt-inventory.svelte";
   import VTTMonster from "$lib/components/vtt-monster.svelte";
+  import CampaignMap from "./campaign-map/+page.svelte";
 
   const character = $state({
     _id: '67e4546a0ea8d52aee4e23dd',
@@ -243,9 +244,7 @@
   id="game-card" 
   class="absolute left-20 right-0 h-full m-5 p-0 rounded-lg shadow-lg">
   <Card.Content>
-    <div>
-      <p>Game</p>
-    </div>
+    <CampaignMap />
     <Toaster position="bottom-right" />
   </Card.Content>
 </Card.Root>
