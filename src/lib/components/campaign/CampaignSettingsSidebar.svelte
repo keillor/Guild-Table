@@ -1,6 +1,7 @@
 <script>
 	import Button from "../ui/button/button.svelte";
     import { page } from "$app/state";
+	import clsx from "clsx";
     const settingsPages = [
         {
             name: 'General',
@@ -27,7 +28,7 @@
 
 <div class='flex flex-row w-min'>
     {#each settingsPages as link}
-        <Button variant='outline' href={`/${link.urlFrag}`}>
+        <Button variant='outline' href={`/${link.urlFrag}`} class={clsx(page.url.pathname == `/${link.urlFrag}` && 'bg-accent')}>
             {link.name}
         </Button>
     {/each}
