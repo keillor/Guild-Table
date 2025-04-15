@@ -28,7 +28,7 @@
 				text: handleSave(),
 				owner: $formData.owner,
 				campaign: $formData.campaign,
-				users: $formData.users,
+				public: $formData.public,
 				_id: $formData._id
 			});
 		},

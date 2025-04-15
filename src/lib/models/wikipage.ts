@@ -3,5 +3,5 @@ export interface Wiki {
     text: string,
     owner: string,
     campaign: string,
-    users: string[]
+    public: boolean
 }
