@@ -152,6 +152,3 @@
 		</DropdownMenu.Root>
 	{/each}
 </ul>
-
-<Button variant='outline'>Wiki Pages</Button>
-<Button variant='outline'>Wiki Pages</Button>

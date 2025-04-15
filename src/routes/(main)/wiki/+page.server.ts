@@ -1,9 +1,8 @@
-import { CreateNewWiki, CreateNewWikiVerified, DeleteWikiVerified, GetWikiTitlesByUser } from '$lib/api/wiki_server';
+import { CreateNewWikiVerified, DeleteWikiVerified, GetWikiTitlesByUser } from '$lib/api/wiki_server';
 import type { Wiki } from '$lib/models/wikipage.js';
-import { error, fail, redirect } from '@sveltejs/kit';
-import { ObjectId } from 'mongodb';
+import { error, redirect } from '@sveltejs/kit';
 
-export const load = async ({locals: {session}, params}) => {
+export const load = async ({locals: {session}}) => {
     const wikiPages = await GetWikiTitlesByUser(session);
     if(wikiPages) {
         return {wikiPages};
@@ -37,7 +36,7 @@ export const actions = {
             owner: session?.user.id,
             text: '# Click here and start typing. \n Don\'t forget to click save when you are done! > Note: This editor supports markdown.',
             title: wikiName,
-            users: []
+            public: false
         }
         const result = await CreateNewWikiVerified(session, wikiInstance);
         if(result) {
