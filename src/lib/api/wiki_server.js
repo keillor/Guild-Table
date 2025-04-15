@@ -72,7 +72,10 @@ export async function GetWiki(objectId) {
 export async function GetWikiVerified(session, objectId) {
     const wiki = await GetWiki(objectId);
     if (wiki && session.user.id === wiki.owner) {
-        wiki._id = wiki._id.toString(); // Convert ObjectId to string for client compatibility
+        wiki._id = wiki._id.toString(); 
+        return wiki;
+    } else if (wiki && wiki.public == true) {
+        wiki._id = wiki._id.toString(); 
         return wiki;
     } else {
         return false;
@@ -152,7 +155,7 @@ export async function GetWikiTitlesByUser(session) {
         // Convert ObjectId to string for client compatibility
         return results.map((wiki) => ({
             _id: wiki._id.toString(),
-            title: wiki.title
+            title: wiki.title,
         }));
     } catch (e) {
         console.log("ERROR!", e);
@@ -177,7 +180,7 @@ export async function GetWikisByCampaign(session, campaignId) {
         // Convert ObjectId to string for client compatibility
         return results.map((wiki) => ({
             _id: wiki._id.toString(),
-            title: wiki.title
+            title: wiki.title,
         }));
     } catch (e) {
         console.log("ERROR!", e);
