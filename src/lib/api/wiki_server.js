@@ -159,3 +159,28 @@ export async function GetWikiTitlesByUser(session) {
         return [];
     }
 }
+
+export async function GetWikisByCampaign(session, campaignId) {
+    try {
+        if (!session || !session.user || !session.user.id) {
+            throw new Error('Invalid session object.');
+        }
+
+        const database = client.db('wiki');
+        const pages = database.collection('pages');
+
+        // Query the database for all wikis associated with the campaign
+        const results = await pages
+            .find({ campaign: campaignId }, { projection: { title: 1, _id: 1 } })
+            .toArray();
+
+        // Convert ObjectId to string for client compatibility
+        return results.map((wiki) => ({
+            _id: wiki._id.toString(),
+            title: wiki.title
+        }));
+    } catch (e) {
+        console.log("ERROR!", e);
+        return [];
+    }
+}

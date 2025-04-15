@@ -142,7 +142,6 @@ export async function GetCampaignByIdAdmin(session, campaignId) {
 
         // Check if the campaign exists and the user is authorized to access it
         if (!campaign || campaign.owner !== session.user.id) {
-            if(session.user.id)
             console.error('Unauthorized or campaign not found.');
             throw error(404, 'Campaign not found.');
         }
