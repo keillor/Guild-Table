@@ -1,7 +1,7 @@
-import { MONGO_URL } from '$env/static/private';
-import { MongoClient, ObjectId} from 'mongodb';
+import { ObjectId} from 'mongodb';
+import { client } from './db';
 
-const client = new MongoClient(MONGO_URL);
+
 
 const serializeNonPOJOs = (value) => {
     return structuredClone(value)
@@ -11,7 +11,7 @@ const serializeNonPOJOs = (value) => {
 //GET
 /**
  * 
- * @param {ObjectId} slugObjectID 
+ * @param {string} slugObjectID 
  * @returns The quiered character if exists.
  *          `result` can be null.
  */
@@ -35,7 +35,26 @@ export async function getSingleCharacter(slugObjectID) {
 
 /**
  * 
- * @param {ObjectId} slugObjectID 
+ * @param {import('@supabase/supabase-js').Session} session 
+ * @param {string} slugObjectID 
+ */
+export async function getSingleCharacterVerified(session, slugObjectID) {
+    console.log("PROVIDED", session.user.id, slugObjectID);
+    const character = await serverGetSingleCharacter(slugObjectID);
+    console.log("FETCHED", character.user)
+    if(session.user.id == character.user) {
+        character._id = character._id.toString();
+        return character;
+    } else {
+        return false;
+    }
+}
+
+
+
+/**
+ * 
+ * @param {string} slugObjectID 
  * @returns The result of querying the character collection. 
  *          `result` can be null.
  */
@@ -49,7 +68,7 @@ export async function serverGetSingleCharacter(slugObjectID) {
         return result;
     } catch (e) {
         console.log("getSingleCharacter ERROR!")
-        return null;
+        return false;
     }
 }
 
@@ -96,6 +115,19 @@ export async function postCharacter(newCharacter) {
     }
 }
 
+export async function postCharacterVerify(session, newCharacter) {
+    if(session) {
+        console.log(session.user.id);
+        newCharacter.user = session.user.id;
+        console.log(newCharacter.user);
+        const result = await postCharacter(newCharacter);
+        if(result) {
+            return result;
+        } else {
+            return false;
+        }
+    }
+}
 
 //PATCH
 /**
@@ -108,14 +140,33 @@ export async function patchCharacter(characterID, characterReplacement) {
     try {
         const database = client.db('character');
         const stdCharacters = database.collection('standard_characters');
+        characterReplacement._id = new ObjectId(characterID);
 
-        const filter = { _id: characterID};
+        const filter = { _id: new ObjectId(characterID)};
         const results = await stdCharacters.replaceOne(filter, characterReplacement);
         console.log("REPLACEMENT RESULT:", results);
-        return results.upsertedCount;
+        return results.modifiedCount;
     } catch (e) {
         console.log("ERROR!", e);
         return null;
+    }
+}
+
+/**
+ * 
+ * @param {import('@supabase/supabase-js').Session} session 
+ * @param {string} characterID 
+ * @param {import('$lib/models/character').CharacterTypeTS} characterReplacement 
+ */
+export async function patchCharacterVerify(session, characterID, characterReplacement) {
+    const serverCharacter = await serverGetSingleCharacter(characterID)
+    if(serverCharacter.hasOwnProperty('avatar')) {
+        characterReplacement.avatar = serverCharacter.avatar
+    }
+    if(serverCharacter && session.user.id == serverCharacter.user) {
+        return await patchCharacter(characterID, characterReplacement);
+    } else {
+        return false;
     }
 }
 
@@ -137,5 +188,20 @@ export async function deleteCharacter(characterID) {
     } catch (e) {
         console.log("ERROR!", e);
         return null;
+    }
+}
+
+/**
+ * 
+ * @param {import('@supabase/supabase-js').Session} session 
+ * @param {string} characterID 
+ */
+export async function deleteCharacterVerify(session, characterID) {
+    const serverCharacter = await serverGetSingleCharacter(characterID);
+    if(serverCharacter && session.user.id == serverCharacter.user) {
+        const result = await deleteCharacter(characterID);
+        return result;
+    } else {
+        return false;
     }
 }

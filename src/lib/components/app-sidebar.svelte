@@ -1,37 +1,12 @@
-<script module>
-	import AudioWaveform from 'lucide-svelte/icons/audio-waveform';
-	import BookOpen from 'lucide-svelte/icons/book-open';
-	import Bot from 'lucide-svelte/icons/bot';
-	import ChartPie from 'lucide-svelte/icons/chart-pie';
-	import Command from 'lucide-svelte/icons/command';
-	import Frame from 'lucide-svelte/icons/frame';
-	import GalleryVerticalEnd from 'lucide-svelte/icons/gallery-vertical-end';
-	import Map from 'lucide-svelte/icons/map';
-	import Settings2 from 'lucide-svelte/icons/settings-2';
-	import MessageSquareCode from 'lucide-svelte/icons/message-square-code';
-	import { Users } from 'lucide-svelte';
+<script lang='ts'>
+	import { House, Library, Users, MessageSquareCode, GalleryVerticalEnd, Frame, Command, ChartPie, AudioWaveform, Settings } from 'lucide-svelte';
+	
+	let { ref = $bindable(null), collapsible = 'icon', user, ...restProps } = $props();
 
-	import { createClient } from '@supabase/supabase-js';
-	import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
-
-	const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
-
-	let fetchedUser = null;
-
-	async function fetchUser() {
-			const { data: { user } } = await supabase.auth.getUser();
-			if (user) {
-					fetchedUser = user;
-			}
-	}
-
-	fetchUser();
-
-	// This is sample data.
 	const data = {
 		user: {
-			name: 'Insert Name',
-			email: 'Insert Email',
+			name: user.email,
+			email: user.email,
 			avatar:
 				'https://imgcdn.stablediffusionweb.com/2024/4/13/9b63df72-55ff-46fd-a5b4-7941b198db95.jpg'
 		},
@@ -55,16 +30,13 @@
 		navMain: [
 			{
 				title: 'Home',
-				url: './homepage',
+				url: '/homepage',
+				icon: House,
 				items: [
 					{
 						title: 'Dashboard',
-						url: './homepage'
+						url: '/homepage'
 					},
-					{
-						title: 'Campaigns',
-						url: './homepage/campaigns'
-					}
 				]
 			},
 			{
@@ -75,11 +47,11 @@
 				items: [
 					{
 						title: 'Dungeon Master',
-						url: '/campaigns'
+						url: '/campaign'
 					},
 					{
 						title: 'Campaign Player',
-						url: '/play/player'
+						url: '/campaign/play'
 					}
 				]
 			},
@@ -100,33 +72,30 @@
 				]
 			},
 			{
-				title: 'Documentation',
-				url: '#',
-				icon: BookOpen,
+				title: 'Wiki',
+				url: '/wiki',
+				icon: Library,
 				items: [
 					{
-						title: 'Get Started',
-						url: '#'
+						title: 'My Wikis',
+						url: '/wiki'
 					},
-					{
-						title: 'Tutorials',
-						url: '#'
-					},
+					
 				]
 			},
 			{
 				title: 'Settings',
-				url: '#',
-				icon: Settings2,
+				url: '/account',
+				icon: Settings,
 				items: [
 					{
-						title: 'General',
-						url: '#'
+						title: 'Account',
+						url: '/account'
 					},
 					{
-						title: 'Team',
-						url: '#'
-					},
+						title: 'Invites',
+						url: '/account/invites'
+					}
 				]
 			},
 			{
@@ -154,16 +123,13 @@
 			}
 		]
 	};
+import NavMain from '$lib/components/nav-main.svelte';
+import NavProjects from '$lib/components/nav-projects.svelte';
+import NavUser from '$lib/components/nav-user.svelte';
+import TeamSwitcher from '$lib/components/team-switcher.svelte';
+import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 </script>
 
-<script>
-	import NavMain from '$lib/components/nav-main.svelte';
-	import NavProjects from '$lib/components/nav-projects.svelte';
-	import NavUser from '$lib/components/nav-user.svelte';
-	import TeamSwitcher from '$lib/components/team-switcher.svelte';
-	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	let { ref = $bindable(null), collapsible = 'icon', ...restProps } = $props();
-</script>
 
 <Sidebar.Root bind:ref {collapsible} {...restProps}>
 	<Sidebar.Header>

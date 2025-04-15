@@ -46,7 +46,7 @@ afterUpdate (() => {
     </div>
     <div>
       <Button href="/character">Characters</Button>
-      <Button href="/vtt">VTT</Button>
+      <Button href="/vtt-campaign">VTT</Button>
     </div>
   </navigation>
   <div class="pt-20 space-y-10">

@@ -19,5 +19,5 @@
 	{/each}
 </div>
 {:catch e}
-    <p class='text-red-500 font-bold'>Error! {e.message}</p>
+    <p class='text-destructive font-bold'>Error! {e.message}</p>
 {/await}

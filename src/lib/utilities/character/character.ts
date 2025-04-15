@@ -9,3 +9,7 @@ export default function as_mod_calc(value: number) {
     return Math.floor((value-10)/2);
     
 }
+
+export function getAvatar(path: string) {
+    return `https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars/${path}`
+}
