@@ -214,36 +214,38 @@
   }
 </script>
 
-<Card.Root 
+<div class="flex flex-row h-full w-full">
+  <Card.Root 
   id="button-container-card" 
   class="absolute left-0 w-20 h-full m-5 p-0 rounded-lg shadow-lg">
-  <Card.Content>
-    <div id="button-container" class="flex flex-col items-center gap-2">
-      {#each items as item}
-        <Popover.Root>
-          <Popover.Trigger 
-            class="${buttonVariants({ variant: 'outline' })}"
-            >
-              <item.icon class='size-6'/>
-          </Popover.Trigger>
-          <Popover.Content side='right'>
-            <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName}/>
-          </Popover.Content>
-        </Popover.Root>
-        {/each}
-    </div>
-  </Card.Content>
-  <Card.Footer>
-    <Button href="/homepage"><DoorOpen /></Button>
-  </Card.Footer>
-</Card.Root>
+    <Card.Content>
+      <div id="button-container" class="flex flex-col items-center gap-2">
+        {#each items as item}
+          <Popover.Root>
+            <Popover.Trigger 
+              class="${buttonVariants({ variant: 'outline' })}"
+              >
+                <item.icon class='size-6'/>
+            </Popover.Trigger>
+            <Popover.Content side='right'>
+              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName}/>
+            </Popover.Content>
+          </Popover.Root>
+          {/each}
+      </div>
+    </Card.Content>
+    <Card.Footer>
+      <Button href="/homepage"><DoorOpen /></Button>
+    </Card.Footer>
+  </Card.Root>
 
 <!-- Render game on the right side-->
-<Card.Root 
-  id="game-card" 
-  class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
-  <Card.Content class="w-screen h-screen">
-    <CampaignMap/>
-    <Toaster position="bottom-right" />
-  </Card.Content>
-</Card.Root>
+  <Card.Root 
+    id="game-card" 
+    class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
+    <Card.Content class="w-screen h-screen">
+      <CampaignMap/>
+      <Toaster position="bottom-right" />
+    </Card.Content>
+  </Card.Root>
+</div>
