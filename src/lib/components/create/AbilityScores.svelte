@@ -4,7 +4,7 @@
 	import Input from '../ui/input/input.svelte';
 	import * as Card from '$lib/components/ui/card/index';
     import * as Select from '$lib/components/ui/select/index';
-	import as_mod_calc from '$lib/utilities/character/character_calculations';
+	import as_mod_calc from '$lib/utilities/character/character';
 	const { bonusScores, abilityScores } = $props();
 	const scores = [
 		{

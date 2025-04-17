@@ -11,8 +11,9 @@ import {
 	stringInputNames
 } from './schema';
 import type { Actions } from './$types.js';
-import { postCharacter } from '$lib/api/mongoapi_server';
+import { postCharacter, postCharacterVerify } from '$lib/api/mongoapi_server';
 import { type CharacterTypeTS } from '$lib/models/character.ts';
+import { dnd5ApiEquipmentQuery } from '$lib/api/dnd5api_client.js';
 
 //steps length is used to detemine if the form has been completed.
 
@@ -81,7 +82,7 @@ export const load = async ({ request }) => {
  * Parses input form data data returned from the user. User input is verified using Regex.
  * @param formData The formData object returned from the client request.
  */
-function parseUserCharacterData(formData: any) {
+async function parseUserCharacterData(formData: any) {
 	let newCharacterConstruction : CharacterTypeTS = {};
 	const regexLettersDashesOnly = /^[a-zA-Z0-9.,' \-]+$/;
 
@@ -164,6 +165,24 @@ function parseUserCharacterData(formData: any) {
 		})
 	}
 
+	const results = await Promise.all(
+        newCharacterConstruction.equipment.map(async (item) => {
+            try {
+                const details = await dnd5ApiEquipmentQuery(item.index);
+                return {
+                    ...item,
+                    name: details.name || item.name, // Use the proper name from the API
+                    weight: details.weight || 0,
+                    cost: details.cost || { quantity: 0, unit: 'gp' }
+                };
+            } catch (error) {
+                console.error(`Failed to fetch details for ${item.index}:`, error);
+                return {...item, weight: 0, cost: {quantity: 0, unit: 'gp'}}; // Return the original item if the API call fails
+            }
+        })
+    );
+	newCharacterConstruction.equipment = results;
+	
 	return newCharacterConstruction;
 }
 
@@ -284,20 +303,19 @@ export const actions = {
 		}
 
 		//form parsing
-		const parsedData = parseUserCharacterData(formData);
-		parsedData['user'] = session?.user.id
+		const parsedData = await parseUserCharacterData(formData);
 		console.log(parsedData);
 		//Form is now complete
 		//You can now save the data, return another message, or redirect to another page.
-		const returnedID = await postCharacter(parsedData);
-		if(returnedID == null) {
-			error(500, "Server error!");
+		const result = await postCharacterVerify(session, parsedData);
+		if(result) {
+			redirect(303, `/character/create/scores/${result}`);
 		}
-		redirect(303, `/character/create/scores/${returnedID}`);
+		error(500, "Server error!");
 
 		//the following resets the form to the default state.
 		///form.data = defaultValues(lastStep);
 
-		return message(form, { text: 'Form posted successfully!', step: 1 });
+		//return message(form, { text: 'Form posted successfully!', step: 1 });
 	}
 } satisfies Actions;
