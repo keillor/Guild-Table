@@ -82,8 +82,12 @@
 				{/each}
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item>
-					<LogOut />
-					Log out
+					{#snippet child({ props })}
+						<a href='/auth/logout' {...props}>
+							<LogOut />
+							<span>Log out</span>
+						</a>
+					{/snippet}
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
