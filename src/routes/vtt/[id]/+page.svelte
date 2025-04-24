@@ -16,131 +16,10 @@
   import VTTMonster from "$lib/components/vtt-monster.svelte";
   import CampaignMap from "./campaign-map/+page.svelte";
 
-  const character = $state({
-    _id: '67e4546a0ea8d52aee4e23dd',
-    name: 'Indiana Bones',
-    race: 'half-elf',
-    subrace: '',
-    'class': 'monk',
-    speed: '30',
-    alignment: 'Half-elves share the chaotic bent of their elven heritage. They value both personal freedom and creative expression, demonstrating neither love of leaders nor desire for followers. They chafe at rules, resent others\' demands, and sometimes prove unreliable, or at least unpredictable.',
-    age: '360',
-    size: 'Medium',
-    size_description: 'Half-elves are about the same size as humans, ranging from 5 to 6 feet tall. Your size is Medium.',
-    language_desc: 'You can speak, read, and write Common, Elvish, and one extra language of your choice.',
-    spellcasting_ability: '',
-    level: 1,
-    proficiency_bonus: 2,
-    hit_die: 8,
-    as_bonus: 0,
-    spellcasting_level: 0,
-    as_bonus_mod: {
-        cha: 2,
-        con: 0,
-        dex: 0,
-        'int': 0,
-        wis: 0,
-        str: 0
-    },
-    proficiencies: [
-        'simple-weapons',
-        'shortswords',
-        'saving-throw-dex',
-        'saving-throw-str',
-        'skill-athletics',
-        'skill-religion',
-        'jewelers-tools'
-    ],
-    languages: [
-        'common',
-        'elvish'
-    ],
-    traits: [
-        'darkvision',
-        'fey-ancestry',
-        'skill-versatility'
-    ],
-    features: [
-        'monk-unarmored-defense',
-        'martial-arts'
-    ],
-    saving_throws: [
-        'str',
-        'dex'
-    ],
-    spells: {},
-    equipment: [
-        {
-            name: 'Mess Kit',
-            index: 'mess-kit',
-            count: 0,
-            weight: 1,
-            cost: {
-                quantity: 2,
-                unit: 'sp'
-            }
-        },
-        {
-            name: 'Amulet',
-            index: 'amulet',
-            count: 1,
-            weight: 1,
-            cost: {
-                quantity: 5,
-                unit: 'gp'
-            }
-        },
-        {
-            name: 'Backpack',
-            index: 'backpack',
-            count: 1,
-            weight: 5,
-            cost: {
-                quantity: 2,
-                unit: 'gp'
-            }
-        },
-        {
-            name: 'Antitoxin (vial)',
-            index: 'antitoxin-vial',
-            count: 1,
-            weight: 0,
-            cost: {
-                quantity: 50,
-                unit: 'gp'
-            }
-        },
-        {
-            name: 'Blowgun',
-            index: 'blowgun',
-            count: 1,
-            weight: 1,
-            cost: {
-                quantity: 10,
-                unit: 'gp'
-            }
-        },
-        {
-            name: 'Chest',
-            index: 'chest',
-            count: 1,
-            weight: 25,
-            cost: {
-                quantity: 5,
-                unit: 'gp'
-            }
-        }
-    ],
-    user: '909e8622-f42e-490e-89f0-e37f5135332b',
-    ability_scores: {
-        cha: 24,
-        con: 22,
-        dex: 20,
-        'int': 18,
-        str: 16,
-        wis: 14
-    }
-})
+  const { data } = $props();
+  console.log(data.characters[0])
+
+  let character = $state(data.characters[0]);
 
   const items = [
     {
@@ -244,7 +123,7 @@
     id="game-card" 
     class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
     <Card.Content class="w-screen h-screen">
-      <CampaignMap/>
+      <CampaignMap {character}/>
       <Toaster position="bottom-right" />
     </Card.Content>
   </Card.Root>

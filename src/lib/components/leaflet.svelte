@@ -3,16 +3,18 @@
   import L from 'leaflet';
   import 'leaflet/dist/leaflet.css';
   import { Heart } from "lucide-svelte";
-
-  export let bounds: L.LatLngBoundsExpression | undefined = undefined;
-  export let view: L.LatLngExpression | undefined = undefined;
-  export let zoom: number | undefined = undefined;
-  export let customImage: string | undefined = undefined;
-  export let customImageBounds: L.LatLngBoundsExpression | undefined = undefined;
-  export let markerOptions: L.MarkerOptions = {};
+	import { characterSchema } from '../../routes/(main)/character/[id]/schema';
 
   let map: L.Map | undefined;
   let mapElement: HTMLDivElement;
+  let bounds: L.LatLngBoundsExpression | undefined = undefined;
+
+  const { view, 
+          zoom, 
+          character,
+          customImage, 
+          customImageBounds, 
+          markerOptions } = $props();
 
   const mapOptions = {
     center: view || [0, 0],
@@ -49,7 +51,13 @@
       }
     }
 
-    L.marker([0, 0], markerOptions).addTo(map).bindPopup('This is your character popup');
+    const customMarker = L.marker([0, 0], markerOptions).addTo(map).bindPopup('This is your character popup');
+
+    customMarker.on("moveend", function (event) {
+    const marker = event.target;
+    const position = marker.getLatLng();
+    console.log(`${character._id}`, position);
+  })
   });
 
   onDestroy(() => {
@@ -61,13 +69,15 @@
     getMap: () => map
   });
 
-  $: if (map) {
+  $effect: if (map) {
     if (bounds) {
       map.fitBounds(bounds);
     } else if (view && zoom) {
       map.setView(view, zoom);
     }
   }
+
+  
 </script>
 
 <div class="w-full h-full z-0" bind:this={mapElement}>

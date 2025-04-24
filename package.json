@@ -31,7 +31,6 @@
 		"globals": "^15.0.0",
 		"lucide-svelte": "^0.469.0",
 		"mode-watcher": "^0.5.1",
-		"mode-watcher": "^0.5.1",
 		"prettier": "^3.3.2",
 		"prettier-plugin-svelte": "^3.2.6",
 		"prettier-plugin-tailwindcss": "^0.6.5",

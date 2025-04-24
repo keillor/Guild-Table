@@ -95,6 +95,55 @@ export async function getAllUserCharacters(userID) {
     }
 }
 
+/**
+ * Load function to retrieve all characters in a campaign.
+ * 
+ * @param {import('@supabase/supabase-js').Session} session - The user's session.
+ * @param {string} campaignId - The ID of the campaign.
+ * @returns {Promise<Array>} - A list of full character objects.
+ */
+export async function loadCampaignCharacters(session, campaignId) {
+    try {
+        if (!session || !session.user || !session.user.id) {
+            throw new Error('Invalid session object.');
+        }
+
+        const campaignDb = client.db('campaign');
+        const campaignCollection = campaignDb.collection('campaign_data');
+
+        // Fetch the campaign by ID
+        const campaign = await campaignCollection.findOne({ _id: new ObjectId(campaignId) });
+        if (!campaign) {
+            throw new Error('Campaign not found.');
+        }
+
+        // Extract characterIds from the campaign
+        const characterIds = campaign.characterIds || [];
+        if (characterIds.length === 0) {
+            return []; // Return an empty list if no characters are associated with the campaign
+        }
+
+        const characterDb = client.db('character');
+        const characterCollection = characterDb.collection('standard_characters');
+
+        // Fetch all characters using the characterIds
+        const characters = await characterCollection
+            .find({ _id: { $in: characterIds.map((char) => new ObjectId(char.characterId)) } })
+            .toArray();
+
+        // Convert ObjectId to string for client compatibility
+        const serializedCharacters = characters.map((character) => ({
+            ...character,
+            _id: character._id.toString(),
+        }));
+
+        return serializedCharacters;
+    } catch (error) {
+        console.error('Error loading campaign characters:', error);
+        return [];
+    }
+}
+
 //POST
 
 /**

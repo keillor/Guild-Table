@@ -12,5 +12,3 @@
     <Button href="/" class="mt-4 w-full bg-blue-500 text-white py-2 rounded">Return to Main Screen</Button>
   </div>
 </div>
-
-

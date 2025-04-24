@@ -15,12 +15,14 @@
   const customImageUrl = mapImage.src
   const customImageBounds: LatLngBoundsExpression = [ southWestCorner, northEastCorner ];
 
+  const { character } = $props();
+
   const markerOptions= {
     title: 'Custom Marker',
     icon: L.icon({
-      iconUrl: 'https://th.bing.com/th/id/OIP.1vGduXYuY44G_z4_rofPxQHaKq?rs=1&pid=ImgDetMain',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
+      iconUrl: 'https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//68028fa05750fa22e6ac3d32',
+      iconSize: [40, 40],
+      iconAnchor: [1, 50],
       popupAnchor: [1, -34],
       shadowUrl: 'https://th.bing.com/th/id/OIP.1vGduXYuY44G_z4_rofPxQHaKq?rs=1&pid=ImgDetMain',
       shadowSize: [41, 41],
@@ -33,5 +35,5 @@
 </script>
 
 <div class="w-full h-full">
-  <Leaflet view={initialView} zoom={initialZoom} customImage={customImageUrl} customImageBounds={customImageBounds} {markerOptions}/>
+  <Leaflet view={initialView} zoom={initialZoom} customImage={customImageUrl} customImageBounds={customImageBounds} {markerOptions} {character}/>
 </div>
