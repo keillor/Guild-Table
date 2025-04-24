@@ -8,7 +8,8 @@
 	import { wikiSchema } from './schema.js';
 	import { toast } from 'svelte-sonner';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import * as Form from "$lib/components/ui/form/index.js";
+	import * as Form from '$lib/components/ui/form/index.js';
+	import Switch from '$lib/components/ui/switch/switch.svelte';
 	const { data } = $props();
 	const myWiki: Wiki = data.wikiPage;
 	console.log(myWiki);
@@ -20,15 +21,15 @@
 
 	const form = superForm(defaults({ ...myWiki }, zodClient(wikiSchema)), {
 		validators: zodClient(wikiSchema),
-		dataType: "json",
+		dataType: 'json',
 		resetForm: false,
-		onSubmit: ({jsonData}) => {
+		onSubmit: ({ jsonData }) => {
 			return jsonData({
 				title: $formData.title,
 				text: handleSave(),
 				owner: $formData.owner,
 				campaign: $formData.campaign,
-				users: $formData.users,
+				public: $formData.public,
 				_id: $formData._id
 			});
 		},
@@ -48,22 +49,35 @@
 
 <div class="p-3">
 	{#if myWiki != null}
-		<form
-			method="POST"
-			use:enhance>
-			<Button type="submit">
-				<Save class="size-4" />
-				Save
-			</Button>
-			<Form.Field {form} name="title">
+		<form method="POST" use:enhance>
+			<Form.Field
+				{form}
+				name="title"
+				class="flex flex-row items-center justify-between rounded-lg border p-4"
+			>
 				<Form.Control>
-				  {#snippet children({ props })}
-					<Input {...props} bind:value={$formData.title} placeholder='Wiki Title' />
-				  {/snippet}
+					{#snippet children({ props })}
+						<div>
+							<Form.Label>Page Name</Form.Label>
+						</div>
+						<Input {...props} bind:value={$formData.title} placeholder="Wiki Title" />
+					{/snippet}
 				</Form.Control>
 				<Form.Description />
 				<Form.FieldErrors />
-			  </Form.Field>
+			</Form.Field>
+			<Form.Field {form} name="public" class="flex flex-row justify-between rounded-lg border p-4">
+				<Form.Control>
+					<div>
+						<Form.Label>Anyone can view :)</Form.Label>
+						<Form.Description>Toggles if page is publicly viewable.</Form.Description>
+					</div>
+					<Switch bind:checked={$formData.public} />
+				</Form.Control>
+				<Form.Description />
+				<Form.FieldErrors />
+			</Form.Field>
+			<Button type="submit" class="flex w-full flex-row justify-center gap-4">Save</Button>
 		</form>
 		<Milkdown bind:this={milkdownRef} markdown={myWiki} />
 	{:else}
