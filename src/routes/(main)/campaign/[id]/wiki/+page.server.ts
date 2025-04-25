@@ -1,9 +1,10 @@
-import { CreateNewWikiVerified, DeleteWikiVerified, GetWikiTitlesByUser } from '$lib/api/wiki_server';
+import { GetCampaignByIdAdmin } from '$lib/api/campaign_manage.js';
+import { CreateNewWikiVerified, DeleteWikiVerified, GetWikisByCampaign, GetWikiTitlesByUser } from '$lib/api/wiki_server';
 import type { Wiki } from '$lib/models/wikipage.js';
 import { error, redirect } from '@sveltejs/kit';
 
-export const load = async ({locals: {session}}) => {
-    const wikiPages = await GetWikiTitlesByUser(session);
+export const load = async ({locals: {session}, params}) => {
+    const wikiPages = await GetWikisByCampaign(session, params.id);
     if(wikiPages) {
         return {wikiPages};
     }
@@ -28,13 +29,19 @@ export const actions = {
         //create a new wiki
         const formData = await request.formData();
         const wikiName = formData.get('wikiname'); 
+        const campaignIdUnverified = formData.get('campaign');
+        console.log(campaignIdUnverified)
+        const campaignIdVerified = await GetCampaignByIdAdmin(session, campaignIdUnverified);
+        if(!campaignIdVerified) {
+            return error(404, "Campaign does not exist.")
+        }
         if(wikiName.length == 0) {
             return error(500, "Error! Wiki name must not be empty.");
         }
         let wikiInstance : Wiki = {
-            campaign: '',
+            campaign: campaignIdVerified._id,
             owner: session?.user.id,
-            text: '# Click here and start typing. \n Don\'t forget to click save when you are done! > Note: This editor supports markdown.',
+            text: '# Click here and start typing. \n Don\'t forget to click save when you are done! \n>Note: This editor supports markdown.',
             title: wikiName,
             public: false
         }
