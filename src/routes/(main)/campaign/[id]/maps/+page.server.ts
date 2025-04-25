@@ -76,6 +76,25 @@ export const actions = {
 			return fail(500, { error: 'Failed to add map.' });
 		}
 
+		try {
+			const database = client.db('campaign');
+			const mapsCollection = database.collection('maps');
+	
+			const mapDocument = {
+				_id: mapId, // Use the same ID as the map
+				name: mapName,
+				characters: [], // Initialize as an empty array
+				monsters: [], // Initialize as an empty array
+				objects: [], // Initialize as an empty array
+				shapes: [] // Initialize as an empty array
+			};
+	
+			await mapsCollection.insertOne(mapDocument);
+		} catch (dbError) {
+			console.error('Failed to create map document in database:', dbError);
+			return fail(500, { error: 'Failed to create map document in database.' });
+		}
+
 		return { success: true, map: newMap };
 	},
 	removeMap: async ({ request, params, locals: { safeGetSession, supabase } }) => {
@@ -107,6 +126,20 @@ export const actions = {
                 console.error('Error deleting map from storage:');
                 return fail(500, { error: 'Failed to delete map from storage.' });
         }
+
+		try {
+			const database = client.db('campaign');
+			const mapsCollection = database.collection('maps');
+	
+			const deleteResult = await mapsCollection.deleteOne({ _id: mapId });
+			if (deleteResult.deletedCount === 0) {
+				console.error('Failed to delete map document from database.');
+				return fail(500, { error: 'Failed to delete map document from database.' });
+			}
+		} catch (dbError) {
+			console.error('Error deleting map document from database:', dbError);
+			return fail(500, { error: 'Failed to delete map document from database.' });
+		}
     
 
 		// Filter out the map with the given ID
