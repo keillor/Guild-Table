@@ -6,33 +6,35 @@
   import {Button} from "$lib/components/ui/button/index.js";
   import { onMount, afterUpdate } from 'svelte';
 
-export let data;
-let { session, supabase, allCharacters } = data;
-let fetchedUser = null;
-let activeCampaigns = null;
-let otherInfo = null;
+  export let data;
+  let { session, supabase, allCharacters } = data;
+  let fetchedUser = null;
+  let otherInfo = null;
+  let campaigns = null;
 
 
-async function getUser() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) {
-    fetchedUser = user;
-  } else {
-    fetchedUser = null;
+  async function getUser() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      fetchedUser = user;
+    } else {
+      fetchedUser = null;
+    }
   }
-}
 
-async function renderEachTime() {
-  getUser();
-}
+  async function renderEachTime() {
+    const response = await fetch('/campaign')
+    campaigns = await response.json();
+    getUser();
+  }
 
-onMount (() => {
-  renderEachTime();
-})
+  onMount (() => {
+    renderEachTime();
+  })
 
-afterUpdate (() => {
-  renderEachTime();
-})
+  afterUpdate (() => {
+    renderEachTime();
+  })
 </script>
 
 <div class="w-full overflow-x-hidden px-5">
@@ -46,7 +48,7 @@ afterUpdate (() => {
     </div>
     <div>
       <Button href="/character">Characters</Button>
-      <Button href="/vtt-campaign">VTT</Button>
+      <Button href="/vtt/68028fa05750fa22e6ac3d32">VTT</Button>
     </div>
   </navigation>
   <div class="pt-20 space-y-10">
@@ -70,7 +72,7 @@ afterUpdate (() => {
     <section>
       <h1 class="text-2xl font-bold inline">My Games</h1>
       <Button>Create Game</Button>
-      {#if activeCampaigns != null}
+      {#if campaigns != null && campaigns > 0}
         <Carousel.Root
           opts={{
             align: "start"
@@ -160,12 +162,12 @@ afterUpdate (() => {
                     >
                       <Card.Description>
                         <p> Character description: uncommenting currently results in white screen </p>
-                        <!-- <div class="flex flex-col"></div>
+                        <div class="flex flex-col">
                           <p>Race: {character.race}</p>
                           <p>Class: {character.class}</p>
                           <p>Level: {character.level}</p>
                           <p>Age: {character.age}</p>
-                        </div> -->
+                        </div>
                       </Card.Description>
                     </Card.Content>
                   </Card.Root>
