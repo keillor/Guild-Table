@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
 	import { toast } from 'svelte-sonner';
+	import { monsterAvatar } from '$lib/utilities/character/monster.ts';
 
 	const { data } = $props();
 	let monsters = $state(data.monsters);
@@ -26,7 +27,7 @@
 							<span class="flex flex-row items-center gap-2">
 								<Avatar.Root class="size-10">
 									<Avatar.Image
-										src={`https://www.dnd5eapi.co${monster.image}`}
+										src={monsterAvatar(monster.image)}
 										alt={monster.name}
 									/>
 									<Avatar.Fallback>{monster.name[0]}</Avatar.Fallback>
