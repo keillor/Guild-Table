@@ -55,17 +55,29 @@
       }
     }
 
-    for (const marker of allMarkers) {
-      const newMarker = L.marker(marker.coordinates, marker.options).bindPopup(`${marker.options.title} popup`)
-      newMarker.on("moveend", function (event) {
-        const markerEvent = event.target;
-        const position = markerEvent.getLatLng();
-        console.log(`${marker.options.title}`, position);
-      })
-      
-      newMarker.addTo(markerLayer);
-    }
+    updateMarkers();
   });
+
+  function updateMarkers() {
+    if (markerLayer) {
+      markerLayer.clearLayers();
+      for (const marker of allMarkers) {
+        const newMarker = L.marker(marker.coordinates, marker.options).bindPopup(`${marker.options.title} popup`);
+        newMarker.on("moveend", function (event) {
+          const markerEvent = event.target;
+          const position = markerEvent.getLatLng();
+          console.log(`${marker.options.title}`, position);
+        });
+        newMarker.addTo(markerLayer);
+      }
+    }
+  }
+
+  $effect(() => {
+    if (markerLayer && allMarkers) {
+      updateMarkers();
+    }
+  })
 
   onDestroy(() => {
     map?.remove();

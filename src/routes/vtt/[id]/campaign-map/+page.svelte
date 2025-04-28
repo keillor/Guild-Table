@@ -23,11 +23,13 @@
 
   let allMarkers = $state(allCharacters.map((char) => {
     if (char._id == character._id) { //User's own marker
-      return {options: {
-          title: `${char.name} Custom Marker`,
+      return {
+        id: char._id,
+        options: {
+          title: `${char.name} Marker`,
           icon: L.icon({
             iconUrl: `https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${char._id}`,
-            iconSize: [40, 40],
+            iconSize: [50, 50],
             iconAnchor: [1, 50],
             popupAnchor: [1, -34],
             autoPan: true
@@ -37,11 +39,13 @@
         coordinates: initialCoordinates
       }
     } else {
-      return {options: {
-          title: `${char.name} Custom Marker`,
+      return {
+        id: char._id,
+        options: {
+          title: `${char.name} Marker`,
           icon: L.icon({
             iconUrl: `https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${char._id}`,
-            iconSize: [40, 40],
+            iconSize: [50, 50],
             iconAnchor: [1, 50],
             popupAnchor: [1, -34],
             autoPan: true
@@ -52,8 +56,23 @@
       }
     }
   }))
+
+  function changeMarkerPosition(markerId: string) {
+    const randomCoordinates: LatLngExpression = [
+      Math.random() * (imageWidth / 2),
+      Math.random() * (imageHeight / 2)
+    ];
+
+    allMarkers = allMarkers.map(marker => {
+      if (marker.id === markerId) {
+        return { ...marker, coordinates: randomCoordinates };
+      }
+      return marker;
+    });
+  }
 </script>
 
 <div class="w-full h-full">
+  <button onclick={() => {changeMarkerPosition(character._id)}}>Change Coordinates</button>
   <Leaflet view={initialView} zoom={initialZoom} customImage={customImageUrl} {customImageBounds} {allMarkers} {character} {initialCoordinates}/>
 </div>
