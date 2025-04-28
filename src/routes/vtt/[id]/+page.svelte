@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import { onMount } from 'svelte';
   import * as Card from "$lib/components/ui/card/index.js";
   import * as Popover from "$lib/components/ui/popover/index.js";
   import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
@@ -17,9 +18,13 @@
   import CampaignMap from "./campaign-map/+page.svelte";
 
   const { data } = $props();
-  console.log(data.characters[0])
+  const campaign = data.campaign;
+  console.log(data.campaign)
+  console.log(data.characters[0]);
 
   let character = $state(data.characters[0]);
+  let allCharacters = $state(data.characters); // Array of other characters
+  console.log(allCharacters)
 
   const items = [
     {
@@ -123,7 +128,7 @@
     id="game-card" 
     class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
     <Card.Content class="w-screen h-screen">
-      <CampaignMap {character}/>
+      <CampaignMap {character} {allCharacters} {campaign}/>
       <Toaster position="bottom-right" />
     </Card.Content>
   </Card.Root>

@@ -3,15 +3,14 @@
 
   import * as Carousel from "$lib/components/ui/carousel/index.ts";
   import * as Card from "$lib/components/ui/card/index.js";
-  import {Button} from "$lib/components/ui/button/index.js";
-  import { onMount, afterUpdate } from 'svelte';
+  import { Button, buttonVariants} from "$lib/components/ui/button/index.js";
+  import { onMount } from 'svelte';
 
-  export let data;
-  let { session, supabase, allCharacters } = data;
-  let fetchedUser = null;
-  let otherInfo = null;
-  let campaigns = null;
-
+  const { data } = $props()
+  const { session, supabase, allCharacters } = data;
+  let fetchedUser = $state(null);
+  let otherInfo = $state(null);
+  let campaigns = $state(null);
 
   async function getUser() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -28,50 +27,35 @@
     getUser();
   }
 
-  onMount (() => {
-    renderEachTime();
-  })
+  async function logout() {
+		await supabase.auth.signOut();
+		goto("/", { invalidateAll: true });
+	}
 
-  afterUpdate (() => {
-    renderEachTime();
+  onMount (() => {
+    getUser();
   })
 </script>
 
 <div class="w-full overflow-x-hidden px-5">
   <navigation class="fixed top-0 left-0 w-full flex justify-between items-center py-4 bg-white shadow-md z-10 px-5">
     <div class="flex items-center">
-      <img src="https://www.clipartkey.com/mpngs/m/152-1520367_user-profile-default-image-png-clipart-png-download.png" alt="User Photo" class="rounded-full mr-2 w-6 h-6">
       <span>User ID: {fetchedUser?.id}</span>
     </div>
     <div class="text-center">
       <h2 class="text-xl font-bold">Guild Table</h2>
     </div>
     <div>
-      <Button href="/character">Characters</Button>
-      <Button href="/vtt/68028fa05750fa22e6ac3d32">VTT</Button>
+      <Button href="vtt/6802904e5750fa22e6ac3d33">VTT</Button>
+      <Button onclick={logout} href="/">Logout</Button>
     </div>
   </navigation>
   <div class="pt-20 space-y-10">
-    <div id="announcement-alert" class="w-full bg-blue-500 text-white p-5 z-20 relative">
-      <Card.Root>
-        <Card.Header>
-          <Card.Title>Announcement Alert!</Card.Title>
-          <Card.Description>January 1, 2025</Card.Description>
-        </Card.Header>
-        <Card.Content>
-          <p>Announcement content is placed here.</p>
-        </Card.Content>
-        <Card.Footer>
-          <Button>Dismiss</Button>
-        </Card.Footer>
-      </Card.Root>  
-    </div>
 
     <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Homepage</h1>
 
     <section>
-      <h1 class="text-2xl font-bold inline">My Games</h1>
-      <Button>Create Game</Button>
+      <Button class="text-2xl font-bold" href="/campaign" variant="ghost">My Campaigns</Button>
       {#if campaigns != null && campaigns > 0}
         <Carousel.Root
           opts={{
@@ -106,7 +90,7 @@
     </section>
 
     <section>
-      <h1 class="text-2xl font-bold">Other Games</h1>
+      <Button class="text-2xl font-bold inline" href="/campaign/play" variant="ghost">Other Campaigns</Button>
       {#if otherInfo != null}
         <Carousel.Root
           opts={{
@@ -141,7 +125,7 @@
     </section>
 
     <section>
-      <h1 class="text-2xl font-bold">Characters</h1>
+      <Button class="text-2xl font-bold inline" href="/character" variant="ghost">My Characters</Button>
       {#if allCharacters.length > 0}
         <Carousel.Root
           opts={{
@@ -155,20 +139,16 @@
                 <div class="p-1">
                   <Card.Root class="h-30 w-25">
                     <Card.Header>
-                      <Card.Title>{character.name}</Card.Title>
+                      <Card.Title>
+                        <img src={`https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${character._id}`} alt={character.name} class="w-20 h-20 rounded-full mb-2 inline" />
+                        <h1 class="inline text-xl">{character.name}</h1>
+                      </Card.Title>
                     </Card.Header>
-                    <Card.Content
-                      class="flex aspect-square items-center justify-center p-6"
-                    >
-                      <Card.Description>
-                        <p> Character description: uncommenting currently results in white screen </p>
-                        <div class="flex flex-col">
-                          <p>Race: {character.race}</p>
-                          <p>Class: {character.class}</p>
-                          <p>Level: {character.level}</p>
-                          <p>Age: {character.age}</p>
-                        </div>
-                      </Card.Description>
+                    <Card.Content class="flex flex-col aspect-square items-center justify-center p-6">
+                        <p>Race: {character.race}</p>
+                        <p>Class: {character.class}</p>
+                        <p>Level: {character.level}</p>
+                        <p>Age: {character.age}</p>
                     </Card.Content>
                   </Card.Root>
                 </div>
