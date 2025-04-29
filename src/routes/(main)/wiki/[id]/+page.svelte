@@ -49,36 +49,50 @@
 
 <div class="p-3">
 	{#if myWiki != null}
-		<form method="POST" use:enhance>
-			<Form.Field
-				{form}
-				name="title"
-				class="flex flex-row items-center justify-between rounded-lg border p-4"
-			>
-				<Form.Control>
-					{#snippet children({ props })}
+		{#if myWiki.owner != data.session.user.id}
+			<h1 class='text-3xl'>{myWiki.title}</h1>
+		{/if}
+		{#if myWiki.owner == data.session.user.id}
+			<form method="POST" use:enhance>
+				<Form.Field
+					{form}
+					name="title"
+					class="flex flex-row items-center justify-between rounded-lg border p-4"
+				>
+					<Form.Control>
+						{#snippet children({ props })}
+							<div>
+								<Form.Label>Page Name</Form.Label>
+							</div>
+							<Input
+								{...props}
+								bind:value={$formData.title}
+								placeholder="Wiki Title"
+								disabled={myWiki.owner !== data.session.user.id}
+							/>
+						{/snippet}
+					</Form.Control>
+					<Form.Description />
+					<Form.FieldErrors />
+				</Form.Field>
+				<Form.Field
+					{form}
+					name="public"
+					class="flex flex-row justify-between rounded-lg border p-4"
+				>
+					<Form.Control>
 						<div>
-							<Form.Label>Page Name</Form.Label>
+							<Form.Label>Anyone can view :)</Form.Label>
+							<Form.Description>Toggles if page is publicly viewable.</Form.Description>
 						</div>
-						<Input {...props} bind:value={$formData.title} placeholder="Wiki Title" />
-					{/snippet}
-				</Form.Control>
-				<Form.Description />
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="public" class="flex flex-row justify-between rounded-lg border p-4">
-				<Form.Control>
-					<div>
-						<Form.Label>Anyone can view :)</Form.Label>
-						<Form.Description>Toggles if page is publicly viewable.</Form.Description>
-					</div>
-					<Switch bind:checked={$formData.public} />
-				</Form.Control>
-				<Form.Description />
-				<Form.FieldErrors />
-			</Form.Field>
-			<Button type="submit" class="flex w-full flex-row justify-center gap-4">Save</Button>
-		</form>
+						<Switch bind:checked={$formData.public} />
+					</Form.Control>
+					<Form.Description />
+					<Form.FieldErrors />
+				</Form.Field>
+				<Button type="submit" class="flex w-full flex-row justify-center gap-4">Save</Button>
+			</form>
+		{/if}
 		<Milkdown bind:this={milkdownRef} markdown={myWiki} />
 	{:else}
 		<h1 class="text-destructive">Whoops!</h1>
