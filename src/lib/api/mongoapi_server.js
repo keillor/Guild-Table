@@ -144,6 +144,40 @@ export async function loadCampaignCharacters(session, campaignId) {
     }
 }
 
+/**
+ * Load function to retrieve all characters in a campaign.
+ * 
+ * @param {import('@supabase/supabase-js').Session} session - The user's session.
+ * @param {string} campaignId - The ID of the campaign.
+ * @returns {Promise<Array>} - A list of full character objects.
+ */
+export async function loadCampaignInformation(session, campaignId) {
+    try {
+        if (!session || !session.user || !session.user.id) {
+            throw new Error('Invalid session object.');
+        }
+
+        const campaignDb = client.db('campaign');
+        const campaignCollection = campaignDb.collection('campaign_data');
+
+        // Fetch the campaign by ID
+        const campaign = await campaignCollection.findOne({ _id: new ObjectId(campaignId) });
+        if (!campaign) {
+            throw new Error('Campaign not found.');
+        }
+
+        const serializedCampaign = {
+            ...campaign,
+            _id: campaign._id.toString(),
+        };
+
+        return serializedCampaign;
+    } catch (error) {
+        console.error('Error loading campaign characters:', error);
+        return [];
+    }
+}
+
 //POST
 
 /**

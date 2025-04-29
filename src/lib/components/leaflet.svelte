@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount, setContext } from 'svelte';
-  import L from 'leaflet';
+  import L, { marker } from 'leaflet';
   import 'leaflet/dist/leaflet.css';
   import { Heart } from "lucide-svelte";
 	import { characterSchema } from '../../routes/(main)/character/[id]/schema';
@@ -8,13 +8,16 @@
   let map: L.Map | undefined;
   let mapElement: HTMLDivElement;
   let bounds: L.LatLngBoundsExpression | undefined = undefined;
+  let markerLayer: L.LayerGroup | undefined = undefined;
 
   const { view, 
           zoom, 
           character,
           customImage, 
           customImageBounds, 
-          markerOptions } = $props();
+          markerOptions,
+          allMarkers,
+          initialCoordinates } = $props();
 
   const mapOptions = {
     center: view || [0, 0],
@@ -29,6 +32,7 @@
 
   onMount(() => {
     map = L.map(mapElement);
+    markerLayer = L.layerGroup().addTo(map);
 
     if (customImage && customImageBounds) {
       // Use custom image overlay
@@ -51,14 +55,29 @@
       }
     }
 
-    const customMarker = L.marker([0, 0], markerOptions).addTo(map).bindPopup('This is your character popup');
-
-    customMarker.on("moveend", function (event) {
-    const marker = event.target;
-    const position = marker.getLatLng();
-    console.log(`${character._id}`, position);
-  })
+    updateMarkers();
   });
+
+  function updateMarkers() {
+    if (markerLayer) {
+      markerLayer.clearLayers();
+      for (const marker of allMarkers) {
+        const newMarker = L.marker(marker.coordinates, marker.options).bindPopup(`${marker.options.title} popup`);
+        newMarker.on("moveend", function (event) {
+          const markerEvent = event.target;
+          const position = markerEvent.getLatLng();
+          console.log(`${marker.options.title}`, position);
+        });
+        newMarker.addTo(markerLayer);
+      }
+    }
+  }
+
+  $effect(() => {
+    if (markerLayer && allMarkers) {
+      updateMarkers();
+    }
+  })
 
   onDestroy(() => {
     map?.remove();

@@ -76,9 +76,6 @@
 		</Card.Content>
 		<Card.Footer>
 			<p>PLEASE LOG IN</p>
-			<Button href="/character">Character Manage</Button>
-			<Button href="/login">Login Screen</Button>
-			<Button href="/homepage">Homepage Screen</Button>
 		</Card.Footer>
 	</Card.Root>
 </div>
