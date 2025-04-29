@@ -1,11 +1,13 @@
 import { GetCampaignByIdAdmin, GetCampaignByIdUser } from '$lib/api/campaign_manage.js';
 import { client } from '$lib/api/db';
+import { loadCampaignCharacters } from '$lib/api/mongoapi_server.js';
 import { error, json } from '@sveltejs/kit';
 import { ObjectId } from 'mongodb';
 
 export const load = async ({ locals: { session }, params }) => {
     const campaign = await GetCampaignByIdUser(session, params.id);
-    return { campaign };
+    const characters = loadCampaignCharacters(session, params.id);
+    return { campaign, characters };
 };
 
 export const actions = {

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { buttonVariants } from '$lib/components/ui/button';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { X } from 'lucide-svelte';
+	import { Clipboard } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 
 	const { data } = $props();
@@ -36,6 +35,15 @@
 </script>
 
 <h1 class="mb-4 text-3xl font-bold">Campaign Invites</h1>
+
+<p>Your invite id: 
+	<span class='underline'>
+		{data.session.user.id}
+	</span>
+	<Button variant='outline' onclick={() => navigator.clipboard.writeText(data.session.user.id)}>
+		<Clipboard/>
+	</Button>
+</p>
 
 {#if campaigns.length < 1}
     <p>Looks like you don't have any invitations yet...</p>

@@ -11,6 +11,7 @@
 	import { toast } from 'svelte-sonner';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import { getAvatar } from '$lib/utilities/character/character.js';
+	import { characterSchema } from '../../../character/[id]/schema';
 
 	const { data } = $props();
 	const campaignInstance: Campaign = $state(data.campaign);
@@ -127,9 +128,13 @@
 			bind:this={fetchCharacterForm}
 			use:enhance={handleCharacterFetch}
 		></form>
-	{:else}
-		<h2>
-			Your character: {campaignInstance.characterIds.filter((c) => c.user == data.session.user.id)}
-		</h2>
 	{/if}
 {/if}
+
+{#await data.characters}
+	loading characters...
+{:then characters} 
+	{#each characters as character}
+		{character.name}
+	{/each}
+{/await}
