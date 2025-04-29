@@ -12,6 +12,7 @@
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import { getAvatar } from '$lib/utilities/character/character.js';
 	import { characterSchema } from '../../../character/[id]/schema';
+	import { page } from '$app/state';
 
 	const { data } = $props();
 	const campaignInstance: Campaign = $state(data.campaign);
@@ -38,9 +39,9 @@
 			const response = await result;
 			if (response.type == 'success') {
 				console.log(response);
-				toast.success('Character linked!')
+				toast.success('Character linked!');
 			} else {
-				toast.error('Failed to link character.')
+				toast.error('Failed to link character.');
 				console.log(response);
 			}
 		};
@@ -50,6 +51,7 @@
 {#if campaignInstance != null && campaignInstance}
 	<h1 class="mb-3 text-3xl font-bold underline-offset-2">Campaign: {campaignInstance.name}</h1>
 	<p>Description: {campaignInstance.description}</p>
+
 	{#if campaignInstance.characterIds.filter((c) => c.user == data.session.user.id).length < 1}
 		<Alert.Root variant="destructive">
 			<UserSearch class="size-4" />
@@ -78,7 +80,12 @@
 								Link your character here. Click save when you are finished.
 							</Dialog.Description>
 						</Dialog.Header>
-						<form action='?/linkCharacter' method='POST' id='linkCharacter' use:enhance={handleCharacterLink}>
+						<form
+							action="?/linkCharacter"
+							method="POST"
+							id="linkCharacter"
+							use:enhance={handleCharacterLink}
+						>
 							<div class="grid gap-4 py-4">
 								<div class="grid grid-cols-4 items-center gap-4">
 									<Label for="character" class="text-right">Character</Label>
@@ -96,9 +103,7 @@
 												<Select.Item value={character}>
 													<span class="grid grid-cols-4 gap-4">
 														<Avatar.Root>
-															<Avatar.Image
-																src={getAvatar(character._id)}
-																alt="character avatar"
+															<Avatar.Image src={getAvatar(character._id)} alt="character avatar"
 															></Avatar.Image>
 															<Avatar.Fallback>{character.name[0]}</Avatar.Fallback>
 														</Avatar.Root>
@@ -108,15 +113,19 @@
 														</span>
 													</span>
 												</Select.Item>
-												{/each}
-											</Select.Content>
-										</Select.Root>
-									</div>
+											{/each}
+										</Select.Content>
+									</Select.Root>
 								</div>
-								<input hidden name='characterId' bind:value={linkedCharacter._id}/>
+							</div>
+							<input hidden name="characterId" bind:value={linkedCharacter._id} />
 						</form>
 						<Dialog.Footer>
-							<Dialog.Close type='submit' form='linkCharacter' class={buttonVariants({variant: 'default'})}>Link</Dialog.Close>
+							<Dialog.Close
+								type="submit"
+								form="linkCharacter"
+								class={buttonVariants({ variant: 'default' })}>Link</Dialog.Close
+							>
 						</Dialog.Footer>
 					</Dialog.Content>
 				</Dialog.Root>
@@ -131,10 +140,85 @@
 	{/if}
 {/if}
 
+<h2 class='text-2xl'>Tools:</h2>
+<Button href={`/vtt/${campaignInstance._id}`}>
+	Live Tabletop
+</Button>
+<Button href={`${page.params.id}/wiki`}>
+	Campaign Wiki
+</Button>
+
 {#await data.characters}
 	loading characters...
-{:then characters} 
+{:then characters}
+	<h2 class="text-2xl">Campaign Characters:</h2>
 	{#each characters as character}
-		{character.name}
+		<div class="character-summary rounded-md border p-4 shadow-md">
+			<Avatar.Root>
+				<Avatar.Image src={getAvatar(character._id)} alt="character avatar" />
+				<Avatar.Fallback>{character.name[0]}</Avatar.Fallback>
+			</Avatar.Root>
+			<h2 class="text-2xl font-bold">{character.name}</h2>
+			<p><strong>Class:</strong> {character.class}</p>
+			<p><strong>Race:</strong> {character.race}</p>
+			<p><strong>Subrace:</strong> {character.subrace || 'None'}</p>
+			<p><strong>Alignment:</strong> {character.alignment}</p>
+			<p><strong>Age:</strong> {character.age}</p>
+			<p><strong>Size:</strong> {character.size}</p>
+			<p><strong>Speed:</strong> {character.speed} ft.</p>
+			<p><strong>Level:</strong> {character.level?.['$numberInt'] || 1}</p>
+			<p><strong>Proficiency Bonus:</strong> +{character.proficiency_bonus?.['$numberInt'] || 2}</p>
+			<p><strong>Hit Die:</strong> d{character.hit_die?.['$numberInt'] || 10}</p>
+
+			<h3 class="mt-4 text-xl font-bold">Ability Scores</h3>
+			<ul class="grid grid-cols-3 gap-2">
+				<li><strong>STR:</strong> {character.ability_scores.str || 0}</li>
+				<li><strong>DEX:</strong> {character.ability_scores.dex || 0}</li>
+				<li><strong>CON:</strong> {character.ability_scores.con || 0}</li>
+				<li><strong>INT:</strong> {character.ability_scores.int || 0}</li>
+				<li><strong>WIS:</strong> {character.ability_scores.wis || 0}</li>
+				<li><strong>CHA:</strong> {character.ability_scores.cha || 0}</li>
+			</ul>
+
+			<h3 class="mt-4 text-xl font-bold">Proficiencies</h3>
+			<ul>
+				{#each character.proficiencies as proficiency}
+					<li>{proficiency}</li>
+				{/each}
+			</ul>
+
+			<h3 class="mt-4 text-xl font-bold">Languages</h3>
+			<ul>
+				{#each character.languages as language}
+					<li>{language}</li>
+				{/each}
+			</ul>
+
+			<h3 class="mt-4 text-xl font-bold">Traits</h3>
+			<ul>
+				{#each character.traits as trait}
+					<li>{trait}</li>
+				{/each}
+			</ul>
+
+			<h3 class="mt-4 text-xl font-bold">Features</h3>
+			<ul>
+				{#each character.features as feature}
+					<li>{feature}</li>
+				{/each}
+			</ul>
+
+			<h3 class="mt-4 text-xl font-bold">Equipment</h3>
+			<ul>
+				{#each character.equipment as item}
+					<li>
+						<strong>{item.name}</strong> (x{item.count?.['$numberInt'] || 1}) - {item.weight?.[
+							'$numberInt'
+						] || 0} lbs, {item.cost?.quantity?.['$numberInt'] || 0}
+						{item.cost?.unit}
+					</li>
+				{/each}
+			</ul>
+		</div>
 	{/each}
 {/await}

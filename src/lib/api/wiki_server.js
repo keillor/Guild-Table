@@ -174,7 +174,7 @@ export async function GetWikisByCampaign(session, campaignId) {
 
         // Query the database for all wikis associated with the campaign
         const results = await pages
-            .find({ campaign: campaignId }, { projection: { title: 1, _id: 1 } })
+            .find({ campaign: campaignId, public: true }, { projection: { title: 1, _id: 1 } })
             .toArray();
 
         // Convert ObjectId to string for client compatibility
