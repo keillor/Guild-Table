@@ -4,7 +4,7 @@
   import * as Card from "$lib/components/ui/card/index.js";
   import * as Popover from "$lib/components/ui/popover/index.js";
   import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
-  import { Backpack, Dices, Heart, ScrollText, BookOpen, Sparkles, Swords, UserRound, Skull, DoorOpen } from "lucide-svelte";
+  import { Backpack, Dices, Heart, ScrollText, BookOpen, Sparkles, Swords, UserRound, Skull, DoorOpen, ClockArrowUp } from "lucide-svelte";
   import { Toaster } from "$lib/components/ui/sonner";
   import { toast } from "svelte-sonner";
   import VTTRolls from "$lib/components/vtt-rolls.svelte";
@@ -18,6 +18,7 @@
   import VTTMonster from "$lib/components/vtt-monster.svelte";
   import CampaignMap from "./campaign-map/+page.svelte";
   import { GuildSocket } from '$lib/socket/SocketIOTools.js';
+	import VttTurntracker from '$lib/components/vtt-turntracker.svelte';
 
   const { data } = $props();
   console.log(data)
@@ -85,7 +86,12 @@
       title: "monster-management",
       icon: Skull,
       component: VTTMonster
-    }
+    },
+    {
+      title: 'turn-tracker',
+      icon: ClockArrowUp,
+      component: VttTurntracker
+    },
   ];
 
   // Roll D20 with ability bonus
@@ -127,7 +133,7 @@
                 <item.icon class='size-6'/>
             </Popover.Trigger>
             <Popover.Content side='right'>
-              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {monsters} {monsterContainer}/>
+              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {monsters} {monsterContainer} {allCharacters}/>
             </Popover.Content>
           </Popover.Root>
           {/each}
