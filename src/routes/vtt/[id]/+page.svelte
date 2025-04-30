@@ -34,14 +34,14 @@
   const monsters = data.monsters;
   let monsterContainer = $state([]);
 
-  let character = $state(null); // User's own character
   let allCharacters = $state(data.characters); // Array of other characters
+  let character = $state(allCharacters.find((char) => char.user === data.user.id)); // User's own character
 
-  if (allCharacters.find((char) => char.user === data.user.id)) {
+  /* if (allCharacters.find((char) => char.user === data.user.id)) {
     character = allCharacters.find((char) => char.user === data.user.id);
   } else {
     character = allCharacters[0];
-  }
+  } */
 
   const items = [
     {
@@ -157,8 +157,7 @@
     id="game-card" 
     class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
     <Card.Content class="w-screen h-screen">
-      <CampaignMap {character} {allCharacters} {campaign} {monsters} {socket} {user} {monsterContainer}/>
-      <Toaster position="bottom-right" />
+      <CampaignMap {character} {allCharacters} {campaign} {monsters} {socket}/>
     </Card.Content>
   </Card.Root>
 </div>
