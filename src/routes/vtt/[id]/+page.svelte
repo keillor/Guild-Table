@@ -150,7 +150,6 @@
     class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
     <Card.Content class="w-screen h-screen">
       <CampaignMap {character} {allCharacters} {campaign} {monsters} {socket}/>
-      <Toaster position="bottom-right" />
     </Card.Content>
   </Card.Root>
 </div>
