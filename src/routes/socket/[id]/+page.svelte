@@ -8,7 +8,9 @@
     const { data } = $props();
     const access_token = data.session?.access_token
 
-    const socket = new GuildSocket('http://localhost:5000', access_token, page.params.id);
+    // http://localhost:5173/socket/6802904e5750fa22e6ac3d33
+    // http://localhost:5001/socket/6802904e5750fa22e6ac3d33
+    const socket = new GuildSocket('http://localhost:5001', access_token, page.params.id);
     socket.on('message', (msg) => {
         lastMessage = msg;
     })

@@ -1,5 +1,6 @@
 <script lang='ts'>
   import { onMount } from 'svelte';
+  import { page } from '$app/state';
   import * as Card from "$lib/components/ui/card/index.js";
   import * as Popover from "$lib/components/ui/popover/index.js";
   import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
@@ -16,15 +17,29 @@
   import VTTInventory from "$lib/components/vtt-inventory.svelte";
   import VTTMonster from "$lib/components/vtt-monster.svelte";
   import CampaignMap from "./campaign-map/+page.svelte";
+  import { GuildSocket } from '$lib/socket/SocketIOTools.js';
 
   const { data } = $props();
+  console.log(data)
+  const access_token = data.session?.access_token
   const campaign = data.campaign;
-  console.log(data.campaign)
-  console.log(data.characters[0]);
 
-  let character = $state(data.characters[0]);
+    // http://localhost:5173/socket/6802904e5750fa22e6ac3d33
+    // http://localhost:5001/socket/6802904e5750fa22e6ac3d33
+  const socket = new GuildSocket('http://localhost:5001', access_token, page.params.id);
+
+
+  const monsters = data.monsters;
+  let monsterContainer = $state([]);
+
+  let character = $state(null); // User's own character
   let allCharacters = $state(data.characters); // Array of other characters
-  console.log(allCharacters)
+
+  if (allCharacters.find((char) => char.user === data.user.id)) {
+    character = allCharacters.find((char) => char.user === data.user.id);
+  } else {
+    character = allCharacters[0];
+  }
 
   const items = [
     {
@@ -98,7 +113,7 @@
   }
 </script>
 
-<div class="flex flex-row h-full w-full">
+<div class="flex flex-row justify-between h-full w-full">
   <Card.Root 
   id="button-container-card" 
   class="absolute left-0 w-20 h-full m-5 p-0 rounded-lg shadow-lg">
@@ -112,14 +127,14 @@
                 <item.icon class='size-6'/>
             </Popover.Trigger>
             <Popover.Content side='right'>
-              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName}/>
+              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {monsters} {monsterContainer}/>
             </Popover.Content>
           </Popover.Root>
           {/each}
       </div>
     </Card.Content>
     <Card.Footer>
-      <Button href="/homepage"><DoorOpen /></Button>
+      <Button href="/homepage" class="m-0"><DoorOpen /></Button>
     </Card.Footer>
   </Card.Root>
 
@@ -128,7 +143,7 @@
     id="game-card" 
     class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
     <Card.Content class="w-screen h-screen">
-      <CampaignMap {character} {allCharacters} {campaign}/>
+      <CampaignMap {character} {allCharacters} {campaign} {monsters} {socket}/>
       <Toaster position="bottom-right" />
     </Card.Content>
   </Card.Root>

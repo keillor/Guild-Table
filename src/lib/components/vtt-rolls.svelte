@@ -53,36 +53,38 @@
   } 
 </script>
   
-<Label class="block">Dice Rolls</Label>
-<Separator class="my-4" />
-<Tabs.Root value="rolls" class="left-0 top-0 p-4 ">
-<Tabs.List class="flex space-x-2 border-b border-gray-200 dark:border-gray-700" aria-label="Dice Rolls">
-  {#each diceNum as die}
-    <Tabs.Trigger value="dice-{die.num}">{die.name}</Tabs.Trigger>
-  {/each}
-</Tabs.List>
-  {#each diceNum as die}
-    <Tabs.Content value="dice-{die.num}">
-      <Table.Root>
-        <Table.Header>
-          <Table.Row>
-            <Table.Head>Adjust Amount</Table.Head>
-            <Table.Head>Roll Amount</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>
-              <Button onclick={() => addDiceRoll()}>+</Button>
-              <Button onclick={() => removeDiceRoll()}>-</Button>
-            </Table.Cell>
-            <Table.Cell>{numRolls}</Table.Cell>
-            <Table.Cell>
-              <Button onclick={() => rollDice(die.num, numRolls)}>Roll</Button>
-            </Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table.Root>
-    </Tabs.Content>
-  {/each}
-</Tabs.Root>
+<div class="flex flex-col justify-between w-full h-full">
+  <Label class="block">Dice Rolls</Label>
+  <Separator class="my-4" />
+  <Tabs.Root value="rolls" class="left-0 top-0 p-4 ">
+  <Tabs.List class="flex space-x-2 border-b border-gray-200 dark:border-gray-700" aria-label="Dice Rolls">
+    {#each diceNum as die}
+      <Tabs.Trigger value="dice-{die.num}">{die.name}</Tabs.Trigger>
+    {/each}
+  </Tabs.List>
+    {#each diceNum as die}
+      <Tabs.Content value="dice-{die.num}">
+        <Table.Root>
+          <Table.Header>
+            <Table.Row>
+              <Table.Head>Adjust Amount</Table.Head>
+              <Table.Head>Roll Amount</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>
+                <Button onclick={() => addDiceRoll()}>+</Button>
+                <Button onclick={() => removeDiceRoll()}>-</Button>
+              </Table.Cell>
+              <Table.Cell>{numRolls}</Table.Cell>
+              <Table.Cell>
+                <Button onclick={() => rollDice(die.num, numRolls)}>Roll</Button>
+              </Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table.Root>
+      </Tabs.Content>
+    {/each}
+  </Tabs.Root>
+</div>
