@@ -74,6 +74,10 @@ export class GuildSocket {
         this.socket.emit('moveMarker', markerObject);
     }
 
+    addMonster(monsterID, markerType) {
+        this.socket.emit('addMonster', monsterID, markerType);
+    }
+
     on(event, callback) {
         this.socket.on(event, callback);
     }
