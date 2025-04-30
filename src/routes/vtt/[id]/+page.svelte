@@ -24,6 +24,7 @@
   console.log(data)
   const access_token = data.session?.access_token
   const campaign = data.campaign;
+  const user = data.user;
 
     // http://localhost:5173/socket/6802904e5750fa22e6ac3d33
     // http://localhost:5001/socket/6802904e5750fa22e6ac3d33
@@ -117,6 +118,13 @@
       .replace(/([a-z])([A-Z])/g, '$1 $2')
       .replace(/\b\w/g, c => c.toUpperCase());
   }
+
+  // Socket Event Listeners
+  socket.on('addMonster', (monsterID) => {
+    const monster = monsters.find((monster) => monster._id == monsterID);
+    monsterContainer = [...monsterContainer, monster];
+    console.log('Monster Added to Container:', monsterContainer);
+  });
 </script>
 
 <div class="flex flex-row justify-between h-full w-full">
@@ -133,7 +141,7 @@
                 <item.icon class='size-6'/>
             </Popover.Trigger>
             <Popover.Content side='right'>
-              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {monsters} {monsterContainer} {allCharacters}/>
+              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {monsters} {monsterContainer} {allCharacters} {socket} {user}/>
             </Popover.Content>
           </Popover.Root>
           {/each}
@@ -149,7 +157,7 @@
     id="game-card" 
     class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
     <Card.Content class="w-screen h-screen">
-      <CampaignMap {character} {allCharacters} {campaign} {monsters} {socket}/>
+      <CampaignMap {character} {allCharacters} {campaign} {monsters} {socket} {user} {monsterContainer}/>
       <Toaster position="bottom-right" />
     </Card.Content>
   </Card.Root>
