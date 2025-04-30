@@ -13,6 +13,7 @@ export const newClassRaceSchema = z.object({
 
 export const raceDataSchema = newClassRaceSchema.extend({
 	name: z.string(),
+	hp: z.number(),
 	speed: z.number(),
 	int_bonus: z.number(),
 	cha_bonus: z.number(),
@@ -51,6 +52,7 @@ export const stringInputNames = {
 };
 
 export const numberInputNames = {
+	hp: 'hp',
 	level: 'level',
 	proficiency_bonus: 'proficiency_bonus',
 	hit_die: 'hit_die',

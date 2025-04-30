@@ -50,6 +50,7 @@
 	<Card.Content>
         <p><b>Race:</b> {character.race}</p>
         <p><b>Class:</b> {character.class}</p>
+        <p><b>Health:</b> {character.hp}</p>
         <p><b>Speed:</b> {character.speed}</p>
         <p><b>Age:</b> {character.name}</p>
         <p><b>Size:</b> {character.size}</p>
