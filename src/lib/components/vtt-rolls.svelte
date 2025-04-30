@@ -9,11 +9,7 @@
   import { Separator } from "$lib/components/ui/separator/index.js";
   import { Label } from "$lib/components/ui/label/index.js";
 
-  let character = $props()
-
-  let user = $state({
-    name: "Player Name"
-  })
+  let { socket, rollNumberedDice } = $props()
 
   let numRolls = $state(1);
 
@@ -35,22 +31,7 @@
       numRolls -= 1;
     }
   }
-
-  function rollDice(num, rolls) {
-    let rollTotal = 0;
-    let diceRolls = []
-
-    for (let i = 0; i < rolls; i++) {
-      diceRolls[i] = Math.floor(Math.random() * num) + 1;
-      rollTotal += diceRolls[i];
-    }
-
-    toast(`${user.name} rolled ${rolls} rolls of D${num}: `, {
-      description: diceRolls.join(' + ') + ` = ${rollTotal}`,
-    }
-    );
-    return rollTotal;
-  } 
+  
 </script>
   
 <div class="flex flex-col justify-between w-full h-full">
@@ -79,7 +60,7 @@
               </Table.Cell>
               <Table.Cell>{numRolls}</Table.Cell>
               <Table.Cell>
-                <Button onclick={() => rollDice(die.num, numRolls)}>Roll</Button>
+                <Button onclick={() => rollNumberedDice(die.num, numRolls)}>Roll</Button>
               </Table.Cell>
             </Table.Row>
           </Table.Body>

@@ -66,6 +66,14 @@ export class GuildSocket {
         this.socket.emit('roll', characterId, label, dice, result);
     }
 
+    rollNumberedDice(num, rolls) {
+        this.socket.emit('rollNumberedDice', num, rolls);
+    }
+
+    abilityRoll(ability, bonus, rollType) {
+        this.socket.emit('abilityRoll', ability, bonus, rollType);
+    }
+
     healthUpdate(characterId, hp) {
         this.socket.emit('healthUpdate', {characterId, hp})
     }

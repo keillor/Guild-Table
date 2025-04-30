@@ -21,7 +21,6 @@
 	import VttTurntracker from '$lib/components/vtt-turntracker.svelte';
 
   const { data } = $props();
-  console.log(data)
   const access_token = data.session?.access_token
   const campaign = data.campaign;
   const user = data.user;
@@ -42,6 +41,8 @@
   } else {
     character = allCharacters[0];
   }
+
+  console.log('Character:', character);
 
   const items = [
     {
@@ -96,14 +97,12 @@
   ];
 
   // Roll D20 with ability bonus
-  function rollTwenty(ability, bonus, rollType) {
-    const roll = Math.floor(Math.random() * 20) + 1;
-    const total = roll + bonus;
-    toast(`${ability}: ${rollType}`, {
-      description: `You rolled a ${roll} + ${bonus} = ${total}`,
-    });
+  function abilityRoll(ability, bonus, rollType) {
+    socket.abilityRoll(ability, bonus, rollType);
+  }
 
-    return total;
+  function rollNumberedDice(num, rolls) {
+    socket.rollNumberedDice(num, rolls);
   }
 
   function toastMain(header: string, description: string) {
@@ -125,6 +124,32 @@
     monsterContainer = [...monsterContainer, monster];
     console.log('Monster Added to Container:', monsterContainer);
   });
+
+  socket.on('rollNumberedDice', (num, rolls) => {
+    let rollTotal = 0;
+    let diceRolls = []
+
+    for (let i = 0; i < rolls; i++) {
+      diceRolls[i] = Math.floor(Math.random() * num) + 1;
+      rollTotal += diceRolls[i];
+    }
+
+    toast(`${character.name} rolled ${rolls} rolls of D${num}: `, {
+      description: diceRolls.join(' + ') + ` = ${rollTotal}`,
+    }
+    );
+    return rollTotal;
+  })
+
+  socket.on('abilityRoll', (ability, bonus, rollType) => {
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const total = roll + bonus;
+    toast(`${ability}: ${rollType}`, {
+      description: `${character.name} rolled a ${roll} + ${bonus} = ${total}`,
+    });
+
+    return total;
+  })
 </script>
 
 <div class="flex flex-row justify-between h-full w-full">
@@ -141,7 +166,7 @@
                 <item.icon class='size-6'/>
             </Popover.Trigger>
             <Popover.Content side='right'>
-              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {monsters} {monsterContainer} {allCharacters} {socket} {user}/>
+              <item.component {character} {rollNumberedDice} {abilityRoll} {toastMain} {parseName} {monsters} {monsterContainer} {allCharacters} {socket} {user}/>
             </Popover.Content>
           </Popover.Root>
           {/each}
