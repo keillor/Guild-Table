@@ -3,7 +3,8 @@
   import Leaflet from '$lib/components/leaflet.svelte';
 	import { init } from '@milkdown/kit/core';
 
-  const { character, allCharacters, campaign} = $props();
+  const { monsters, character, allCharacters, campaign, socket } = $props();
+  console.log('Monsters:', monsters);
   const mapURL = `https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${campaign.mapIds[0].id}`
 
   const mapImage = new Image();
@@ -57,6 +58,16 @@
     }
   }))
 
+  socket.on('moveMarker', (markerObject) => {
+    allMarkers = allMarkers.map(marker => {
+      if (marker.id === markerObject.id) {
+        console.log('Marker moved:', markerObject);
+        return { ...marker, coordinates: markerObject.coordinates };
+      }
+      return marker;
+    });
+  });
+
   function changeMarkerPosition(markerId: string) {
     const randomCoordinates: LatLngExpression = [
       Math.random() * (imageWidth / 2),
@@ -74,5 +85,5 @@
 
 <div class="w-full h-full">
   <button onclick={() => {changeMarkerPosition(character._id)}}>Change Coordinates</button>
-  <Leaflet view={initialView} zoom={initialZoom} customImage={customImageUrl} {customImageBounds} {allMarkers} {character} {initialCoordinates}/>
+  <Leaflet view={initialView} zoom={initialZoom} customImage={customImageUrl} {customImageBounds} {allMarkers} {character} {initialCoordinates} {socket}/>
 </div>

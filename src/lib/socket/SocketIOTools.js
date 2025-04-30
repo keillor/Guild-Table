@@ -70,6 +70,10 @@ export class GuildSocket {
         this.socket.emit('healthUpdate', {characterId, hp})
     }
 
+    moveMarker(markerObject) {
+        this.socket.emit('moveMarker', markerObject);
+    }
+
     on(event, callback) {
         this.socket.on(event, callback);
     }

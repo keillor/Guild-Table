@@ -17,7 +17,9 @@
           customImageBounds, 
           markerOptions,
           allMarkers,
-          initialCoordinates } = $props();
+          initialCoordinates, 
+          socket } = $props();
+  
 
   const mapOptions = {
     center: view || [0, 0],
@@ -66,7 +68,10 @@
         newMarker.on("moveend", function (event) {
           const markerEvent = event.target;
           const position = markerEvent.getLatLng();
-          console.log(`${marker.options.title}`, position);
+          socket.moveMarker({
+            id: marker.id,
+            coordinates: position
+          });
         });
         newMarker.addTo(markerLayer);
       }
