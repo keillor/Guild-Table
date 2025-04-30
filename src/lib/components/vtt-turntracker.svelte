@@ -7,7 +7,6 @@
 	import as_mod_calc from '$lib/utilities/character/character';
 
 	let { parseName, allCharacters, abilityRoll } = $props();
-
 	onMount(() => {
 		allCharacters.forEach((char) => {
 			if (!char.turntracker) {
@@ -43,16 +42,18 @@
 	<ul class="list-none p-0">
 		{#each allCharacters as char, index}
 			<li class="flex items-center gap-4 border-b p-2">
-				<Checkbox bind:checked={char.turntracker.checked} />
+				<!-- <Checkbox bind:checked={char.turntracker.checked} /> -->
 				<span class="font-bold">{index + 1}.</span>
 				<span>{parseName(char.name)}</span>
 				<span class="ml-auto text-sm text-gray-500">DEX: {as_mod_calc(char.ability_scores?.dex) || 0}</span>
-				<Input
-					type="number"
-					max="100"
-					class="w-12 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-					bind:value={char.turntracker.value}
-				/>
+				{#if char.turntracker}
+					<Input
+						type="number"
+						max="100"
+						class="w-12 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+						bind:value={char.turntracker.value}
+					/>
+				{/if}
 			</li>
 		{/each}
 	</ul>
