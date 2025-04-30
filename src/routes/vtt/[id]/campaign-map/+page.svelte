@@ -22,6 +22,27 @@
   const initialZoom: number = 2;
   const customImageUrl = mapImage.src
   const customImageBounds: LatLngBoundsExpression = [ southWestCorner, northEastCorner ];
+  
+  let monsterMarkers = $derived.by(() => {
+    return monsterContainer.map((monst) => {
+      return {
+        id: monst._id,
+        type: 'monster',
+        options: {
+          title: `${monst.name} Marker`,
+          icon: L.icon({
+            iconUrl: monsterAvatar(monst.image),
+            iconSize: [50, 50],
+            iconAnchor: [1, 50],
+            popupAnchor: [1, -34],
+            autoPan: true
+          }),
+          draggable: true,
+        },
+        coordinates: initialCoordinates
+      }
+    })
+  })
 
   let allMarkers = $state(allCharacters.map((char) => {
     if (char._id == character._id) { //User's own marker
