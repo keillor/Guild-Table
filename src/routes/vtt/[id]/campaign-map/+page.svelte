@@ -22,11 +22,14 @@
   const initialZoom: number = 2;
   const customImageUrl = mapImage.src
   const customImageBounds: LatLngBoundsExpression = [ southWestCorner, northEastCorner ];
+
+  let monsterCount = 0;
   
   let monsterMarkers = $derived.by(() => {
     return monsterContainer.map((monst) => {
+      monsterCount++;
       return {
-        id: monst._id,
+        id: monsterCount,
         type: 'monster',
         options: {
           title: `${monst.name} Marker`,
@@ -82,14 +85,25 @@
     }
   }))
 
-  socket.on('moveMarker', (markerObject) => {
-    allMarkers = allMarkers.map(marker => {
+  socket.on('moveMarker', (markerObject, markerType) => {
+    if (markerType === 'player') {
+      allMarkers = allMarkers.map(marker => {
       if (marker.id === markerObject.id) {
         console.log('Marker moved:', markerObject);
         return { ...marker, coordinates: markerObject.coordinates };
       }
       return marker;
     });
+    } else if (markerType === 'monster') {
+      monsterMarkers = monsterMarkers.map(marker => {
+        if (marker.id === markerObject.id) {
+          console.log('Monster moved:', markerObject);
+          return { ...marker, coordinates: markerObject.coordinates };
+        }
+        return marker;
+      });
+    }
+    
   });
 </script>
 

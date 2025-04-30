@@ -17,6 +17,7 @@
           customImageBounds, 
           markerOptions,
           allMarkers,
+          monsterMarkers,
           initialCoordinates, 
           socket } = $props();
   
@@ -71,7 +72,20 @@
           socket.moveMarker({
             id: marker.id,
             coordinates: position
-          });
+          }, 'player');
+        });
+        newMarker.addTo(markerLayer);
+      }
+
+      for (const marker of monsterMarkers) {
+        const newMarker = L.marker(marker.coordinates, marker.options).bindPopup(`${marker.options.title} popup`);
+        newMarker.on("moveend", function (event) {
+          const markerEvent = event.target;
+          const position = markerEvent.getLatLng();
+          socket.moveMarker({
+            id: marker.id,
+            coordinates: position
+          }, 'monster');
         });
         newMarker.addTo(markerLayer);
       }
