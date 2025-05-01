@@ -29,6 +29,12 @@
     // http://localhost:5173/socket/6802904e5750fa22e6ac3d33
     // http://localhost:5001/socket/6802904e5750fa22e6ac3d33
   const socket = new GuildSocket('http://localhost:5001', access_token, page.params.id);
+  socket.on('healthChange', ({characterID, newHealth}) => {
+    const targetChar = campaign.characterIds.find((char) => char.characterId === characterID);
+    if (targetChar) {
+      targetChar.hp = newHealth;
+    }
+  })
 
 
   const monsters = data.monsters;
