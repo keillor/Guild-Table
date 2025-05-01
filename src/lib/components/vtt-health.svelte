@@ -5,31 +5,24 @@
   import { Separator } from "$lib/components/ui/separator/index.js";
   import * as Table from "$lib/components/ui/table";
 
-  let { character, toastMain } = $props();
-  let maxHealth = $state(15);
-  let currentHealth = $state(maxHealth);
+  let { character, campaign, socket } = $props();
+  let maxHealth = character.hp
+  let currentHealth = $state(campaign.characterIds.find((char) => char.characterId === character._id)?.hp || character.hp);
   let temporaryHealth = $state(10);
 
   const healthInput = document.getElementById("healthInput");
   let changeHealthNum = $state();
 
   function adjustHealth(amount) {
-    if (amount < 0 && temporaryHealth > 0) {
-      if (temporaryHealth < amount) {
-        amount = amount + temporaryHealth;
-        temporaryHealth = 0;
-      } else {
-        temporaryHealth = Math.max(temporaryHealth + amount, 0);
-        amount = 0;
-      }
-    } else
+    currentHealth += amount;
+    changeHealthNum = null;
 
-    if (amount > 0) {
-      currentHealth = Math.min(currentHealth + amount, maxHealth);
-    } else {
-      currentHealth = Math.max(currentHealth + amount, 0);
+    const targetChar = campaign.characterIds.find((char) => char.characterId === character._id);
+    if (targetChar) {
+      targetChar.hp += amount;
     }
-    changeHealthNum = 0;
+
+    socket.healthChange(character._id, currentHealth);
   }
 </script>
 
@@ -48,8 +41,8 @@
     <Table.Row>
       <Table.Cell>
         <form>
-          <Input type="number" bind:value={changeHealthNum} placeholder="Enter Health Amount (-/+)" class="w-24" />
-          <Button type="submit" onclick={() => adjustHealth(changeHealthNum)} class="w-24">Change Health</Button>
+          <Input type="number" bind:value={changeHealthNum} placeholder="HP (-/+)" class="w-24" />
+          <Button type="submit" onclick={() => adjustHealth(changeHealthNum)} class="w-24">Update</Button>
         </form>
       </Table.Cell>
       <Table.Cell>{currentHealth}</Table.Cell>

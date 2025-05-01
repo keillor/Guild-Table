@@ -23,7 +23,7 @@
   const { data } = $props();
   console.log(data)
   const access_token = data.session?.access_token
-  const campaign = data.campaign;
+  const campaign = $state(data.campaign);
   const user = data.user;
 
     // http://localhost:5173/socket/6802904e5750fa22e6ac3d33
@@ -141,7 +141,7 @@
                 <item.icon class='size-6'/>
             </Popover.Trigger>
             <Popover.Content side='right'>
-              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {monsters} {monsterContainer} {allCharacters} {socket} {user}/>
+              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {campaign} {monsters} {monsterContainer} {allCharacters} {socket} {user}/>
             </Popover.Content>
           </Popover.Root>
           {/each}
