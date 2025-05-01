@@ -25,7 +25,7 @@
   const access_token = data.session?.access_token
   const campaign = $state(data.campaign);
   const user = data.user;
-  let mapURL = $state(`https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${campaign.mapIds[1].id}`)
+  let mapURL = $state(`https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${campaign.mapIds[0].id}`)
 
     // http://localhost:5173/socket/6802904e5750fa22e6ac3d33
     // http://localhost:5001/socket/6802904e5750fa22e6ac3d33
@@ -87,11 +87,6 @@
       title: "features-and-traits",
       icon: ScrollText,
       component: VTTTraits
-    },
-    {
-      title: "inventory",
-      icon: Backpack,
-      component: VTTInventory
     },
     {
       title: "monster-management",
@@ -188,16 +183,14 @@
               >
                 <item.icon class='size-6'/>
             </Popover.Trigger>
-            <Popover.Content side='right'>
+            <Popover.Content side='right' class='w-50'>
               <item.component {campaign} {character} {rollNumberedDice} {abilityRoll} {toastMain} {parseName} {monsters} {monsterContainer} {allCharacters} {socket} {user} {changeMap}/>
             </Popover.Content>
           </Popover.Root>
           {/each}
+          <Button href="/homepage" class="m-0"><DoorOpen /></Button>
       </div>
     </Card.Content>
-    <Card.Footer>
-      <Button href="/homepage" class="m-0"><DoorOpen /></Button>
-    </Card.Footer>
   </Card.Root>
 
 <!-- Render game on the right side-->
