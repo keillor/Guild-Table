@@ -3,25 +3,45 @@
   import Leaflet from '$lib/components/leaflet.svelte';
 	import { init } from '@milkdown/kit/core';
   import { monsterAvatar } from '$lib/utilities/character/monster.ts';
+	import { derived } from 'svelte/store';
 
-  const { monsters, character, allCharacters, campaign, socket, monsterContainer } = $props();
+  const { monsters, character, allCharacters, campaign, socket, monsterContainer, mapURL } = $props();
   console.log('Monsters:', monsters);
-  const mapURL = `https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${campaign.mapIds[0].id}`
 
-  const mapImage = new Image();
-  mapImage.src = mapURL
-  const imageWidth = mapImage.width;
-  const imageHeight = mapImage.height;
+  let mapInformation = $derived.by(() => {
+    let mapImage = $derived.by(() => {
+      let image = new Image();
+      image.src = mapURL;
+      return {
+        src: image.src,
+        width: image.width,
+        height: image.height
+      }
+    })
 
-  const initialCoordinates: LatLngExpression = [0,0];
+    let initialCoordinates: LatLngExpression = [0, 0];
 
-  const southWestCorner: LatLngExpression = [0, 0];
-  const northEastCorner: LatLngExpression = [imageWidth/2, imageHeight/2];
+    let southWestCorner: LatLngExpression = [0, 0];
+    let northEastCorner: LatLngExpression = $derived([mapImage.width/2, mapImage.height/2]);
 
-  const initialView: LatLngExpression = [imageWidth/4, imageHeight/4];
-  const initialZoom: number = 2;
-  const customImageUrl = mapImage.src
-  const customImageBounds: LatLngBoundsExpression = [ southWestCorner, northEastCorner ];
+    let initialZoom: number = 2;
+    let initialView: LatLngExpression = $derived([mapImage.width/4, mapImage.height/4]);
+    let bounds: LatLngBoundsExpression = $derived([ southWestCorner, northEastCorner ]);
+
+    return {
+      url: mapImage.src,
+      width: mapImage.width,
+      height: mapImage.height,
+      initialCoordinates: initialCoordinates,
+      southWestCorner: southWestCorner,
+      northEastCorner: northEastCorner,
+      initialView: initialView,
+      initialZoom: initialZoom,
+      bounds: bounds
+    }
+  })
+
+  console.log('Map Information:', mapInformation);
 
   /* let monsterCount = 0;
   
@@ -42,7 +62,7 @@
           }),
           draggable: true,
         },
-        coordinates: initialCoordinates
+        coordinates: mapInformation.initialCoordinates
       }
     })
   }) */
@@ -63,7 +83,7 @@
           }),
           draggable: true,
         },
-        coordinates: initialCoordinates
+        coordinates: mapInformation.initialCoordinates
       }
     } else {
       return {
@@ -94,8 +114,12 @@
       return marker;
     })
   });
+
+  socket.on('changeMap', (mapID) => {
+   console.log('Map changed to:', mapInformation);
+  })
 </script>
 
 <div class="w-full h-full">
-  <Leaflet view={initialView} zoom={initialZoom} customImage={customImageUrl} {customImageBounds} {allMarkers} {character} {initialCoordinates} {socket}/>
+  <Leaflet {mapInformation} {allMarkers} {monsterMarkers} {character} {socket}/>
 </div>

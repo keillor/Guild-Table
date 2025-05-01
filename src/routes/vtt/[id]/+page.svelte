@@ -4,7 +4,7 @@
   import * as Card from "$lib/components/ui/card/index.js";
   import * as Popover from "$lib/components/ui/popover/index.js";
   import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
-  import { Backpack, Dices, Heart, ScrollText, BookOpen, Sparkles, Swords, UserRound, Skull, DoorOpen, ClockArrowUp } from "lucide-svelte";
+  import { Backpack, Dices, Heart, ScrollText, BookOpen, Sparkles, Swords, UserRound, Skull, DoorOpen, ClockArrowUp, Map } from "lucide-svelte";
   import { Toaster } from "$lib/components/ui/sonner";
   import { toast } from "svelte-sonner";
   import VTTRolls from "$lib/components/vtt-rolls.svelte";
@@ -16,15 +16,16 @@
   import VTTTraits from "$lib/components/vtt-traits.svelte";
   import VTTInventory from "$lib/components/vtt-inventory.svelte";
   import VTTMonster from "$lib/components/vtt-monster.svelte";
+  import VTTMap from "$lib/components/vtt-map.svelte";
   import CampaignMap from "./campaign-map/+page.svelte";
   import { GuildSocket } from '$lib/socket/SocketIOTools.js';
 	import VttTurntracker from '$lib/components/vtt-turntracker.svelte';
 
   const { data } = $props();
-  console.log(data)
   const access_token = data.session?.access_token
   const campaign = $state(data.campaign);
   const user = data.user;
+  let mapURL = $state(`https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${campaign.mapIds[1].id}`)
 
     // http://localhost:5173/socket/6802904e5750fa22e6ac3d33
     // http://localhost:5001/socket/6802904e5750fa22e6ac3d33
@@ -43,11 +44,14 @@
   let allCharacters = $state(data.characters); // Array of other characters
   let character = $state(allCharacters.find((char) => char.user === data.user.id)); // User's own character
 
-  /* if (allCharacters.find((char) => char.user === data.user.id)) {
+  if (allCharacters.find((char) => char.user === data.user.id)) {
     character = allCharacters.find((char) => char.user === data.user.id);
   } else {
     character = allCharacters[0];
-  } */
+  }
+
+
+  console.log('Campaign:', campaign);
 
   const items = [
     {
@@ -99,17 +103,25 @@
       icon: ClockArrowUp,
       component: VttTurntracker
     },
+    {
+      title: "map",
+      icon: Map,
+      component: VTTMap
+    }
   ];
 
   // Roll D20 with ability bonus
-  function rollTwenty(ability, bonus, rollType) {
-    const roll = Math.floor(Math.random() * 20) + 1;
-    const total = roll + bonus;
-    toast(`${ability}: ${rollType}`, {
-      description: `You rolled a ${roll} + ${bonus} = ${total}`,
-    });
+  function abilityRoll(ability, bonus, rollType) {
+    socket.abilityRoll(ability, bonus, rollType);
+  }
 
-    return total;
+  function rollNumberedDice(num, rolls) {
+    socket.rollNumberedDice(num, rolls);
+  }
+
+  function changeMap(mapID) {
+    console.log('Changing Map to:', mapID);
+    socket.changeMap(mapID);
   }
 
   function toastMain(header: string, description: string) {
@@ -131,6 +143,36 @@
     monsterContainer = [...monsterContainer, monster];
     console.log('Monster Added to Container:', monsterContainer);
   });
+
+  socket.on('rollNumberedDice', (num, rolls) => {
+    let rollTotal = 0;
+    let diceRolls = []
+
+    for (let i = 0; i < rolls; i++) {
+      diceRolls[i] = Math.floor(Math.random() * num) + 1;
+      rollTotal += diceRolls[i];
+    }
+
+    toast(`${character.name} rolled ${rolls} rolls of D${num}: `, {
+      description: diceRolls.join(' + ') + ` = ${rollTotal}`,
+    }
+    );
+    return rollTotal;
+  })
+
+  socket.on('abilityRoll', (ability, bonus, rollType) => {
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const total = roll + bonus;
+    toast(`${ability}: ${rollType}`, {
+      description: `${character.name} rolled a ${roll} + ${bonus} = ${total}`,
+    });
+
+    return total;
+  })
+
+  socket.on('changeMap', (mapID) => {
+    mapURL = `https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${mapID}`
+  })
 </script>
 
 <div class="flex flex-row justify-between h-full w-full">
@@ -147,7 +189,7 @@
                 <item.icon class='size-6'/>
             </Popover.Trigger>
             <Popover.Content side='right'>
-              <item.component {character} abilityRoll={rollTwenty} {toastMain} {parseName} {campaign} {monsters} {monsterContainer} {allCharacters} {socket} {user}/>
+              <item.component {campaign} {character} {rollNumberedDice} {abilityRoll} {toastMain} {parseName} {monsters} {monsterContainer} {allCharacters} {socket} {user} {changeMap}/>
             </Popover.Content>
           </Popover.Root>
           {/each}
@@ -163,7 +205,7 @@
     id="game-card" 
     class="absolute left-20 right-0 w-full h-full m-5 p-0 rounded-lg shadow-lg">
     <Card.Content class="w-screen h-screen">
-      <CampaignMap {character} {allCharacters} {campaign} {monsters} {socket}/>
+      <CampaignMap {character} {allCharacters} {campaign} {monsters} {socket} {mapURL}/>
     </Card.Content>
   </Card.Root>
 </div>
