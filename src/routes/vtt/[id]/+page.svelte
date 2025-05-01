@@ -23,13 +23,19 @@
 
   const { data } = $props();
   const access_token = data.session?.access_token
-  const campaign = data.campaign;
+  const campaign = $state(data.campaign);
   const user = data.user;
   let mapURL = $state(`https://xkosdyzaaquclhzewzgh.supabase.co/storage/v1/object/public/character-avatars//${campaign.mapIds[1].id}`)
 
     // http://localhost:5173/socket/6802904e5750fa22e6ac3d33
     // http://localhost:5001/socket/6802904e5750fa22e6ac3d33
   const socket = new GuildSocket('http://localhost:5001', access_token, page.params.id);
+  socket.on('healthChange', ({characterID, newHealth}) => {
+    const targetChar = campaign.characterIds.find((char) => char.characterId === characterID);
+    if (targetChar) {
+      targetChar.hp = newHealth;
+    }
+  })
 
 
   const monsters = data.monsters;

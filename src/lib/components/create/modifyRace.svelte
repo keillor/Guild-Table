@@ -65,6 +65,9 @@
 		<Label for="name">Race</Label>
 		<Input name={stringInputNames.race} value={raceData.name} type="text" disabled />
 
+		<Label for="hp">HP</Label>
+		<Input name={numberInputNames.hp} value={$form.hp} type="number" />
+
 		<Label for="speed">Speed</Label>
 		<Input name={stringInputNames.speed} value={$form.speed} type="number" />
 

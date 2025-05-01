@@ -10,8 +10,9 @@ export const characterSchema = z.object({
     size_description: z.string().min(1).max(2000),
     language_description: z.string().max(2000).optional().nullable(),
     spellcasting_ability: z.enum(['cha', 'con', 'dex', 'str', 'int', 'wis']).nullable().optional(),
-    avatar: z.boolean().nullable(),
+    avatar: z.boolean().nullable().optional(),
     
+    hp: z.number(),
     as_bonus: z.number(),
     level: z.number(),
     proficiency_bonus: z.number(),

@@ -118,6 +118,7 @@
 				<Form.FieldErrors />
 			</Form.Field>
 
+			
 			<Form.Field {form} name="race">
 				<Form.Control>
 					<Form.Label>Character Race</Form.Label>
@@ -133,7 +134,15 @@
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
-
+			
+			<Form.Field {form} name="hp">
+				<Form.Control>
+					<Form.Label>Character HP</Form.Label>
+					<Input type='number' bind:value={$formData.hp} />
+				</Form.Control>
+				<Form.FieldErrors />
+			</Form.Field>
+			
 			<Form.Field {form} name="speed">
 				<Form.Control>
 					<Form.Label>Character Speed</Form.Label>

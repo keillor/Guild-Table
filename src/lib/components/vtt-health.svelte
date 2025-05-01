@@ -5,31 +5,16 @@
   import { Separator } from "$lib/components/ui/separator/index.js";
   import * as Table from "$lib/components/ui/table";
 
-  let { character, toastMain } = $props();
-  let maxHealth = $state(15);
-  let currentHealth = $state(maxHealth);
-  let temporaryHealth = $state(10);
-
-  const healthInput = document.getElementById("healthInput");
+  let { character, allCharacters, campaign, socket } = $props();
   let changeHealthNum = $state();
 
+  // Function to adjust health for the player's character
   function adjustHealth(amount) {
-    if (amount < 0 && temporaryHealth > 0) {
-      if (temporaryHealth < amount) {
-        amount = amount + temporaryHealth;
-        temporaryHealth = 0;
-      } else {
-        temporaryHealth = Math.max(temporaryHealth + amount, 0);
-        amount = 0;
-      }
-    } else
-
-    if (amount > 0) {
-      currentHealth = Math.min(currentHealth + amount, maxHealth);
-    } else {
-      currentHealth = Math.max(currentHealth + amount, 0);
+    const targetChar = campaign.characterIds.find((char) => char.characterId === character._id);
+    if (targetChar) {
+      targetChar.hp += amount;
+      socket.healthChange(character._id, targetChar.hp);
     }
-    changeHealthNum = 0;
   }
 </script>
 
@@ -38,6 +23,7 @@
 <Table.Root>
   <Table.Header>
     <Table.Row>
+      <Table.Head>Name</Table.Head>
       <Table.Head>Adjust</Table.Head>
       <Table.Head>Current</Table.Head>
       <Table.Head>Max</Table.Head>
@@ -45,16 +31,31 @@
     </Table.Row>
   </Table.Header>
   <Table.Body>
-    <Table.Row>
-      <Table.Cell>
-        <form>
-          <Input type="number" bind:value={changeHealthNum} placeholder="Enter Health Amount (-/+)" class="w-24" />
-          <Button type="submit" onclick={() => adjustHealth(changeHealthNum)} class="w-24">Change Health</Button>
-        </form>
-      </Table.Cell>
-      <Table.Cell>{currentHealth}</Table.Cell>
-      <Table.Cell>{maxHealth}</Table.Cell>
-      <Table.Cell>{temporaryHealth}</Table.Cell>
-    </Table.Row>
+    {#each campaign.characterIds as char}
+      <Table.Row>
+        <Table.Cell>
+          {#if allCharacters.find((c) => c._id === char.characterId)?.name}
+            {allCharacters.find((c) => c._id === char.characterId)?.name}
+          {:else}
+            Unknown
+          {/if}
+        </Table.Cell>
+        <Table.Cell>{char.hp}</Table.Cell>
+        <Table.Cell>
+          {#if char.characterId === character._id}
+            <form>
+              <Input type="number" bind:value={changeHealthNum} placeholder="HP (-/+)" class="w-24" />
+              <Button type="submit" onclick={() => adjustHealth(changeHealthNum)} class="w-24">Update</Button>
+            </form>
+          {:else}
+            <span>N/A</span>
+          {/if}
+        </Table.Cell>
+        <Table.Cell>
+          {allCharacters.find((c) => c._id === char.characterId)?.maxHp || "N/A"}
+        </Table.Cell>
+        <Table.Cell>{char.tempHp || 0}</Table.Cell>
+      </Table.Row>
+    {/each}
   </Table.Body>
 </Table.Root>

@@ -77,9 +77,8 @@ export class GuildSocket {
     abilityRoll(ability, bonus, rollType) {
         this.socket.emit('abilityRoll', ability, bonus, rollType);
     }
-
-    healthUpdate(characterId, hp) {
-        this.socket.emit('healthUpdate', {characterId, hp})
+    healthChange(characterID, newHealth) {
+        this.socket.emit('healthChange', {characterID, newHealth})
     }
 
     moveMarker(markerObject) {

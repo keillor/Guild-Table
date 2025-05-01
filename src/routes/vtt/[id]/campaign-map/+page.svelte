@@ -43,7 +43,7 @@
 
   console.log('Map Information:', mapInformation);
 
-  let monsterCount = 0;
+  /* let monsterCount = 0;
   
   let monsterMarkers = $derived.by(() => {
     return monsterContainer.map((monst) => {
@@ -65,7 +65,7 @@
         coordinates: mapInformation.initialCoordinates
       }
     })
-  })
+  }) */
 
   let allMarkers = $state(allCharacters.map((char) => {
     if (char._id == character._id) { //User's own marker
