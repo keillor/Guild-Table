@@ -42,7 +42,7 @@
 					const campaignId = result.data.campaignId
 					campaigns = [...campaigns, {name: newName, description: newDesc, _id: campaignId}]
 
-					goto(`/campaign/${result.data.campaignId}`);
+					goto(`/campaign/${result.data.campaignId}/general`);
 				} else {
 					open = true;
 				}
@@ -117,7 +117,7 @@
 				>
 				<td class="border border-gray-300 px-4 py-2">
 					<div class="flex gap-2">
-						<Button variant='outline' href='#'>
+						<Button variant='outline' href={`/vtt/${campaign._id}`}>
 							<Swords class='size-4'/>
 							Play
 						</Button>

@@ -15,7 +15,6 @@
   const { socket,
           character,
           allMarkers,
-          monsterMarkers,
           mapInformation } = $props();
   
 

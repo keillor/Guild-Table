@@ -132,12 +132,8 @@ import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 
 
 <Sidebar.Root bind:ref {collapsible} {...restProps}>
-	<Sidebar.Header>
-		<TeamSwitcher teams={data.teams} />
-	</Sidebar.Header>
 	<Sidebar.Content>
 		<NavMain items={data.navMain} />
-		<NavProjects campaigns={data.campaigns} />
 	</Sidebar.Content>
 	<Sidebar.Footer>
 		<NavUser user={data.user} />
