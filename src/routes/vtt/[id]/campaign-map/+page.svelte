@@ -121,5 +121,5 @@
 </script>
 
 <div class="w-full h-full">
-  <Leaflet {mapInformation} {allMarkers} {monsterMarkers} {character} {socket}/>
+  <Leaflet {mapInformation} {allMarkers} {character} {socket}/>
 </div>
