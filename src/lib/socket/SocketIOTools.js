@@ -62,6 +62,10 @@ export class GuildSocket {
         this.socket.emit('removeShape', {shapeId})
     }
 
+    changeMap(mapId) {
+        this.socket.emit('changeMap', mapId);
+    }
+
     roll(characterId, label, dice, result) {
         this.socket.emit('roll', {characterId, label, dice, result});
     }
